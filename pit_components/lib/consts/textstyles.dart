@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+
+final TextStyle fs8 = TextStyle(fontSize: 8.0);
+final TextStyle fs10 = TextStyle(fontSize: 10.0);
+final TextStyle fs11 = TextStyle(fontSize: 11.0);
+final TextStyle fs12 = TextStyle(fontSize: 12.0);
+final TextStyle fs13 = TextStyle(fontSize: 13.0);
+final TextStyle fs14 = TextStyle(fontSize: 14.0);
+final TextStyle fs15 = TextStyle(fontSize: 15.0);
+final TextStyle fs16 = TextStyle(fontSize: 16.0);
+final TextStyle fs17 = TextStyle(fontSize: 17.0);
+final TextStyle fs18 = TextStyle(fontSize: 18.0);
+final TextStyle fs19 = TextStyle(fontSize: 19.0);
+final TextStyle fs20 = TextStyle(fontSize: 20.0);
+final TextStyle fs21 = TextStyle(fontSize: 21.0);
+final TextStyle fs22 = TextStyle(fontSize: 22.0);
+final TextStyle fs23 = TextStyle(fontSize: 23.0);
+final TextStyle fs24 = TextStyle(fontSize: 24.0);
+final TextStyle fs25 = TextStyle(fontSize: 25.0);
+final TextStyle fs26 = TextStyle(fontSize: 26.0);
+final TextStyle fs27 = TextStyle(fontSize: 27.0);
+final TextStyle fs28 = TextStyle(fontSize: 28.0);
+final TextStyle fs29 = TextStyle(fontSize: 29.0);
+final TextStyle fs30 = TextStyle(fontSize: 30.0);
+
+final TextStyle tcBlack = TextStyle(color: Colors.black);
+final TextStyle tcBlack87 = TextStyle(color: Colors.black87);
+final TextStyle tcBlack38 = TextStyle(color: Colors.black38);
+final TextStyle tcBlack26 = TextStyle(color: Colors.black26);
+final TextStyle tcBlack54 = TextStyle(color: Colors.black54);
+final TextStyle tcBlack45 = TextStyle(color: Colors.black45);
+final TextStyle tcBlack12 = TextStyle(color: Colors.black12);
+final TextStyle tcWhite = TextStyle(color: Colors.white);
+
+final TextStyle fw = TextStyle(fontWeight: FontWeight.normal);
+final TextStyle fwBold = TextStyle(fontWeight: FontWeight.bold);
+final TextStyle fw100 = TextStyle(fontWeight: FontWeight.w100);
+final TextStyle fw200 = TextStyle(fontWeight: FontWeight.w200);
+final TextStyle fw300 = TextStyle(fontWeight: FontWeight.w300);
+final TextStyle fw400 = TextStyle(fontWeight: FontWeight.w400);
+final TextStyle fw500 = TextStyle(fontWeight: FontWeight.w500);
+final TextStyle fw600 = TextStyle(fontWeight: FontWeight.w600);
+final TextStyle fw700 = TextStyle(fontWeight: FontWeight.w700);
+final TextStyle fw800 = TextStyle(fontWeight: FontWeight.w800);
+final TextStyle fw900 = TextStyle(fontWeight: FontWeight.w900);
