@@ -10,7 +10,7 @@ Our custom Payment Interface
 First, add `pit_payment` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```
-pit_payment: ^0.0.2
+pit_payment: ^0.0.3
 ```
 
 ## Example

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,9 +7,9 @@ import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_expansion_panel.dart';
 import 'package:pit_components/components/adv_text_field.dart';
-import 'package:pit_components/components/adv_text_field_controller.dart';
 import 'package:pit_components/components/adv_text_with_number.dart';
 import 'package:pit_components/components/adv_visibility.dart';
+import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/components/extras/date_formatter.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
@@ -135,7 +134,8 @@ class _PitPaymentState extends State<PitPayment> {
   void initState() {
     super.initState();
 
-    PitComponents.expansionPanelRadioColor = PitPayment.expansionPanelRadioColor;
+    PitComponents.expansionPanelRadioColor =
+        PitPayment.expansionPanelRadioColor;
     PitComponents.buttonBackgroundColor = PitPayment.expansionPanelButtonColor;
 
     randomNumber = _randomNumber().toString();
@@ -242,7 +242,8 @@ class _PitPaymentState extends State<PitPayment> {
                               "Once payment is complete, you will receive a confirmation email")),
                       AdvButton("Submit", width: double.infinity,
                           onPressed: () {
-                        widget.paymentCallback(PaymentType.permataVirtualAccount);
+                        widget
+                            .paymentCallback(PaymentType.permataVirtualAccount);
                       })
                     ]));
           }),
@@ -285,11 +286,13 @@ class _PitPaymentState extends State<PitPayment> {
                       ),
                       AdvButton("Submit", width: double.infinity,
                           onPressed: () {
-                            String mandiriToken = (mandiriTokenController.text ?? "");
-                        widget.paymentCallback(PaymentType.mandiriClickPay, result: {
-                          "mandiriDebitNumber": mandiriDebitNumber,
-                          "mandiriToken": mandiriToken
-                        });
+                        String mandiriToken =
+                            (mandiriTokenController.text ?? "");
+                        widget.paymentCallback(PaymentType.mandiriClickPay,
+                            result: {
+                              "mandiriDebitNumber": mandiriDebitNumber,
+                              "mandiriToken": mandiriToken
+                            });
                       })
                     ]));
           }),
@@ -326,20 +329,20 @@ class _PitPaymentState extends State<PitPayment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-          child: AdvExpansionPanelList.radio(
-              expansionCallback: (int index, bool isExpanded) {
-                setState(() {
-                  _paymentMethodItem[index].reset();
-                  _paymentMethodItem[index].isExpanded = !isExpanded;
-                });
-              },
-              children: _paymentMethodItem
-                  .map<AdvExpansionPanelRadio>((PaymentMethodItem item) {
-                return AdvExpansionPanelRadio(
-                    value: item.paymentType,
-                    headerBuilder: item.headerBuilder,
-                    body: item.build());
-              }).toList()),
+      child: AdvExpansionPanelList.radio(
+          expansionCallback: (int index, bool isExpanded) {
+            setState(() {
+              _paymentMethodItem[index].reset();
+              _paymentMethodItem[index].isExpanded = !isExpanded;
+            });
+          },
+          children: _paymentMethodItem
+              .map<AdvExpansionPanelRadio>((PaymentMethodItem item) {
+            return AdvExpansionPanelRadio(
+                value: item.paymentType,
+                headerBuilder: item.headerBuilder,
+                body: item.build());
+          }).toList()),
     );
   }
 }

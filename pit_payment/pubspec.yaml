@@ -1,6 +1,6 @@
 name: pit_payment
 description: Payment Solution by PIT, supported by Midtrans. Credit card supported
-version: 0.0.2
+version: 0.0.3
 author: Richardo <richardothayeb@gmail.com>
 homepage: https://nemob.id
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  pit_components: ^0.0.10
+  pit_components: ^0.0.14
   intl: "^0.15.7"
 
 # For information on the generic Dart part of this file, see the
