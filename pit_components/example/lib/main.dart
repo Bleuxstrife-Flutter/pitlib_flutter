@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_badge.dart';
 import 'package:pit_components/components/adv_button.dart';
+import 'package:pit_components/components/adv_chooser.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
@@ -9,14 +10,15 @@ import 'package:pit_components/components/adv_list_view_with_bottom.dart';
 import 'package:pit_components/components/adv_radio_button.dart';
 import 'package:pit_components/components/adv_range_slider.dart';
 import 'package:pit_components/components/adv_row.dart';
+import 'package:pit_components/components/adv_scrollable_bottom_sheet.dart';
 import 'package:pit_components/components/adv_single_digit_inputter.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/adv_text_field.dart';
-import 'package:pit_components/components/adv_text_field_controller.dart';
 import 'package:pit_components/components/adv_text_field_plain.dart';
-import 'package:pit_components/components/extras/date_formatter.dart';
-import 'package:pit_components/components/extras/number_thousand_formatter.dart';
+import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
+import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
+import 'package:pit_components/utils/utils.dart';
 
 void main() => runApp(MyApp());
 
@@ -71,10 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     AdvTextFieldController controller = AdvTextFieldController(
         label: "Just TextField MaxLines 1",
-        maxLines: 1,
-        text: "00\\00\\0000 ~ 00(00)00®000");
-    AdvTextFieldController plainController =
-        AdvTextFieldController(label: "Plain TextField");
+        hint: "TextField MaxLines 1 Example",
+        maxLines: 1 /*,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+        );
+    AdvTextFieldController plainController = AdvTextFieldController(
+        enable: false,
+        hint: "Plain TextField Example",
+        label: "Plain TextField");
 
     AdvRadioGroupController radioButtonController = new AdvRadioGroupController(
         checkedValue: _radioButtonValue,
@@ -116,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Color(0xffFFF1CA),
+          color: Color(0xffFCF6E8),
           child: AdvColumn(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             onlyInner: false,
@@ -125,15 +131,15 @@ class _MyHomePageState extends State<MyHomePage> {
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(
                     child: AdvTextField(
-                      controller: controller,
-                      inputFormatters: [
-                        DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
-                      ],
-                    )),
+                  controller: controller,
+//                  inputFormatters: [
+//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
+//                  ],
+                )),
                 Expanded(
                     child: AdvTextFieldPlain(
-                      controller: plainController,
-                    )),
+                  controller: plainController,
+                )),
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(child: AdvButton("Normal", enable: false)),
@@ -144,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: AdvButton("Reverse", reverse: true, enable: false))
               ]),
               AdvButton(
-                "Go to Another Page",
+                "Go to List View with Bottom Button",
                 width: double.infinity,
                 buttonSize: ButtonSize.small,
                 onPressed: () {
@@ -165,25 +171,48 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                     child: AdvButtonWithIcon(
                         "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
-                        onPressed: () {}, onlyBorder: true)),
+                        onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PersistentBottomSheetDemo(),
+                        settings:
+                            RouteSettings(name: widget.runtimeType.toString())),
+                  );
+                }, onlyBorder: true)),
                 Expanded(
                     child: AdvButtonWithIcon(
-                        "", Icon(Icons.headset), Axis.vertical,
-                        onPressed: () {}, reverse: true)),
+                        "", Icon(Icons.headset), Axis.vertical, onPressed: () {
+                  Utils.pickDate(
+                    context,
+                    selectionType: SelectionType.range,
+                  ).then((dates) {
+                    print("dates => $dates");
+                  });
+                }, reverse: true)),
               ]),
               Visibility(
                   visible: _date != null,
                   child: AdvText("You picked date => $_date")),
               AdvDatePicker(
+                selectionType: SelectionType.range,
                 onChanged: (List value) {
+                  if (value == null || value.length == 0) return;
+
                   setState(() {
                     _date = value[0];
                   });
                 },
-                markedDates: [
-                  MarkedDate(DateTime(2018, 11, 20),
-                      "20th November - Maulid Nabi Muhammad")
-                ],
+//                markedDates: [
+//                  MarkedDate(DateTime(2018, 11, 20),
+//                      "20th November - Maulid Nabi Muhammad")
+//                ],
+                controller: AdvDatePickerController(
+                    label: "Just TextField MaxLines 1",
+                    hint: "test",
+                    initialValue: _date ?? DateTime.now(),
+                    markedDates: [MarkedDate(DateTime.now(), "lalala")],
+                    dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]),
               ),
               AdvDropDown(
                 onChanged: (String value) {},
@@ -220,6 +249,37 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: groupCheckController,
                 callback: (itemSelected) async {},
               ),
+              AdvChooser(
+                label: "Chooser Example",
+                hint: "This is chooser example",
+                items: {
+                  "data 1": "display 1",
+                  "data 2": "display 2",
+                  "data 3": "display 3",
+                  "data 4": "display 4",
+                  "data 5": "display 5",
+                  "data 6": "display 6",
+                  "data 7": "display 7",
+                  "data 8": "display 8",
+                  "data 9": "display 9",
+                  "data 10": "display 10",
+                  "data 11": "display 11",
+                  "data 12": "display 12",
+                  "data 13": "display 13",
+                  "data 14": "display 14",
+                  "data 15": "display 15",
+                  "data 16": "display 16",
+                  "data 17": "display 17",
+                  "data 18": "display 18",
+                  "data 19": "display 19",
+                  "data 20": "display 20",
+                  "data 21": "display 21",
+                  "data 22": "display 22",
+                  "data 23": "display 24 ",
+                  "data 24": "display 24",
+                  "data 25": "display 25"
+                },
+              )
             ],
           ),
         ),
@@ -275,5 +335,104 @@ class AnotherPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class PersistentBottomSheetDemo extends StatefulWidget {
+  static const String routeName = '/material/persistent-bottom-sheet';
+
+  @override
+  _PersistentBottomSheetDemoState createState() =>
+      _PersistentBottomSheetDemoState();
+}
+
+class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool _bottomSheetActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _showMessage() {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const Text('You tapped the floating action button.'),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'))
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: const Text('Persistent bottom sheet'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _showMessage,
+          backgroundColor: Colors.redAccent,
+          child: const Icon(
+            Icons.add,
+            semanticLabel: 'Add',
+          ),
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            final ThemeData themeData = Theme.of(context);
+            return Center(
+                child: RaisedButton(
+                    onPressed: _bottomSheetActive
+                        ? null
+                        : () {
+                            setState(() {
+                              //disable button
+                              _bottomSheetActive = true;
+                            });
+                            showBottomSheet<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AdvScrollableBottomSheet(
+                                    initialHeight: 200.0,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(32.0),
+                                        child: Column(children: [
+                                          Text(
+                                              'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: themeData.accentColor,
+                                                  fontSize: 24.0)),
+                                          Column(
+                                              children:
+                                                  List.generate(100, (index) {
+                                            return Text("Text $index");
+                                          }))
+                                        ])),
+                                  );
+                                }).closed.whenComplete(() {
+                              if (mounted) {
+                                setState(() {
+                                  // re-enable the button
+                                  _bottomSheetActive = false;
+                                });
+                              }
+                            });
+                          },
+                    child: const Text('SHOW BOTTOM SHEET')));
+          },
+        ));
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
+import 'package:pit_components/pit_components.dart';
+
 typedef void OnTextChanged(String value);
 
 const Duration _kDropdownMenuDuration = Duration(milliseconds: 300);
@@ -20,6 +22,7 @@ class AdvDropDown extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onChanged;
+  final Color backgroundColor;
 
   AdvDropDown(
       {String selectedItem,
@@ -31,6 +34,7 @@ class AdvDropDown extends StatefulWidget {
       EdgeInsetsGeometry padding,
       this.validator,
       AdvDropDownController controller,
+        Color backgroundColor,
       @required this.onChanged})
       : assert(measureText == null || measureTextSpan == null),
         assert(controller == null ||
@@ -41,6 +45,7 @@ class AdvDropDown extends StatefulWidget {
                 hint: hint ?? "",
                 alignment: alignment ?? TextAlign.left,
                 items: items ?? Map()),
+        this.backgroundColor = backgroundColor ?? PitComponents.dropDownBackgroundColor,
         this.measureTextSpan = measureTextSpan ??
             new TextSpan(
                 text: measureText,
@@ -159,6 +164,8 @@ class _AdvDropDownState extends State<AdvDropDown>
                               color: Colors.black,
                               width: 1.0,
                             )),
+                        filled: true,
+                        fillColor: widget.backgroundColor,
                         contentPadding: new EdgeInsets.only(
                             left: _defaultInnerPadding,
                             right: _defaultInnerPadding + 16.0,
@@ -689,7 +696,7 @@ class AdvDropDownController extends ValueNotifier<AdvDropDownEditingValue> {
       String hint,
       TextAlign alignment,
       Map<String, dynamic> items})
-      : super(text == null
+      : super(text == null && hint == null && alignment == null && items == null
             ? AdvDropDownEditingValue.empty
             : new AdvDropDownEditingValue(
                 text: text,

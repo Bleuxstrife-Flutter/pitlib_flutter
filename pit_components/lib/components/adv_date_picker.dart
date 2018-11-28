@@ -2,13 +2,20 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:pit_components/components/extras/com_calendar_carousel.dart';
+import 'package:pit_components/components/adv_column.dart';
+import 'package:pit_components/components/adv_text.dart';
+import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
 import 'package:pit_components/components/extras/com_date_picker_page.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
+import 'package:pit_components/mods/mod_input_decorator.dart';
+import 'package:pit_components/mods/mod_text_field.dart';
+import 'package:pit_components/pit_components.dart';
+import 'package:pit_components/utils/utils.dart';
 
 typedef void OnTextChanged(List<DateTime> value);
+
+enum SelectionType { single, multi, range }
 
 class MarkedDate {
   final DateTime date;
@@ -22,38 +29,63 @@ class AdvDatePicker extends StatefulWidget {
   final SelectionType selectionType;
   final TextSpan measureTextSpan;
   final EdgeInsetsGeometry padding;
-  final FormFieldValidator<String> validator;
   final ValueChanged<List<DateTime>> onChanged;
   final DateFormat format;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color hintColor;
+  final Color labelColor;
+  final Color errorColor;
 
   AdvDatePicker(
       {DateTime initialValue,
       List<DateTime> dates,
       List<MarkedDate> markedDates,
+      String label,
       String hint,
+      String error,
+      bool enable,
       String measureText,
       TextSpan measureTextSpan,
       EdgeInsetsGeometry padding,
-      this.validator,
       this.selectionType,
       DateFormat format,
       AdvDatePickerController controller,
+      Color hintColor,
+      Color labelColor,
+      Color backgroundColor,
+      Color borderColor,
+      Color errorColor,
       @required this.onChanged})
       : assert(measureText == null || measureTextSpan == null),
         assert(controller == null ||
-            (hint == null &&
+            (initialValue == null &&
+                hint == null &&
                 dates == null &&
                 markedDates == null &&
-                hint == null)),
+                error == null &&
+                label == null &&
+                enable == null)),
         this.format = format ?? new DateFormat("dd/MM/yyyy"),
+        this.hintColor = hintColor ?? PitComponents.datePickerHintColor,
+        this.labelColor = labelColor ?? PitComponents.datePickerLabelColor,
+        this.backgroundColor =
+            backgroundColor ?? PitComponents.datePickerBackgroundColor,
+        this.borderColor = borderColor ?? PitComponents.datePickerBorderColor,
+        this.errorColor = errorColor ?? PitComponents.datePickerErrorColor,
         this.controller = controller ??
             new AdvDatePickerController(
                 initialValue: initialValue,
                 dates: dates ?? [],
                 markedDates: markedDates ?? [],
-                hint: hint ?? ""),
-        this.measureTextSpan =
-            measureTextSpan ?? new TextSpan(text: measureText, style: ts.fs16),
+                hint: hint ?? "",
+                error: error ?? "",
+                label: label ?? "",
+                enable: enable ?? true),
+        this.measureTextSpan = measureTextSpan ??
+            new TextSpan(
+                text: measureText,
+                style: ts.fs16.copyWith(color: Colors.black87)),
         this.padding = padding ?? new EdgeInsets.all(0.0);
 
   @override
@@ -62,26 +94,53 @@ class AdvDatePicker extends StatefulWidget {
 
 class _AdvDatePickerState extends State<AdvDatePicker>
     with SingleTickerProviderStateMixin {
-  AdvDatePickerController _controller;
-
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller;
     widget.controller.addListener(_update);
   }
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth;
+
+        return AdvColumn(
+          mainAxisSize: MainAxisSize.min,
+          divider: ColumnDivider(2.0),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _buildChildren(context, maxWidth),
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildChildren(BuildContext context, double maxWidth) {
     final int _defaultWidthAddition = 2;
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
-    int maxLengthHeight = 0;
+
+    final Color _backgroundColor = widget.controller.enable
+        ? widget.backgroundColor
+        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+    final Color _textColor = widget.controller.enable
+        ? widget.measureTextSpan.style.color
+        : Color.lerp(
+            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+    final Color _hintColor = widget.controller.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+    final Color _iconColor = widget.controller.enable
+        ? Colors.grey.shade700
+        : Color.lerp(Colors.grey.shade700, PitComponents.lerpColor, 0.6);
+
+    List<Widget> children = [];
 
     TextEditingController controller = new TextEditingController(
-        text: _controller.initialValue == null
+        text: widget.controller.initialValue == null
             ? ""
-            : widget.format.format(_controller.initialValue));
+            : widget.format.format(widget.controller.initialValue));
 
     var tp = new TextPainter(
         text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
@@ -89,63 +148,74 @@ class _AdvDatePickerState extends State<AdvDatePicker>
     tp.layout();
 
     double width = tp.size.width == 0
-        ? null
+        ? maxWidth
         : tp.size.width +
             _defaultWidthAddition +
             (_defaultInnerPadding * 2) +
             (widget.padding.horizontal);
 
-    Widget result = new Container(
+    if (widget.controller.label != null && widget.controller.label != "") {
+      children.add(
+        AdvText(
+          widget.controller.label,
+          style: ts.fs11.merge(TextStyle(color: widget.labelColor)),
+          maxLines: 1,
+        ),
+      );
+    }
+
+    Widget mainChild = Container(
       width: width,
       padding: widget.padding,
       child: new ConstrainedBox(
         constraints: new BoxConstraints(
-          minHeight: tp.size.height +
-              _defaultHeightAddition +
-              /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
-              maxLengthHeight,
+          minHeight: tp.size.height + _defaultHeightAddition,
         ),
         child: new Center(
           child: GestureDetector(
-            onTap: _handleTap,
+            onTap: () {
+              _handleTap(context);
+            },
             child: AbsorbPointer(
               child: new Stack(
                 children: [
-                  new Container(
-                    child: new TextFormField(
+                  Theme(
+                    data: new ThemeData(
+                      cursorColor: Theme.of(context).cursorColor,
+                      accentColor: _backgroundColor,
+                      hintColor: widget.borderColor,
+                      primaryColor: widget.borderColor,
+                    ),
+                    child: ModTextField(
                       controller: controller,
-                      validator: widget.validator,
                       textAlign: TextAlign.center,
-                      style: widget.measureTextSpan.style,
-                      decoration: InputDecoration(
+                      style: widget.measureTextSpan.style
+                          .copyWith(color: _textColor),
+                      decoration: ModInputDecoration(
+                        suffixIcon: Container(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: Icon(Icons.calendar_today,
+                                size: 18.0,
+                                // These colors are not defined in the Material Design spec.
+                                color: _iconColor)),
+                        filled: true,
+                        fillColor: _backgroundColor,
                         border: OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
                               const Radius.circular(4.0),
                             ),
                             borderSide: new BorderSide(
-                              color: Colors.black,
-                              width: 1.0,
+                              color: Colors.amber,
+                              width: 1111.0,
                             )),
                         contentPadding: new EdgeInsets.only(
-                            left: _defaultInnerPadding,
-                            right: _defaultInnerPadding + 16.0,
-                            top: 16.0,
-                            bottom: 8.0),
-                        labelText: _controller.hint,
+                            left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
+                        hintText: widget.controller.hint,
+                        hintStyle:
+                            TextStyle(color: _hintColor.withOpacity(0.6)),
                       ),
                     ),
                   ),
-                  new Positioned(
-                    top: 0.0,
-                    bottom: 0.0,
-                    right: 8.0,
-                    child: new Icon(Icons.calendar_today,
-                        size: 18.0,
-                        // These colors are not defined in the Material Design spec.
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.grey.shade700
-                            : Colors.white70),
-                  )
                 ],
               ),
             ),
@@ -154,149 +224,37 @@ class _AdvDatePickerState extends State<AdvDatePicker>
       ),
     );
 
-    if (width == null) {
-      result = new Row(children: [new Expanded(child: result)]);
+    children.add(mainChild);
+
+    if (widget.controller.error != null && widget.controller.error != "") {
+      TextStyle style = ts.fs11
+          .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
+
+      children.add(Container(
+          width: maxWidth,
+          child: AdvText(
+            widget.controller.error,
+            textAlign: TextAlign.end,
+            style: style,
+            maxLines: 1,
+          )));
     }
 
-    return result;
+    return children;
   }
 
   _update() {
     setState(() {});
   }
 
-  void _handleTap() async {
-    List<DateTime> result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ComDatePickerPage(
-                currentDate: _controller.dates,
-                markedDates: _controller.markedDates,
-                selectionType: widget.selectionType ?? SelectionType.single,
-              ),
-          settings: RouteSettings(name: widget.runtimeType.toString())),
-    );
+  void _handleTap(BuildContext context) async {
+    if (!widget.controller.enable) return;
+
+    List<DateTime> result = await Utils.pickDate(context,
+        dates: widget.controller.dates,
+        markedDates: widget.controller.markedDates, selectionType: widget.selectionType);
 
     if (widget.onChanged != null) widget.onChanged(result);
-    _controller.dates = result;
+    widget.controller.dates = result;
   }
-}
-
-class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
-  DateTime get initialValue => value.initialValue;
-
-  set initialValue(DateTime newInitialValue) {
-    value = value.copyWith(
-        initialValue: newInitialValue,
-        dates: this.dates,
-        markedDates: this.markedDates,
-        hint: this.hint);
-  }
-
-  List<DateTime> get dates => value.dates;
-
-  set dates(List<DateTime> newDates) {
-    value = value.copyWith(
-        initialValue: this.initialValue,
-        dates: newDates,
-        markedDates: this.markedDates,
-        hint: this.hint);
-  }
-
-  List<MarkedDate> get markedDates => value.markedDates;
-
-  set markedDates(List<MarkedDate> newMarkedDates) {
-    value = value.copyWith(
-        initialValue: this.initialValue,
-        dates: this.dates,
-        markedDates: newMarkedDates,
-        hint: this.hint);
-  }
-
-  String get hint => value.hint;
-
-  set hint(String newHint) {
-    value = value.copyWith(
-        initialValue: this.initialValue,
-        dates: this.dates,
-        markedDates: this.markedDates,
-        hint: newHint);
-  }
-
-  AdvDatePickerController(
-      {DateTime initialValue,
-      List<DateTime> dates,
-      List<MarkedDate> markedDates,
-      String hint})
-      : super(initialValue == null &&
-                dates == null &&
-                markedDates == null &&
-                hint == null
-            ? AdvDatePickerEditingValue.empty
-            : new AdvDatePickerEditingValue(
-                initialValue: initialValue,
-                dates: dates,
-                markedDates: markedDates,
-                hint: hint));
-
-  AdvDatePickerController.fromValue(AdvDatePickerEditingValue value)
-      : super(value ?? AdvDatePickerEditingValue.empty);
-
-  void clear() {
-    value = AdvDatePickerEditingValue.empty;
-  }
-}
-
-@immutable
-class AdvDatePickerEditingValue {
-  const AdvDatePickerEditingValue(
-      {this.initialValue,
-      this.dates = const [],
-      this.markedDates = const [],
-      this.hint = ''});
-
-  final DateTime initialValue;
-  final List<DateTime> dates;
-  final List<MarkedDate> markedDates;
-  final String hint;
-
-  static const AdvDatePickerEditingValue empty =
-      const AdvDatePickerEditingValue();
-
-  AdvDatePickerEditingValue copyWith(
-      {DateTime initialValue,
-      List<DateTime> dates,
-      List<MarkedDate> markedDates,
-      String hint}) {
-    return new AdvDatePickerEditingValue(
-        initialValue: initialValue ?? this.initialValue,
-        dates: dates ?? this.dates,
-        markedDates: markedDates ?? this.markedDates,
-        hint: hint ?? this.hint);
-  }
-
-  AdvDatePickerEditingValue.fromValue(AdvDatePickerEditingValue copy)
-      : this.initialValue = copy.initialValue,
-        this.dates = copy.dates,
-        this.markedDates = copy.markedDates,
-        this.hint = copy.hint;
-
-  @override
-  String toString() =>
-      '$runtimeType(initialValue: \u2524$initialValue\u251C, dates: \u2524$dates\u251C, markedDates: \u2524$markedDates\u251C, hint: \u2524$hint\u251C)';
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (other is! AdvDatePickerEditingValue) return false;
-    final AdvDatePickerEditingValue typedOther = other;
-    return typedOther.initialValue == initialValue &&
-        typedOther.dates == dates &&
-        typedOther.markedDates == markedDates &&
-        typedOther.hint == hint;
-  }
-
-  @override
-  int get hashCode => hashValues(initialValue.hashCode, dates.hashCode,
-      markedDates.hashCode, hint.hashCode);
 }

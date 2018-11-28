@@ -226,7 +226,6 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
   void _handlePressed(bool isExpanded, int index) {
     if (widget.expansionCallback != null)
       widget.expansionCallback(index, isExpanded);
-    print("$isExpanded, $index");
     if (widget._allowOnlyOnePanelOpen) {
       final AdvExpansionPanelRadio pressedChild = widget.children[index];
 

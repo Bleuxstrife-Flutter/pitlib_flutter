@@ -37,3 +37,19 @@
 ## 0.0.10
 
 * Bug fixes
+
+## 0.0.11
+
+* Bug fixes and more component added (Chooser)
+
+## 0.0.12
+
+* Bug fixes
+
+## 0.0.13
+
+* Bug fixes and more component added (ScrollableBottomSheet)
+
+## 0.0.14
+
+* Pick date & Pick from Chooser now can be used independently

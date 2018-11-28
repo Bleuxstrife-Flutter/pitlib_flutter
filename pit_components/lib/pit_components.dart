@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 class PitComponents {
   static Color textFieldHintColor = Color(0xffa6a6a6);
-  static Color textFieldLabelColor = Color(0xffa6a6a6);
-  static Color textFieldBackgroundColor = Color(0xffFDFDFD);
+  static Color textFieldLabelColor = Color(0xff777777);
+  static Color textFieldBackgroundColor = Color(0xfff7f7f7);
   static Color textFieldErrorColor = Color(0xffd81920);
+  static Color textFieldBorderColor = Color(0xffa6a6a6);
   static Color textFieldLineColor = Color(0xffa6a6a6);
   static Color buttonTextColor = Color(0xffffffff);
   static Color buttonBackgroundColor = Color(0xfff4329a);
@@ -27,6 +28,11 @@ class PitComponents {
   static Color datePickerPrevDaysColor = Color(0xffa6a6a6);
   static Color datePickerNextDaysDaysColor = Color(0xffa6a6a6);
   static Color datePickerMarkedDaysDaysColor = Colors.blue;
+  static Color datePickerBackgroundColor = Color(0xfff7f7f7);
+  static Color datePickerBorderColor = Color(0xffa6a6a6);
+  static Color datePickerHintColor = Color(0xffa6a6a6);
+  static Color datePickerLabelColor = Color(0xff777777);
+  static Color datePickerErrorColor = Color(0xffd81920);
 
   static Color radioButtonColor = Colors.blue;
 
@@ -37,6 +43,16 @@ class PitComponents {
   static Color groupCheckCheckColor = Colors.blue;
 
   static Color expansionPanelRadioColor = Colors.blue;
+
+  static Color chooserHintColor = Color(0xffa6a6a6);
+  static Color chooserLabelColor = Color(0xff777777);
+  static Color chooserBackgroundColor = Color(0xfff7f7f7);
+  static Color chooserErrorColor = Color(0xffd81920);
+  static Color chooserBorderColor = Color(0xffa6a6a6);
+
+  static Color dropDownBackgroundColor = Color(0xffFDFDFD);
+
+  static Color lerpColor = Color(0xffD1D1D1);
 
   static List<String> weekdaysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_row.dart';
-import 'package:pit_components/components/adv_text_field_controller.dart';
+import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/components/adv_text_field_plain.dart';
 
 class AdvSingleDigitInputter extends StatefulWidget {

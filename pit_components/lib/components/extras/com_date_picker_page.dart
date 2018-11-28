@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/extras/com_calendar_carousel.dart';
 import 'package:pit_components/pit_components.dart';
@@ -8,7 +9,7 @@ class ComDatePickerPage extends StatefulWidget {
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
 
-  ComDatePickerPage({this.currentDate, this.markedDates, this.selectionType});
+  ComDatePickerPage({this.currentDate = const[], this.markedDates = const[], this.selectionType});
 
   @override
   State createState() => new _ComDatePickerPageState();
@@ -28,19 +29,19 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         title: new Text(PitComponents.datePickerTitle),
         backgroundColor: PitComponents.datePickerToolbarColor,
       ),
-      body: new Container(
+      body: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.0),
         child: ComCalendarCarousel(
           selectionType: _selectionType,
           weekDays: PitComponents.weekdaysArray,
           onDayPressed: (List<DateTime> dates) async {
             this.setState(() => _currentDate = dates);
-            await new Future.delayed(const Duration(milliseconds: 400));
+            await new Future.delayed(const Duration(milliseconds: 200));
             Navigator.pop(context, _currentDate);
           },
           thisMonthDayBorderColor: Colors.grey,

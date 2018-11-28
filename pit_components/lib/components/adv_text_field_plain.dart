@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_text.dart';
-import 'package:pit_components/components/adv_text_field_controller.dart';
+import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
+import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
-import 'package:pit_components/consts/textstyles.dart' as ts;
 
 typedef void OnTextChanged(String oldValue, String newValue);
 typedef void OnIconTapped();
@@ -17,7 +17,6 @@ typedef void OnIconTapped();
 class AdvTextFieldPlain extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
-  final TextStyle textStyle;
   final EdgeInsetsGeometry padding;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
@@ -42,7 +41,7 @@ class AdvTextFieldPlain extends StatefulWidget {
       int maxLength,
       int maxLines,
       bool maxLengthEnforced,
-        this.needsCounter = false,
+      this.needsCounter = false,
       bool enable,
       TextAlign alignment,
       bool obscureText,
@@ -92,7 +91,6 @@ class AdvTextFieldPlain extends StatefulWidget {
                 alignment: alignment ?? TextAlign.left,
                 obscureText: obscureText ?? false,
                 suffixIcon: suffixIcon),
-        this.textStyle = textStyle ?? ts.fs16.merge(ts.tcBlack),
         this.measureTextSpan = new TextSpan(
             text: measureText ?? "",
             style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
@@ -152,6 +150,14 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     final int _defaultWidthAddition = 2;
     final int _defaultHeightAddition = 20;
     final double _defaultInnerPadding = 8.0;
+
+    final Color _textColor = widget.controller.enable
+        ? widget.measureTextSpan.style.color
+        : Color.lerp(
+            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+    final Color _hintColor = widget.controller.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
 
     int maxLengthHeight = widget.controller == null
         ? 0
@@ -255,12 +261,13 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
                 newValue = "(setstate) $newValue";
                 if (this.mounted) {
                   setState(() {
-                    if (widget.textChangeListener != null) widget
-                        .textChangeListener(oldValue, newValue);
+                    if (widget.textChangeListener != null)
+                      widget.textChangeListener(oldValue, newValue);
                   });
                 }
               } else {
-                if (widget.textChangeListener!= null)widget.textChangeListener(oldValue, newValue);
+                if (widget.textChangeListener != null)
+                  widget.textChangeListener(oldValue, newValue);
               }
             },
             obscureText: _obscureText,
@@ -271,7 +278,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
             inputFormatters: formatters,
             maxLengthEnforced: widget.controller.maxLengthEnforced,
             textAlign: widget.controller.alignment,
-            style: widget.textStyle,
+            style: widget.measureTextSpan.style.copyWith(color: _textColor),
             decoration: ModInputDecoration(
                 suffixIcon: widget.controller.suffixIcon != null
                     ? InkWell(
@@ -281,7 +288,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
                 contentPadding: new EdgeInsets.only(
                     left: 8.0, top: 4.0, right: 8.0, bottom: 8.0),
                 hintText: widget.controller.hint,
-                hintStyle: TextStyle(color: widget.hintColor.withOpacity(0.6)),
+                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
                 maxLines: widget.controller.maxLines),
           ),
         ),

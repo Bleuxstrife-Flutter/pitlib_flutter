@@ -3,12 +3,13 @@ library flutter_calendar_dooboo;
 import 'package:flutter/material.dart';
 /// A Calculator.
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
+/// A Calculator.
 
-enum SelectionType { single, multi, range }
 
 class ComCalendarCarousel extends StatefulWidget {
   final TextStyle defaultHeaderTextStyle =
@@ -78,12 +79,12 @@ class ComCalendarCarousel extends StatefulWidget {
     this.onDayPressed,
     this.iconColor = Colors.blueAccent,
     this.headerText,
-    this.markedDates,
+    List<MarkedDate> markedDates = const [],
     this.selectionType = SelectionType.single,
     this.headerMargin = const EdgeInsets.symmetric(vertical: 16.0),
     this.childAspectRatio = 1.0,
     this.weekDayMargin = const EdgeInsets.only(bottom: 4.0),
-  });
+  }) : this.markedDates = markedDates ?? const [];
 
   @override
   _CalendarState createState() => _CalendarState();
@@ -184,6 +185,19 @@ class _CalendarState extends State<ComCalendarCarousel> {
 //              pageSnapping: true,
             ),
           ),
+          Visibility(
+              visible: widget.selectionType == SelectionType.multi,
+              child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  child: AdvButton(
+                    "Submit",
+                    width: double.infinity,
+                    buttonSize: ButtonSize.large,
+                    onPressed: () {
+                      if (widget.onDayPressed != null)
+                        widget.onDayPressed(_selectedDateTimes);
+                    },
+                  ))),
         ],
       ),
     );
@@ -293,9 +307,14 @@ class _CalendarState extends State<ComCalendarCarousel> {
                         if (widget.onDayPressed != null)
                           widget.onDayPressed(_selectedDateTimes);
                       } else if (widget.selectionType == SelectionType.multi) {
-                        _selectedDateTimes.add(currentDate);
-                        if (widget.onDayPressed != null)
-                          widget.onDayPressed(_selectedDateTimes);
+                        if (_selectedDateTimes
+                                .where((date) => date == currentDate)
+                                .length ==
+                            0) {
+                          _selectedDateTimes.add(currentDate);
+                        } else {
+                          _selectedDateTimes.remove(currentDate);
+                        }
                       } else if (widget.selectionType == SelectionType.range) {
                         if (!rangeIsComplete) {
                           var dateDiff = _selectedDateTimes[0]

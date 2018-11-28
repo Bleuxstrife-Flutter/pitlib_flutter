@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_text.dart';
-import 'package:pit_components/components/adv_text_field_controller.dart';
+import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
@@ -27,7 +27,8 @@ class AdvTextField extends StatefulWidget {
   final FocusNode focusNode;
   final Color hintColor;
   final Color labelColor;
-  final Color fillColor;
+  final Color backgroundColor;
+  final Color borderColor;
   final Color errorColor;
   final Widget suffixIcon;
   final OnIconTapped tapped;
@@ -40,8 +41,8 @@ class AdvTextField extends StatefulWidget {
       String error,
       int maxLength,
       int maxLines,
-        bool maxLengthEnforced,
-        this.needsCounter = false,
+      bool maxLengthEnforced,
+      this.needsCounter = false,
       bool enable,
       TextAlign alignment,
       bool obscureText,
@@ -58,7 +59,8 @@ class AdvTextField extends StatefulWidget {
       this.focusNode,
       Color hintColor,
       Color labelColor,
-      Color fillColor,
+      Color backgroundColor,
+      Color borderColor,
       Color errorColor,
       this.suffixIcon,
       this.tapped})
@@ -77,7 +79,9 @@ class AdvTextField extends StatefulWidget {
                 suffixIcon == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
-        this.fillColor = fillColor ?? PitComponents.textFieldBackgroundColor,
+        this.backgroundColor =
+            backgroundColor ?? PitComponents.textFieldBackgroundColor,
+        this.borderColor = borderColor ?? PitComponents.textFieldBorderColor,
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
         this.controller = controller ??
             new AdvTextFieldController(
@@ -149,6 +153,17 @@ class _AdvTextFieldState extends State<AdvTextField>
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
+    final Color _backgroundColor = widget.controller.enable
+        ? widget.backgroundColor
+        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+    final Color _textColor = widget.controller.enable
+        ? widget.measureTextSpan.style.color
+        : Color.lerp(
+            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+    final Color _hintColor = widget.controller.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+
     int maxLengthHeight = widget.controller == null
         ? 0
         : widget.controller.maxLength != null && widget.needsCounter ? 22 : 0;
@@ -199,9 +214,9 @@ class _AdvTextFieldState extends State<AdvTextField>
         child: new Theme(
           data: new ThemeData(
             cursorColor: Theme.of(context).cursorColor,
-            hintColor: widget.fillColor,
-            primaryColor: widget.fillColor,
-            accentColor: widget.fillColor,
+            accentColor: _backgroundColor,
+            hintColor: widget.borderColor,
+            primaryColor: widget.borderColor,
           ),
           child: ModTextField(
             focusNode: widget.focusNode,
@@ -268,7 +283,7 @@ class _AdvTextFieldState extends State<AdvTextField>
             inputFormatters: formatters,
             maxLengthEnforced: widget.controller.maxLengthEnforced,
             textAlign: widget.controller.alignment,
-            style: widget.measureTextSpan.style,
+            style: widget.measureTextSpan.style.copyWith(color: _textColor),
             decoration: ModInputDecoration(
                 suffixIcon: widget.controller.suffixIcon != null
                     ? InkWell(
@@ -276,17 +291,16 @@ class _AdvTextFieldState extends State<AdvTextField>
                         child: Container(child: widget.controller.suffixIcon))
                     : null,
                 filled: true,
-                fillColor: widget.fillColor,
+                fillColor: _backgroundColor,
                 border: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
                     const Radius.circular(4.0),
                   ),
-                  borderSide: new BorderSide(),
                 ),
                 contentPadding: new EdgeInsets.only(
                     left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
                 hintText: widget.controller.hint,
-                hintStyle: TextStyle(color: widget.hintColor.withOpacity(0.6)),
+                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
                 maxLines: widget.controller.maxLines),
           ),
         ),
