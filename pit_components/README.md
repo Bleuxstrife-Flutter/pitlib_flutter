@@ -10,7 +10,7 @@ A bundle that contains our custom components, mostly just override the default F
 First, add `pit_components` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```
-pit_components: ^0.0.14
+pit_components: ^0.0.18
 ```
 
 ## Example

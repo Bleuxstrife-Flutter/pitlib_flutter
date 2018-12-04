@@ -53,3 +53,19 @@
 ## 0.0.14
 
 * Pick date & Pick from Chooser now can be used independently
+
+## 0.0.15
+
+* More component added (InfiniteListView)
+
+## 0.0.16
+
+* Bug fixes
+
+## 0.0.17
+
+* Bug fixes
+
+## 0.0.18
+
+* More component added (RatingBar)

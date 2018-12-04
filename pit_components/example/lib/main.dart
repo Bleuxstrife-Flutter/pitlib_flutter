@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_badge.dart';
 import 'package:pit_components/components/adv_button.dart';
@@ -6,6 +8,7 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
 import 'package:pit_components/components/adv_group_check.dart';
+import 'package:pit_components/components/adv_infinity_list_view.dart';
 import 'package:pit_components/components/adv_list_view_with_bottom.dart';
 import 'package:pit_components/components/adv_radio_button.dart';
 import 'package:pit_components/components/adv_range_slider.dart';
@@ -166,7 +169,19 @@ class _MyHomePageState extends State<MyHomePage> {
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(
                   child: AdvButtonWithIcon(
-                      "", Icon(Icons.ring_volume), Axis.vertical),
+                    "",
+                    Icon(Icons.ring_volume),
+                    Axis.vertical,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InfinityListDemo(),
+                            settings: RouteSettings(
+                                name: widget.runtimeType.toString())),
+                      );
+                    },
+                  ),
                 ),
                 Expanded(
                     child: AdvButtonWithIcon(
@@ -190,6 +205,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     print("dates => $dates");
                   });
                 }, reverse: true)),
+              ]),
+              AdvRow(divider: RowDivider(8.0), children: [
+                Expanded(
+                  child: AdvButtonWithIcon(
+                    "",
+                    Icon(Icons.ring_volume),
+                    Axis.vertical,
+                    enable: false,
+                  ),
+                ),
+                Expanded(
+                    child: AdvButtonWithIcon(
+                        "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
+                        enable: false,
+                        onlyBorder: true)),
+                Expanded(
+                    child: AdvButtonWithIcon(
+                        "", Icon(Icons.headset), Axis.vertical,
+                        enable: false, reverse: true)),
               ]),
               Visibility(
                   visible: _date != null,
@@ -249,37 +283,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: groupCheckController,
                 callback: (itemSelected) async {},
               ),
-              AdvChooser(
-                label: "Chooser Example",
-                hint: "This is chooser example",
-                items: {
-                  "data 1": "display 1",
-                  "data 2": "display 2",
-                  "data 3": "display 3",
-                  "data 4": "display 4",
-                  "data 5": "display 5",
-                  "data 6": "display 6",
-                  "data 7": "display 7",
-                  "data 8": "display 8",
-                  "data 9": "display 9",
-                  "data 10": "display 10",
-                  "data 11": "display 11",
-                  "data 12": "display 12",
-                  "data 13": "display 13",
-                  "data 14": "display 14",
-                  "data 15": "display 15",
-                  "data 16": "display 16",
-                  "data 17": "display 17",
-                  "data 18": "display 18",
-                  "data 19": "display 19",
-                  "data 20": "display 20",
-                  "data 21": "display 21",
-                  "data 22": "display 22",
-                  "data 23": "display 24 ",
-                  "data 24": "display 24",
-                  "data 25": "display 25"
-                },
-              )
+              Row(children: [
+                Expanded(
+                    child: AdvChooser(
+                  label: "Chooser Example",
+                  hint: "This is chooser example",
+                  items: {
+                    "data 1": "display 1",
+                    "data 2": "display 2",
+                    "data 3": "display 3",
+                    "data 4": "display 4",
+                    "data 5": "display 5",
+                    "data 6": "display 6",
+                    "data 7": "display 7",
+                    "data 8": "display 8",
+                    "data 9": "display 9",
+                    "data 10": "display 10",
+                    "data 11": "display 11",
+                    "data 12": "display 12",
+                    "data 13": "display 13",
+                    "data 14": "display 14",
+                    "data 15": "display 15",
+                    "data 16": "display 16",
+                    "data 17": "display 17",
+                    "data 18": "display 18",
+                    "data 19": "display 19",
+                    "data 20": "display 20",
+                    "data 21": "display 21",
+                    "data 22": "display 22",
+                    "data 23": "display 24 ",
+                    "data 24": "display 24",
+                    "data 25": "display 25"
+                  },
+                ))
+              ])
             ],
           ),
         ),
@@ -405,7 +442,7 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AdvScrollableBottomSheet(
-                                    initialHeight: 200.0,
+                                    initialHeight: 550.0,
                                     child: Padding(
                                         padding: const EdgeInsets.all(32.0),
                                         child: Column(children: [
@@ -434,5 +471,73 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
                     child: const Text('SHOW BOTTOM SHEET')));
           },
         ));
+  }
+}
+
+class InfinityListDemo extends StatefulWidget {
+  @override
+  _InfinityListDemoState createState() => _InfinityListDemoState();
+}
+
+class _InfinityListDemoState extends State<InfinityListDemo> {
+  List<int> items = [];
+
+  AdvInfiniteListRemote remote = AdvInfiniteListRemote();
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text("Infinite ListView"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              items = [];
+
+              remote.reset();
+            },
+          )
+        ],
+      ),
+      body: AdvColumn(children: [
+        Text(
+            "the data will be fetched 50 per pull, and it will randomly return true (keep fetching data) or false (stop fetching data), so if you have reach to false condition, you will have to refresh it again"),
+        Expanded(
+            child: AdvInfiniteListView(
+          widgetBuilder: _widgetBuilder,
+          fetcher: _fetcher,
+          remote: remote,
+        ))
+      ]),
+    );
+  }
+
+  List<Widget> _widgetBuilder(BuildContext context) {
+    return List.generate(
+      items.length,
+      (index) {
+        return Text("Number $index");
+      },
+    );
+  }
+
+  Future<bool> _fetcher(BuildContext context, int cursor) {
+    return Future.delayed(Duration(seconds: 2), () {
+      print("cursor = $cursor");
+      bool isThereAnyMoreData = Random().nextBool();
+
+      items.addAll(List.generate(50, (i) => i));
+
+      print("isThereAnyMoreData = $isThereAnyMoreData");
+      return isThereAnyMoreData;
+    });
+  }
+
+  /// from - inclusive, to - exclusive
+  Future<List<int>> fakeRequest(int from, int to) async {
+    return Future.delayed(Duration(seconds: 2), () {
+      return List.generate(to - from, (i) => i + from);
+    });
   }
 }

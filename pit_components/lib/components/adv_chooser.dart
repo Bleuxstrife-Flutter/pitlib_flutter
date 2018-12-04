@@ -103,7 +103,7 @@ class _AdvChooserState extends State<AdvChooser>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+    return Container(child: LayoutBuilder(
       builder: (context, constraints) {
         final double maxWidth = constraints.maxWidth;
 
@@ -113,7 +113,7 @@ class _AdvChooserState extends State<AdvChooser>
           children: _buildChildren(maxWidth),
         );
       },
-    );
+    ));
   }
 
   List<Widget> _buildChildren(double maxWidth) {
@@ -166,7 +166,16 @@ class _AdvChooserState extends State<AdvChooser>
       }
     });
 
-    Widget mainChild = GestureDetector(
+    Widget mainChild = Container(
+      width: width,
+      height: 60.0,
+      padding: widget.padding,
+      child: new ConstrainedBox(
+        constraints: new BoxConstraints(
+            minHeight: tp.size.height + _defaultHeightAddition
+          /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result,
+        ),
+        child: new GestureDetector(
       onTap: () {
         if (!widget.controller.enable) return;
         Utils.pickFromChooser(context,
@@ -176,15 +185,7 @@ class _AdvChooserState extends State<AdvChooser>
             callback: _handleItemChanged);
       },
       child: AbsorbPointer(
-        child: Container(
-          width: width,
-          padding: widget.padding,
-          child: new ConstrainedBox(
-            constraints: new BoxConstraints(
-                minHeight: tp.size.height + _defaultHeightAddition
-                /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result,
-                ),
-            child: new Theme(
+        child: Theme(
               data: new ThemeData(
                 cursorColor: Theme.of(context).cursorColor,
                 accentColor: _backgroundColor,

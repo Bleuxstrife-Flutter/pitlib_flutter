@@ -52,6 +52,8 @@ class PitComponents {
 
   static Color dropDownBackgroundColor = Color(0xffFDFDFD);
 
+  static Color ratingBarColor = Color(0xffffc100);
+
   static Color lerpColor = Color(0xffD1D1D1);
 
   static List<String> weekdaysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];

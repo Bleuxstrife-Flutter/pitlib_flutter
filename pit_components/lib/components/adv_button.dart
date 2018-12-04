@@ -17,8 +17,6 @@ class AdvButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double width;
-  final Color disableBackgroundColor;
-  final Color disableTextColor;
 
   AdvButton(this.data,
       {bool circular = true,
@@ -39,13 +37,7 @@ class AdvButton extends StatelessWidget {
             : textColor ?? PitComponents.buttonTextColor,
         this.textColor = !reverse
             ? textColor ?? PitComponents.buttonTextColor
-            : backgroundColor ?? PitComponents.buttonBackgroundColor,
-        this.disableBackgroundColor = Color.lerp(
-            backgroundColor ?? PitComponents.buttonBackgroundColor,
-            lerpColor,
-            0.6),
-        this.disableTextColor = Color.lerp(
-            backgroundColor ?? PitComponents.buttonTextColor, lerpColor, 0.6);
+            : backgroundColor ?? PitComponents.buttonBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +54,10 @@ class AdvButton extends StatelessWidget {
   Widget _buildTinyButton(BuildContext context) {
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
+    Color disableBackgroundColor = Color.lerp(!reverse
+        ? backgroundColor
+        : textColor, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(textColor, lerpColor, 0.6);
 
     ShapeBorder border = RoundedRectangleBorder(
         side: BorderSide(
@@ -97,6 +93,8 @@ class AdvButton extends StatelessWidget {
   Widget _buildLargeButton(BuildContext context) {
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
+    Color disableBackgroundColor = Color.lerp(backgroundColor, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(textColor, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
     Color _disableColor =
@@ -144,8 +142,6 @@ class AdvButtonWithIcon extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double width;
-  final Color disableBackgroundColor;
-  final Color disableTextColor;
 
   AdvButtonWithIcon(this.data, this.image, this.direction,
       {bool circular = true,
@@ -166,13 +162,7 @@ class AdvButtonWithIcon extends StatelessWidget {
             : textColor ?? PitComponents.buttonTextColor,
         this.textColor = !reverse
             ? textColor ?? PitComponents.buttonTextColor
-            : backgroundColor ?? PitComponents.buttonBackgroundColor,
-        this.disableBackgroundColor = Color.lerp(
-            backgroundColor ?? PitComponents.buttonBackgroundColor,
-            lerpColor,
-            0.6),
-        this.disableTextColor = Color.lerp(
-            backgroundColor ?? PitComponents.buttonTextColor, lerpColor, 0.6);
+            : backgroundColor ?? PitComponents.buttonBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +179,8 @@ class AdvButtonWithIcon extends StatelessWidget {
   Widget _buildSmallButton(BuildContext context) {
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
+    Color disableBackgroundColor = Color.lerp(backgroundColor, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(textColor, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
     Color _disableColor =
@@ -256,6 +248,8 @@ class AdvButtonWithIcon extends StatelessWidget {
   Widget _buildLargeButton(BuildContext context) {
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
+    Color disableBackgroundColor = Color.lerp(backgroundColor, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(textColor, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
     Color _disableColor =
