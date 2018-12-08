@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+class Position {
+  final double top;
+  final double bottom;
+  final double left;
+  final double right;
+
+  const Position(
+      {double top = 8.0,
+      double bottom = 8.0,
+      double left = 8.0,
+      double right = 8.0})
+      : this.top = top,
+        this.bottom = bottom,
+        this.left = left,
+        this.right = right;
+}
+
 class AdvCarousel extends StatefulWidget {
   final AdvCarouselController carouselController;
   final List<Widget> children;
@@ -24,6 +41,7 @@ class AdvCarousel extends StatefulWidget {
   final bool repeat;
 
   final Alignment dotAlignment;
+  final Position dotPosition;
 
   AdvCarousel({
     double height,
@@ -36,6 +54,7 @@ class AdvCarousel extends StatefulWidget {
     bool autoPlay = true,
     bool repeat = true,
     this.dotAlignment = Alignment.bottomCenter,
+    this.dotPosition = const Position(),
   })  : assert(height == null || height > 0),
         assert(children == null || carouselController == null),
         assert(animationCurve != null),
@@ -67,7 +86,7 @@ class _AdvCarouselState extends State<AdvCarousel>
 
   ///Actual index of the displaying Widget
   int get actualIndex =>
-      _pageController.positions.isEmpty ? 0 : _pageController.page.round();
+      !_pageController.hasClients ? 0 : _pageController.page.round();
 
   ///Returns the calculated value of the next index.
   int get nextIndex {
@@ -144,7 +163,6 @@ class _AdvCarouselState extends State<AdvCarousel>
     _pageController.addListener(() => setState(() {}));
 
     return new Container(
-        height: widget.height,
         margin: widget.margin,
         child: new Stack(children: [
           new PageView(
@@ -157,10 +175,10 @@ class _AdvCarouselState extends State<AdvCarousel>
                 .toList(),
           ),
           new Positioned(
-              top: 8.0,
-              bottom: 8.0,
-              left: 8.0,
-              right: 8.0,
+              top: widget.dotPosition.top,
+              bottom: widget.dotPosition.bottom,
+              left: widget.dotPosition.left,
+              right: widget.dotPosition.right,
               child: Container(
                 alignment: widget.dotAlignment,
                 child: new Row(
@@ -174,7 +192,7 @@ class _AdvCarouselState extends State<AdvCarousel>
 
   Widget _buildDot(int index) {
     double currentPage =
-        _pageController.positions.isEmpty ? 0.0 : _pageController.page ?? 0.0;
+        !_pageController.hasClients ? 0.0 : _pageController.page ?? 0.0;
     double zoom = (currentPage).floor() == index
         ? ((1.0 - (currentPage - index)) * (dotIncreaseSize - 1)) + 1
         : (currentPage + 1).floor() == index
