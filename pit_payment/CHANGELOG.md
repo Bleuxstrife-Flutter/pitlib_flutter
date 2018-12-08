@@ -9,3 +9,11 @@
 ## 0.0.3
 
 * Dependency fixes
+
+## 0.0.4
+
+* iOS Dependency fixes
+
+## 0.0.5
+
+* iOS Dependency fixes

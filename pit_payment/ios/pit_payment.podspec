@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'pit_payment'
-  s.version          = '0.0.3'
+  s.version          = '0.0.5'
   s.summary          = 'Payment Solution by PIT'
   s.description      = <<-DESC
 Payment Solution by PIT
