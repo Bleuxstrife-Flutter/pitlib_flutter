@@ -69,3 +69,35 @@
 ## 0.0.18
 
 * More component added (RatingBar)
+
+## 0.0.19
+
+* Bug fixes
+
+## 0.0.20
+
+* Bug fixes
+
+## 0.0.21
+
+* Bug fixes
+
+## 0.0.22
+
+* Bug fixes and more component added (Increment, TextField with Button)
+
+## 0.0.23
+
+* Bug fixes
+
+## 0.0.24
+
+* Bug fixes
+
+## 0.0.25
+
+* Text Field excess padding fixed
+
+## 0.0.26
+
+* Text Field's line expansion improved, Text maxLines improved (not only constraint to maxLines, but also maxHeight from LayoutBuilder)

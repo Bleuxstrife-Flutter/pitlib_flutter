@@ -4,6 +4,7 @@ import 'package:pit_components/components/adv_list_tile.dart';
 import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/mods/mod_checkbox.dart';
 import 'package:pit_components/pit_components.dart';
+import 'package:pit_components/consts/textstyles.dart' as ts;
 
 typedef RadioGroupCallback = void Function(String data);
 typedef ContentGetterCallback = Widget Function(String data);
@@ -58,8 +59,7 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
   handleClick(data) {
     widget.controller.checkedValue = data;
     if (widget.callback != null) widget.callback(data);
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -67,19 +67,30 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
     List<RadioGroupItem> stringChildren = widget.controller.itemList;
     List<Widget> children = [];
 
+    Widget _title = widget.title == null
+        ? Container()
+        : Container(
+            child: Text(
+              widget.title,
+              style: ts.fs16
+                  .merge(ts.fw600)
+                  .copyWith(color: PitComponents.radioButtonTitleColor),
+            ),
+          );
+
     stringChildren.forEach((radioGroupItem) {
       AdvListTile item = AdvListTile(
           onTap: () {
             handleClick(radioGroupItem.data);
           },
           padding: EdgeInsets.all(0.0),
-          start: RoundCheckbox(
+          start: AbsorbPointer(child: RoundCheckbox(
               activeColor: PitComponents.radioButtonColor,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onChanged: (b) {
                 handleClick(radioGroupItem.data);
               },
-              value: radioGroupItem.data == widget.controller.checkedValue),
+              value: radioGroupItem.data == widget.controller.checkedValue),),
           end: radioGroupItem.data == widget.controller.checkedValue
               ? radioGroupItem.activeItem
               : radioGroupItem.inactiveItem);
@@ -87,17 +98,20 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
       children.add(item);
     });
 
-    return widget.direction == Axis.horizontal
-        ? AdvRow(
-            divider: RowDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: children)
-        : AdvColumn(
-            divider: ColumnDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: children);
+    return AdvColumn(divider: ColumnDivider(widget.divider), crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _title,
+      widget.direction == Axis.horizontal
+          ? AdvRow(
+              divider: RowDivider(widget.divider),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: children)
+          : AdvColumn(
+              divider: ColumnDivider(widget.divider),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: children)
+    ]);
   }
 }
 

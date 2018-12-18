@@ -8,6 +8,7 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
 import 'package:pit_components/components/adv_group_check.dart';
+import 'package:pit_components/components/adv_increment.dart';
 import 'package:pit_components/components/adv_infinity_list_view.dart';
 import 'package:pit_components/components/adv_list_view_with_bottom.dart';
 import 'package:pit_components/components/adv_radio_button.dart';
@@ -17,11 +18,15 @@ import 'package:pit_components/components/adv_scrollable_bottom_sheet.dart';
 import 'package:pit_components/components/adv_single_digit_inputter.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/adv_text_field.dart';
-import 'package:pit_components/components/adv_text_field_plain.dart';
+import 'package:pit_components/components/adv_text_field_with_button.dart';
 import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
+import 'package:pit_components/components/controllers/adv_increment_controller.dart';
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/utils/utils.dart';
+
+const String loremIpsum =
+    "You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a candle to man.";
 
 void main() => runApp(MyApp());
 
@@ -74,16 +79,42 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AdvIncrementController incController = AdvIncrementController(
+      label: "Increment",
+      hint: "Increment",
+      format: "#,### Hari",
+      minCounter: 0,
+      maxCounter: 9,
+      /* maxLines: 1 ,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+    );
+    AdvTextFieldController specialController = AdvTextFieldController(
+      label: "With Button",
+      hint: "Dengan Tombol",
+      /* maxLines: 1 ,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+    );
     AdvTextFieldController controller = AdvTextFieldController(
+        label: "Just",
+        hint: "TextField MaxLines 1 Example",
+//        enable: false,
+        prefixIcon: Icon(Icons.arrow_back),
+        suffixIcon: Icon(Icons.arrow_forward),
+      maxLines: 1/*,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+        );
+    AdvTextFieldController controller2 = AdvTextFieldController(
         label: "Just TextField MaxLines 1",
         hint: "TextField MaxLines 1 Example",
+        prefixIcon: Icon(Icons.arrow_back),
+        suffixIcon: Icon(Icons.arrow_forward),
         maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
         );
-    AdvTextFieldController plainController = AdvTextFieldController(
-        enable: false,
-        hint: "Plain TextField Example",
-        label: "Plain TextField");
+//    AdvTextFieldController plainController = AdvTextFieldController(
+//        enable: false,
+//        hint: "Plain TextField Example",
+//        label: "Plain TextField");
 
     AdvRadioGroupController radioButtonController = new AdvRadioGroupController(
         checkedValue: _radioButtonValue,
@@ -131,18 +162,103 @@ class _MyHomePageState extends State<MyHomePage> {
             onlyInner: false,
             divider: ColumnDivider(16.0),
             children: [
+              AdvRow(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  divider: RowDivider(8.0),
+                  children: [
+                    Expanded(
+                      child: AdvDatePicker(
+                        textStyle: ts.fs16.copyWith(color: Colors.black),
+                        selectionType: SelectionType.range,
+                        onChanged: (List value) {
+                          if (value == null || value.length == 0) return;
+
+                          setState(() {
+                            _date = value[0];
+                          });
+                        },
+//                markedDates: [
+//                  MarkedDate(DateTime(2018, 11, 20),
+//                      "20th November - Maulid Nabi Muhammad")
+//                ],
+                        controller: AdvDatePickerController(
+//                    enable: false,
+                            label: "Just TextField MaxLines 1",
+                            hint: "test",
+                            initialValue: _date ?? DateTime.now(),
+                            markedDates: [
+                              MarkedDate(DateTime.now(), "lalala")
+                            ],
+                            dates: [
+                              _date ?? DateTime.now(),
+                              _date ?? DateTime.now()
+                            ]),
+                      ),
+                    ),
+                    Expanded(
+                      child: AdvIncrement(
+                        textStyle: ts.fs16,
+                        controller: incController,
+                        valueChangeListener: (before, after) {
+                          print("before => $before, after => $after");
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: AdvTextFieldWithButton(
+                        textStyle: ts.fs16,
+                        controller: specialController,
+                        buttonName: "Btn",
+                      ),
+                    ),
+//                Expanded(
+//                    child: AdvTextFieldPlain(
+//                  controller: plainController,
+//                )),
+                  ]),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                child: AdvTextFieldWithButton(
+//                  textStyle: ts.fs12,
+                  controller: specialController,
+                  buttonName: "Button",
+                ),
+              ),
+              AdvButton(
+                "Pick From Increment",
+                buttonSize: ButtonSize.small,
+                onPressed: () {
+                  Utils.pickFromIncrement(context,
+                      title: "Pick from Increment",
+                      controller: incController,
+                      infoMessage: "Sewa berakhir pada 12/12/2018 12:40:40");
+                },
+              ),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(
                     child: AdvTextField(
+                  textStyle: ts.fs10,
                   controller: controller,
+                  maxLineExpand: 5,
+                  onIconTapped: (iconType) {
+                    print("iconType => $iconType");
+                  },
 //                  inputFormatters: [
 //                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
 //                  ],
                 )),
                 Expanded(
-                    child: AdvTextFieldPlain(
-                  controller: plainController,
+                    child: AdvTextField(
+//                      measureTextSpan: TextSpan(style: ts.fs10),
+                  controller: controller2,
+//                  inputFormatters: [
+//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
+//                  ],
                 )),
+//                Expanded(
+//                    child: AdvTextFieldPlain(
+//                  controller: plainController,
+//                )),
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(child: AdvButton("Normal", enable: false)),
@@ -218,13 +334,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                     child: AdvButtonWithIcon(
                         "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
-                        enable: false,
-                        onlyBorder: true)),
+                        enable: false, onlyBorder: true)),
                 Expanded(
                     child: AdvButtonWithIcon(
                         "", Icon(Icons.headset), Axis.vertical,
                         enable: false, reverse: true)),
               ]),
+              Container(child: AdvText(
+                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
+//                maxLines: 5,
+              ), height: 1250.0, color: Colors.green),
               Visibility(
                   visible: _date != null,
                   child: AdvText("You picked date => $_date")),
@@ -242,6 +361,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
                 controller: AdvDatePickerController(
+//                    enable: false,
                     label: "Just TextField MaxLines 1",
                     hint: "test",
                     initialValue: _date ?? DateTime.now(),
@@ -261,6 +381,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 digitCount: 5,
               ),
               AdvRadioGroup(
+                title: "this is radio Group",
                 direction: Axis.vertical,
                 controller: radioButtonController,
                 divider: 8.0,
@@ -393,7 +514,7 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
     super.initState();
   }
 
-  void _showMessage() {
+  void _showMessage(BuildContext context) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -419,7 +540,9 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
           title: const Text('Persistent bottom sheet'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: _showMessage,
+          onPressed: () {
+            _showMessage(context);
+          },
           backgroundColor: Colors.redAccent,
           child: const Icon(
             Icons.add,
@@ -442,22 +565,25 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AdvScrollableBottomSheet(
-                                    initialHeight: 550.0,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(32.0),
-                                        child: Column(children: [
-                                          Text(
-                                              'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: themeData.accentColor,
-                                                  fontSize: 24.0)),
-                                          Column(
-                                              children:
-                                                  List.generate(100, (index) {
-                                            return Text("Text $index");
-                                          }))
-                                        ])),
+                                    initialHeight: 250.0,
+                                    child: Container(
+                                        color: Colors.green,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(32.0),
+                                            child: Column(children: [
+                                              Text(
+                                                  'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color:
+                                                          themeData.accentColor,
+                                                      fontSize: 24.0)),
+                                              Column(
+                                                  children: List.generate(100,
+                                                      (index) {
+                                                return Text("Text $index");
+                                              }))
+                                            ]))),
                                   );
                                 }).closed.whenComplete(() {
                               if (mounted) {

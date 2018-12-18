@@ -71,21 +71,21 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
               : Container()));
     });
 
-    return AdvColumn(
+    return Container(child: AdvColumn(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         widget.title == null
             ? Container()
             : Container(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  widget.title,
-                  style: ts.fs18
-                      .merge(ts.fw700)
-                      .copyWith(color: PitComponents.groupCheckTitleColor),
-                ),
-              ),
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            widget.title,
+            style: ts.fs18
+                .merge(ts.fw700)
+                .copyWith(color: PitComponents.groupCheckTitleColor),
+          ),
+        ),
         Container(
           child: AdvColumn(
               divider: Container(
@@ -97,7 +97,7 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
               children: children),
         )
       ],
-    );
+    ));
   }
 }
 

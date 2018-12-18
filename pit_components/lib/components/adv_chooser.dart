@@ -12,7 +12,7 @@ import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 import 'package:pit_components/utils/utils.dart';
 
-typedef void OnItemChanged(String oldValue, String newValue);
+typedef void OnItemChanged(BuildContext context, String oldValue, String newValue);
 
 class AdvChooser extends StatefulWidget {
   final AdvChooserController controller;
@@ -27,23 +27,23 @@ class AdvChooser extends StatefulWidget {
 
   AdvChooser(
       {String text,
-      String hint,
-      String label,
-      String error,
-      bool enable,
-      TextAlign alignment,
-      String measureText,
-      TextSpan measureTextSpan,
-      EdgeInsetsGeometry padding,
-      AdvChooserController controller,
-      Map<String, dynamic> items,
-      int maxLineExpand,
-      Color hintColor,
-      Color labelColor,
-      Color backgroundColor,
-      Color borderColor,
-      Color errorColor,
-      this.itemChangeListener})
+        String hint,
+        String label,
+        String error,
+        bool enable,
+        TextAlign alignment,
+        String measureText,
+        TextSpan measureTextSpan,
+        EdgeInsetsGeometry padding,
+        AdvChooserController controller,
+        Map<String, dynamic> items,
+        int maxLineExpand,
+        Color hintColor,
+        Color labelColor,
+        Color backgroundColor,
+        Color borderColor,
+        Color errorColor,
+        this.itemChangeListener})
       : assert(measureText == null || measureTextSpan == null),
         assert(controller == null ||
             (text == null &&
@@ -89,16 +89,18 @@ class _AdvChooserState extends State<AdvChooser>
   }
 
   _update() {
-    setState(() {
-      var cursorPos = _textEdittingCtrl.selection;
-      _textEdittingCtrl.text = widget.controller.text;
+    if (this.mounted) {
+      setState(() {
+        var cursorPos = _textEdittingCtrl.selection;
+        _textEdittingCtrl.text = widget.controller.text;
 
-      if (cursorPos.start > _textEdittingCtrl.text.length) {
-        cursorPos = new TextSelection.fromPosition(
-            new TextPosition(offset: _textEdittingCtrl.text.length));
-      }
-      _textEdittingCtrl.selection = cursorPos;
-    });
+        if (cursorPos.start > _textEdittingCtrl.text.length) {
+          cursorPos = new TextSelection.fromPosition(
+              new TextPosition(offset: _textEdittingCtrl.text.length));
+        }
+        _textEdittingCtrl.selection = cursorPos;
+      });
+    }
   }
 
   @override
@@ -110,13 +112,13 @@ class _AdvChooserState extends State<AdvChooser>
         return AdvColumn(
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: _buildChildren(maxWidth),
+          children: _buildChildren(context, maxWidth),
         );
       },
     ));
   }
 
-  List<Widget> _buildChildren(double maxWidth) {
+  List<Widget> _buildChildren(BuildContext context, double maxWidth) {
     List<Widget> children = [];
     final int _defaultWidthAddition = 2;
     final int _defaultHeightAddition = 24;
@@ -128,7 +130,7 @@ class _AdvChooserState extends State<AdvChooser>
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color
         : Color.lerp(
-            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+        widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -144,9 +146,9 @@ class _AdvChooserState extends State<AdvChooser>
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-            _defaultWidthAddition +
-            (_defaultInnerPadding * 2) +
-            (widget.padding.horizontal);
+        _defaultWidthAddition +
+        (_defaultInnerPadding * 2) +
+        (widget.padding.horizontal);
 
     if (widget.controller.label != null && widget.controller.label != "") {
       children.add(
@@ -166,26 +168,29 @@ class _AdvChooserState extends State<AdvChooser>
       }
     });
 
+    double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
+
     Widget mainChild = Container(
       width: width,
-      height: 60.0,
       padding: widget.padding,
       child: new ConstrainedBox(
         constraints: new BoxConstraints(
-            minHeight: tp.size.height + _defaultHeightAddition
+            minHeight: tp.size.height + _defaultHeightAddition -
+                /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
+                8.0 -
+                ((8.0 - _paddingSize) * 2),
           /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result,
         ),
         child: new GestureDetector(
-      onTap: () {
-        if (!widget.controller.enable) return;
-        Utils.pickFromChooser(context,
-            title: widget.controller.label,
-            items: widget.controller.items,
-            currentItem: widget.controller.text,
-            callback: _handleItemChanged);
-      },
-      child: AbsorbPointer(
-        child: Theme(
+          onTap: () {
+            if (!widget.controller.enable) return;
+            Utils.pickFromChooser(context,
+                title: widget.controller.label,
+                items: widget.controller.items,
+                currentItem: widget.controller.text, callback: _handleItemChanged);
+          },
+          child: AbsorbPointer(
+            child: Theme(
               data: new ThemeData(
                 cursorColor: Theme.of(context).cursorColor,
                 accentColor: _backgroundColor,
@@ -195,7 +200,7 @@ class _AdvChooserState extends State<AdvChooser>
               child: ModTextField(
                 controller: controller,
                 onChanged: (newValue) {
-                  _handleItemChanged(widget.controller.text, newValue);
+                  _handleItemChanged(context, widget.controller.text, newValue);
                 },
                 enabled: widget.controller.enable,
                 textAlign: widget.controller.alignment,
@@ -213,8 +218,7 @@ class _AdvChooserState extends State<AdvChooser>
                       ),
                       borderSide: new BorderSide(),
                     ),
-                    contentPadding: new EdgeInsets.only(
-                        left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
+                    contentPadding: new EdgeInsets.all(_paddingSize),
                     hintText: widget.controller.hint,
                     hintStyle: TextStyle(color: _hintColor.withOpacity(0.6))),
               ),
@@ -243,7 +247,7 @@ class _AdvChooserState extends State<AdvChooser>
     return children;
   }
 
-  _handleItemChanged(String oldValue, String newValue) {
+  _handleItemChanged(BuildContext context, String oldValue, String newValue) {
     widget.controller.removeListener(_update);
 
     String oldValue = widget.controller.text;
@@ -255,7 +259,7 @@ class _AdvChooserState extends State<AdvChooser>
     if (this.mounted) {
       setState(() {
         if (widget.itemChangeListener != null)
-          widget.itemChangeListener(oldValue, newValue);
+          widget.itemChangeListener(context, oldValue, newValue);
       });
     }
   }

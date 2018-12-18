@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pit_components/mods/mod_input_decorator.dart';
 
-export 'package:flutter/services.dart' show TextInputType, TextInputAction, TextCapitalization;
+export 'package:flutter/services.dart'
+    show TextInputType, TextInputAction, TextCapitalization;
 
 /// A material design text field.
 ///
@@ -88,7 +89,7 @@ class ModTextField extends StatefulWidget {
   ///
   ///  * [maxLength], which discusses the precise meaning of "number of
   ///    characters" and how it may differ from the intuitive meaning.
-  const ModTextField({
+  ModTextField({
     Key key,
     this.controller,
     this.focusNode,
@@ -115,7 +116,7 @@ class ModTextField extends StatefulWidget {
     this.cursorColor,
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
-  }) : assert(textAlign != null),
+  })  : assert(textAlign != null),
         assert(autofocus != null),
         assert(obscureText != null),
         assert(autocorrect != null),
@@ -123,7 +124,8 @@ class ModTextField extends StatefulWidget {
         assert(scrollPadding != null),
         assert(maxLines == null || maxLines > 0),
         assert(maxLength == null || maxLength > 0),
-        keyboardType = keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+        keyboardType = keyboardType ??
+            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         super(key: key);
 
   /// Controls the text being edited.
@@ -345,57 +347,79 @@ class ModTextField extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>('controller', controller, defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
-    properties.add(DiagnosticsProperty<ModInputDecoration>('decoration', decoration));
-    properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType, defaultValue: TextInputType.text));
-    properties.add(DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
-    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText, defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect, defaultValue: false));
+    properties.add(DiagnosticsProperty<TextEditingController>(
+        'controller', controller,
+        defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
+        defaultValue: null));
+    properties
+        .add(DiagnosticsProperty<ModInputDecoration>('decoration', decoration));
+    properties.add(DiagnosticsProperty<TextInputType>(
+        'keyboardType', keyboardType,
+        defaultValue: TextInputType.text));
+    properties.add(
+        DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
+    properties.add(
+        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText,
+        defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
+        defaultValue: false));
     properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));
     properties.add(IntProperty('maxLength', maxLength, defaultValue: null));
-    properties.add(FlagProperty('maxLengthEnforced', value: maxLengthEnforced, ifTrue: 'max length enforced'));
+    properties.add(FlagProperty('maxLengthEnforced',
+        value: maxLengthEnforced, ifTrue: 'max length enforced'));
   }
 }
 
-class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClientMixin {
-  final GlobalKey<EditableTextState> _editableTextKey = GlobalKey<EditableTextState>();
+class _ModTextFieldState extends State<ModTextField>
+    with AutomaticKeepAliveClientMixin {
+  final GlobalKey<EditableTextState> _editableTextKey =
+      GlobalKey<EditableTextState>();
 
   Set<InteractiveInkFeature> _splashes;
   InteractiveInkFeature _currentSplash;
 
   TextEditingController _controller;
-  TextEditingController get _effectiveController => widget.controller ?? _controller;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _controller;
 
   FocusNode _focusNode;
-  FocusNode get _effectiveFocusNode => widget.focusNode ?? (_focusNode ??= FocusNode());
 
-  bool get needsCounter => widget.maxLength != null
-      && widget.decoration != null
-      && widget.decoration.counterText == null && widget.needsCounter;
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_focusNode ??= FocusNode());
+
+  bool get needsCounter =>
+      widget.maxLength != null &&
+      widget.decoration != null &&
+      widget.decoration.counterText == null &&
+      widget.needsCounter;
 
   ModInputDecoration _getEffectiveDecoration() {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final ModInputDecoration effectiveDecoration = (widget.decoration ?? const ModInputDecoration())
-        .applyDefaults(Theme.of(context).inputDecorationTheme)
-        .copyWith(
-      enabled: widget.enabled,
-    );
+    final MaterialLocalizations localizations =
+        MaterialLocalizations.of(context);
+    final ModInputDecoration effectiveDecoration =
+        (widget.decoration ?? const ModInputDecoration())
+            .applyDefaults(Theme.of(context).inputDecorationTheme)
+            .copyWith(
+              enabled: widget.enabled,
+            );
 
-    if (!needsCounter)
-      return effectiveDecoration;
+    if (!needsCounter) return effectiveDecoration;
 
     final int currentLength = _effectiveController.value.text.runes.length;
     final String counterText = '$currentLength/${widget.maxLength}';
-    final int remaining = (widget.maxLength - currentLength).clamp(0, widget.maxLength);
-    final String semanticCounterText = localizations.remainingTextFieldCharacterCount(remaining);
+    final int remaining =
+        (widget.maxLength - currentLength).clamp(0, widget.maxLength);
+    final String semanticCounterText =
+        localizations.remainingTextFieldCharacterCount(remaining);
     if (_effectiveController.value.text.runes.length > widget.maxLength) {
       final ThemeData themeData = Theme.of(context);
       return effectiveDecoration.copyWith(
         errorText: effectiveDecoration.errorText ?? '',
-        counterStyle: effectiveDecoration.errorStyle
-            ?? themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+        counterStyle: effectiveDecoration.errorStyle ??
+            themeData.textTheme.caption.copyWith(color: themeData.errorColor),
         counterText: counterText,
         semanticCounterText: semanticCounterText,
       );
@@ -409,8 +433,8 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null)
-      _controller = TextEditingController();
+
+    if (widget.controller == null) _controller = TextEditingController();
   }
 
   @override
@@ -421,7 +445,8 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
     else if (widget.controller != null && oldWidget.controller == null)
       _controller = null;
     final bool isEnabled = widget.enabled ?? widget.decoration?.enabled ?? true;
-    final bool wasEnabled = oldWidget.enabled ?? oldWidget.decoration?.enabled ?? true;
+    final bool wasEnabled =
+        oldWidget.enabled ?? oldWidget.decoration?.enabled ?? true;
     if (wasEnabled && !isEnabled) {
       _effectiveFocusNode.unfocus();
     }
@@ -437,7 +462,8 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
     _editableTextKey.currentState?.requestKeyboard();
   }
 
-  void _handleSelectionChanged(TextSelection selection, SelectionChangedCause cause) {
+  void _handleSelectionChanged(
+      TextSelection selection, SelectionChangedCause cause) {
     if (cause == SelectionChangedCause.longPress)
       Feedback.forLongPress(context);
   }
@@ -445,7 +471,9 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
   InteractiveInkFeature _createInkFeature(TapDownDetails details) {
     final MaterialInkController inkController = Material.of(context);
     final BuildContext editableContext = _editableTextKey.currentContext;
-    final RenderBox referenceBox = ModInputDecorator.containerOf(editableContext) ?? editableContext.findRenderObject();
+    final RenderBox referenceBox =
+        ModInputDecorator.containerOf(editableContext) ??
+            editableContext.findRenderObject();
     final Offset position = referenceBox.globalToLocal(details.globalPosition);
     final Color color = Theme.of(context).splashColor;
 
@@ -454,28 +482,28 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
       if (_splashes != null) {
         assert(_splashes.contains(splash));
         _splashes.remove(splash);
-        if (_currentSplash == splash)
-          _currentSplash = null;
+        if (_currentSplash == splash) _currentSplash = null;
         updateKeepAlive();
       } // else we're probably in deactivate()
     }
 
     splash = Theme.of(context).splashFactory.create(
-      controller: inkController,
-      referenceBox: referenceBox,
-      position: position,
-      color: color,
-      containedInkWell: true,
-      // TODO(hansmuller): splash clip borderRadius should match the input decorator's border.
-      borderRadius: BorderRadius.zero,
-      onRemoved: handleRemoved,
-      textDirection: Directionality.of(context),
-    );
+          controller: inkController,
+          referenceBox: referenceBox,
+          position: position,
+          color: color,
+          containedInkWell: true,
+          // TODO(hansmuller): splash clip borderRadius should match the input decorator's border.
+          borderRadius: BorderRadius.zero,
+          onRemoved: handleRemoved,
+          textDirection: Directionality.of(context),
+        );
 
     return splash;
   }
 
-  RenderEditable get _renderEditable => _editableTextKey.currentState.renderEditable;
+  RenderEditable get _renderEditable =>
+      _editableTextKey.currentState.renderEditable;
 
   void _handleTapDown(TapDownDetails details) {
     _renderEditable.handleTapDown(details);
@@ -498,8 +526,7 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
   }
 
   void _startSplash(TapDownDetails details) {
-    if (_effectiveFocusNode.hasFocus)
-      return;
+    if (_effectiveFocusNode.hasFocus) return;
     final InteractiveInkFeature splash = _createInkFeature(details);
     _splashes ??= HashSet<InteractiveInkFeature>();
     _splashes.add(splash);
@@ -524,8 +551,7 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
     if (_splashes != null) {
       final Set<InteractiveInkFeature> splashes = _splashes;
       _splashes = null;
-      for (InteractiveInkFeature splash in splashes)
-        splash.dispose();
+      for (InteractiveInkFeature splash in splashes) splash.dispose();
       _currentSplash = null;
     }
     assert(_currentSplash == null);
@@ -541,10 +567,12 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
     assert(debugCheckHasDirectionality(context));
     final ThemeData themeData = Theme.of(context);
     final TextStyle style = widget.style ?? themeData.textTheme.subhead;
-    final Brightness keyboardAppearance = widget.keyboardAppearance ?? themeData.primaryColorBrightness;
+    final Brightness keyboardAppearance =
+        widget.keyboardAppearance ?? themeData.primaryColorBrightness;
     final TextEditingController controller = _effectiveController;
     final FocusNode focusNode = _effectiveFocusNode;
-    final List<TextInputFormatter> formatters = widget.inputFormatters ?? <TextInputFormatter>[];
+    final List<TextInputFormatter> formatters =
+        widget.inputFormatters ?? <TextInputFormatter>[];
     if (widget.maxLength != null && widget.maxLengthEnforced)
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
 
@@ -574,6 +602,8 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
         rendererIgnoresPointer: true,
         cursorWidth: widget.cursorWidth,
         cursorRadius: widget.cursorRadius,
+        backgroundCursorColor:
+            widget.cursorColor ?? Theme.of(context).cursorColor,
         cursorColor: widget.cursorColor ?? Theme.of(context).cursorColor,
         scrollPadding: widget.scrollPadding,
         keyboardAppearance: keyboardAppearance,
@@ -582,7 +612,7 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
 
     if (widget.decoration != null) {
       child = AnimatedBuilder(
-        animation: Listenable.merge(<Listenable>[ focusNode, controller ]),
+        animation: Listenable.merge(<Listenable>[focusNode, controller]),
         builder: (BuildContext context, Widget child) {
           return ModInputDecorator(
             decoration: _getEffectiveDecoration(),
@@ -600,7 +630,8 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
     return Semantics(
       onTap: () {
         if (!_effectiveController.selection.isValid)
-          _effectiveController.selection = TextSelection.collapsed(offset: _effectiveController.text.length);
+          _effectiveController.selection =
+              TextSelection.collapsed(offset: _effectiveController.text.length);
         _requestKeyboard();
       },
       child: IgnorePointer(

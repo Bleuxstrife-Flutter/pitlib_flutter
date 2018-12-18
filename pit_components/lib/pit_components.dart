@@ -9,6 +9,7 @@ class PitComponents {
   static Color textFieldErrorColor = Color(0xffd81920);
   static Color textFieldBorderColor = Color(0xffa6a6a6);
   static Color textFieldLineColor = Color(0xffa6a6a6);
+  static Color textFieldButtonColor = Color(0xfff4329a);
   static Color buttonTextColor = Color(0xffffffff);
   static Color buttonBackgroundColor = Color(0xfff4329a);
   static String datePickerTitle = "Pick your date";
@@ -34,6 +35,7 @@ class PitComponents {
   static Color datePickerLabelColor = Color(0xff777777);
   static Color datePickerErrorColor = Color(0xffd81920);
 
+  static Color radioButtonTitleColor = Colors.blueGrey;
   static Color radioButtonColor = Colors.blue;
 
   static Color badgeHeaderColor = Colors.orange;
@@ -55,6 +57,8 @@ class PitComponents {
   static Color ratingBarColor = Color(0xffffc100);
 
   static Color lerpColor = Color(0xffD1D1D1);
+
+  static String incrementPickerButtonName = "Save";
 
   static List<String> weekdaysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 }
