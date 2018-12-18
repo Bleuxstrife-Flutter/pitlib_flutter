@@ -1,3 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="pit.com.pitpayment">
+    <application
+        android:name="io.flutter.app.FlutterApplication"
+        android:label="pit_payment">
+        <activity
+            android:name=".WebviewVerifyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.NeedMobile.Base.NoActionBar" />
+    </application>
 </manifest>

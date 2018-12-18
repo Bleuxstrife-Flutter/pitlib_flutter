@@ -277,7 +277,7 @@ class _PitPaymentState extends State<PitPayment> {
                       ),
                       AdvTextWithNumber(Text("APPLI : "), Text("3")),
                       AdvTextWithNumber(Text("Input 1 : "), Text(input1)),
-                      AdvTextWithNumber(Text("Input 2 : "), Text("")),
+                      AdvTextWithNumber(Text("Input 2 : "), Text(widget.price.toInt().toString())),
                       AdvTextWithNumber(
                           Text("Input 3 : "), Text("$randomNumber")),
                       AdvTextField(
@@ -290,6 +290,9 @@ class _PitPaymentState extends State<PitPayment> {
                             widget.paymentCallback(PaymentType.mandiriClickPay,
                                 result: {
                                   "mandiriDebitNumber": mandiriDebitNumber,
+                                  "input1": input1,
+                                  "input2": widget.price.toInt().toString(),
+                                  "input3": randomNumber,
                                   "mandiriToken": mandiriToken
                                 });
                           })
@@ -341,7 +344,8 @@ class _PitPaymentState extends State<PitPayment> {
                 value: item.paymentType,
                 headerBuilder: item.headerBuilder,
                 body: item.build());
-          }).toList()),
+          }).toList(),
+      padding: widget.padding),
     );
   }
 }
