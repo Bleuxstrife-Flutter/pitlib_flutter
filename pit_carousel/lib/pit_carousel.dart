@@ -163,6 +163,7 @@ class _AdvCarouselState extends State<AdvCarousel>
     _pageController.addListener(() => setState(() {}));
 
     return new Container(
+      height: widget.height,
         margin: widget.margin,
         child: new Stack(children: [
           new PageView(
