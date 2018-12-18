@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
-import 'package:pit_components/components/extras/com_date_picker_page.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
@@ -45,8 +44,7 @@ class AdvDatePicker extends StatefulWidget {
       String hint,
       String error,
       bool enable,
-      String measureText,
-      TextSpan measureTextSpan,
+      TextStyle textStyle,
       EdgeInsetsGeometry padding,
       this.selectionType,
       DateFormat format,
@@ -57,8 +55,7 @@ class AdvDatePicker extends StatefulWidget {
       Color borderColor,
       Color errorColor,
       @required this.onChanged})
-      : assert(measureText == null || measureTextSpan == null),
-        assert(controller == null ||
+      : assert(controller == null ||
             (initialValue == null &&
                 hint == null &&
                 dates == null &&
@@ -82,10 +79,9 @@ class AdvDatePicker extends StatefulWidget {
                 error: error ?? "",
                 label: label ?? "",
                 enable: enable ?? true),
-        this.measureTextSpan = measureTextSpan ??
-            new TextSpan(
-                text: measureText,
-                style: ts.fs16.copyWith(color: Colors.black87)),
+        this.measureTextSpan = TextSpan(
+                text: "",
+                style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
         this.padding = padding ?? new EdgeInsets.all(0.0);
 
   @override
@@ -164,12 +160,20 @@ class _AdvDatePickerState extends State<AdvDatePicker>
       );
     }
 
+    double _iconSize = 18.0 / 16.0 * widget.measureTextSpan.style.fontSize;
+    double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
+
     Widget mainChild = Container(
       width: width,
       padding: widget.padding,
       child: new ConstrainedBox(
         constraints: new BoxConstraints(
-          minHeight: tp.size.height + _defaultHeightAddition,
+          minHeight: tp.size.height +
+              _defaultHeightAddition -
+              /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
+              8.0 -
+              ((8.0 - _paddingSize) * 2),
+//          minHeight: tp.size.height + _defaultHeightAddition,
         ),
         child: new Center(
           child: GestureDetector(
@@ -195,7 +199,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
                         suffixIcon: Container(
                             padding: EdgeInsets.only(right: 8.0),
                             child: Icon(Icons.calendar_today,
-                                size: 18.0,
+                                size: _iconSize,
                                 // These colors are not defined in the Material Design spec.
                                 color: _iconColor)),
                         filled: true,
@@ -203,13 +207,12 @@ class _AdvDatePickerState extends State<AdvDatePicker>
                         border: OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
                               const Radius.circular(4.0),
-                            ),
+                            )/*,
                             borderSide: new BorderSide(
                               color: Colors.amber,
                               width: 1111.0,
-                            )),
-                        contentPadding: new EdgeInsets.only(
-                            left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
+                            )*/),
+                        contentPadding: new EdgeInsets.all(_paddingSize),
                         hintText: widget.controller.hint,
                         hintStyle:
                             TextStyle(color: _hintColor.withOpacity(0.6)),

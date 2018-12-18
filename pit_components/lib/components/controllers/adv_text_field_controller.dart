@@ -15,6 +15,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -32,6 +33,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -49,6 +51,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -66,6 +69,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -83,6 +87,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -100,6 +105,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -117,6 +123,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -134,6 +141,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: newEnable,
         alignment: this.alignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -151,6 +159,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: newAlignment,
         obscureText: this.obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -168,6 +177,25 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: newObscureText,
+        prefixIcon: this.prefixIcon,
+        suffixIcon: this.suffixIcon);
+  }
+
+  Widget get prefixIcon => value.prefixIcon;
+
+  set prefixIcon(Widget newPrefixIcon) {
+    value = value.copyWith(
+        text: this.text,
+        hint: this.hint,
+        label: this.label,
+        error: this.error,
+        maxLength: this.maxLength,
+        maxLengthEnforced: this.maxLengthEnforced,
+        maxLines: this.maxLines,
+        enable: this.enable,
+        alignment: this.alignment,
+        obscureText: this.obscureText,
+        prefixIcon: newPrefixIcon,
         suffixIcon: this.suffixIcon);
   }
 
@@ -185,6 +213,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         enable: this.enable,
         alignment: this.alignment,
         obscureText: obscureText,
+        prefixIcon: this.prefixIcon,
         suffixIcon: newSuffixIcon);
   }
 
@@ -199,6 +228,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
       bool enable,
       TextAlign alignment,
       bool obscureText,
+      Widget prefixIcon,
       Widget suffixIcon})
       : super(text == null &&
                 hint == null &&
@@ -210,6 +240,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 enable == null &&
                 alignment == null &&
                 obscureText == null &&
+                prefixIcon == null &&
                 suffixIcon == null
             ? AdvTextFieldEditingValue.empty
             : new AdvTextFieldEditingValue(
@@ -223,6 +254,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.left,
                 obscureText: obscureText ?? false,
+                prefixIcon: prefixIcon,
                 suffixIcon: suffixIcon));
 
   AdvTextFieldController.fromValue(AdvTextFieldEditingValue value)
@@ -246,6 +278,7 @@ class AdvTextFieldEditingValue {
       this.enable = true,
       this.alignment = TextAlign.left,
       this.obscureText = false,
+      this.prefixIcon,
       this.suffixIcon});
 
   final String text;
@@ -258,6 +291,7 @@ class AdvTextFieldEditingValue {
   final bool enable;
   final TextAlign alignment;
   final bool obscureText;
+  final Widget prefixIcon;
   final Widget suffixIcon;
 
   static const AdvTextFieldEditingValue empty =
@@ -274,6 +308,7 @@ class AdvTextFieldEditingValue {
       bool enable,
       TextAlign alignment,
       bool obscureText,
+      Widget prefixIcon,
       Widget suffixIcon}) {
     return new AdvTextFieldEditingValue(
         text: text ?? this.text,
@@ -286,6 +321,7 @@ class AdvTextFieldEditingValue {
         enable: enable ?? this.enable,
         alignment: alignment ?? this.alignment,
         obscureText: obscureText ?? this.obscureText,
+        prefixIcon: prefixIcon ?? this.prefixIcon,
         suffixIcon: suffixIcon ?? this.suffixIcon);
   }
 
@@ -300,11 +336,12 @@ class AdvTextFieldEditingValue {
         this.enable = copy.enable,
         this.alignment = copy.alignment,
         this.obscureText = copy.obscureText,
+        this.prefixIcon = copy.prefixIcon,
         this.suffixIcon = copy.suffixIcon;
 
   @override
   String toString() =>
-      '$runtimeType(text: \u2524$text\u251C, \u2524$hint\u251C, \u2524$label\u251C, \u2524$error\u251C, maxLength: $maxLength, maxLengthEnforced: $maxLengthEnforced, maxLines: $maxLines, enable: $enable, alignment: $alignment, obscureText: $obscureText, suffixIcon: $suffixIcon)';
+      '$runtimeType(text: \u2524$text\u251C, \u2524$hint\u251C, \u2524$label\u251C, \u2524$error\u251C, maxLength: $maxLength, maxLengthEnforced: $maxLengthEnforced, maxLines: $maxLines, enable: $enable, alignment: $alignment, obscureText: $obscureText, prefixIcon: $prefixIcon, suffixIcon: $suffixIcon)';
 
   @override
   bool operator ==(dynamic other) {
@@ -321,6 +358,7 @@ class AdvTextFieldEditingValue {
         typedOther.enable == enable &&
         typedOther.alignment == alignment &&
         typedOther.obscureText == obscureText &&
+        typedOther.prefixIcon == prefixIcon &&
         typedOther.suffixIcon == suffixIcon;
   }
 
@@ -336,5 +374,6 @@ class AdvTextFieldEditingValue {
       enable.hashCode,
       alignment.hashCode,
       obscureText.hashCode,
+      prefixIcon.hashCode,
       suffixIcon.hashCode);
 }

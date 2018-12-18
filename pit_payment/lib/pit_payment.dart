@@ -50,12 +50,10 @@ class PaymentMethodItem {
     return (BuildContext context, bool isExpanded) {
       return Align(
           alignment: Alignment.centerLeft,
-          child: Padding(
-              padding: EdgeInsets.only(left: 16.0),
-              child: Text(
-                displayValues[paymentType],
-                style: ts.fs16.merge(ts.fw700),
-              )));
+          child: Text(
+            displayValues[paymentType],
+            style: ts.fs16.merge(ts.fw700),
+          ));
     };
   }
 
@@ -69,12 +67,13 @@ const MethodChannel _channel = const MethodChannel('pit_payment');
 class PitPayment extends StatefulWidget {
   final num price;
   final PaymentCallback paymentCallback;
+  final EdgeInsetsGeometry padding;
 
   static Color expansionPanelRadioColor = Colors.blue;
   static Color expansionPanelBackgroundColor = Color(0xffF4FAFE);
   static Color expansionPanelButtonColor = Colors.blue;
 
-  PitPayment(this.price, this.paymentCallback);
+  PitPayment(this.price, this.paymentCallback, {this.padding});
 
   @override
   _PitPaymentState createState() => _PitPaymentState();
@@ -108,7 +107,7 @@ class _PitPaymentState extends State<PitPayment> {
   AdvTextFieldController cvvController = AdvTextFieldController(
       hint: "CVV Number", maxLength: 3, maxLengthEnforced: true);
   AdvTextFieldController expiryDateController =
-      AdvTextFieldController(hint: "Expiry Date", text: "00/0000");
+  AdvTextFieldController(hint: "Expiry Date", text: "00/0000");
 
   AdvTextFieldController mandiriDebitController = AdvTextFieldController(
       hint: "Mandiri Debit Card Number",
@@ -174,11 +173,11 @@ class _PitPaymentState extends State<PitPayment> {
 
                     _channel.invokeMethod('generateCreditCardToken', {
                       "creditCard": CreditCardDetail(
-                              creditCard,
-                              expiryDate.month,
-                              expiryDate.year,
-                              cvv,
-                              widget.price)
+                          creditCard,
+                          expiryDate.month,
+                          expiryDate.year,
+                          cvv,
+                          widget.price)
                           .toMap()
                     }).then((result) {
                       print("result = $result!");
@@ -242,9 +241,9 @@ class _PitPaymentState extends State<PitPayment> {
                               "Once payment is complete, you will receive a confirmation email")),
                       AdvButton("Submit", width: double.infinity,
                           onPressed: () {
-                        widget
-                            .paymentCallback(PaymentType.permataVirtualAccount);
-                      })
+                            widget
+                                .paymentCallback(PaymentType.permataVirtualAccount);
+                          })
                     ]));
           }),
       PaymentMethodItem(
@@ -278,7 +277,7 @@ class _PitPaymentState extends State<PitPayment> {
                       ),
                       AdvTextWithNumber(Text("APPLI : "), Text("3")),
                       AdvTextWithNumber(Text("Input 1 : "), Text(input1)),
-                      AdvTextWithNumber(Text("Input 2 : "), Text("")),
+                      AdvTextWithNumber(Text("Input 2 : "), Text(widget.price.toInt().toString())),
                       AdvTextWithNumber(
                           Text("Input 3 : "), Text("$randomNumber")),
                       AdvTextField(
@@ -286,14 +285,17 @@ class _PitPaymentState extends State<PitPayment> {
                       ),
                       AdvButton("Submit", width: double.infinity,
                           onPressed: () {
-                        String mandiriToken =
+                            String mandiriToken =
                             (mandiriTokenController.text ?? "");
-                        widget.paymentCallback(PaymentType.mandiriClickPay,
-                            result: {
-                              "mandiriDebitNumber": mandiriDebitNumber,
-                              "mandiriToken": mandiriToken
-                            });
-                      })
+                            widget.paymentCallback(PaymentType.mandiriClickPay,
+                                result: {
+                                  "mandiriDebitNumber": mandiriDebitNumber,
+                                  "input1": input1,
+                                  "input2": widget.price.toInt().toString(),
+                                  "input3": randomNumber,
+                                  "mandiriToken": mandiriToken
+                                });
+                          })
                     ]));
           }),
       PaymentMethodItem(
@@ -319,8 +321,8 @@ class _PitPaymentState extends State<PitPayment> {
                       Text("Order details will be sent via email"),
                       AdvButton("Submit", width: double.infinity,
                           onPressed: () {
-                        widget.paymentCallback(PaymentType.mandiriBillPay);
-                      })
+                            widget.paymentCallback(PaymentType.mandiriBillPay);
+                          })
                     ]));
           }),
     ];
@@ -342,7 +344,8 @@ class _PitPaymentState extends State<PitPayment> {
                 value: item.paymentType,
                 headerBuilder: item.headerBuilder,
                 body: item.build());
-          }).toList()),
+          }).toList(),
+      padding: widget.padding),
     );
   }
 }

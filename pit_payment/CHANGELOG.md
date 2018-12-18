@@ -9,3 +9,27 @@
 ## 0.0.3
 
 * Dependency fixes
+
+## 0.0.4
+
+* iOS Dependency fixes
+
+## 0.0.5
+
+* iOS Dependency fixes
+
+## 0.0.6
+
+* Dependency fixes
+
+## 0.0.7
+
+* Bug on Mandiri Click Pay fixed
+
+## 0.0.8
+
+* Bug fixes
+
+## 0.0.9
+
+* Android bugs fixed

@@ -9,7 +9,7 @@ Our custom Carousel
 First, add `pit_carousel` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```
-pit_carousel: ^0.0.1
+pit_carousel: ^0.0.4
 ```
 
 ## Example
