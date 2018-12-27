@@ -64,8 +64,10 @@ class AdvColumn extends StatelessWidget {
     if (!onlyInner) newChildren.add(divider);
 
     for (Widget child in children) {
-      newChildren.add(child);
-      newChildren.add(divider);
+      if (child != null) {
+        newChildren.add(child);
+        newChildren.add(divider);
+      }
     }
 
     if (onlyInner) newChildren.removeAt(newChildren.length - 1);

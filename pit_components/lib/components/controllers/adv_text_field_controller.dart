@@ -219,43 +219,43 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
 
   AdvTextFieldController(
       {String text,
-      String hint,
-      String label,
-      String error,
-      int maxLength,
-      bool maxLengthEnforced,
-      int maxLines,
-      bool enable,
-      TextAlign alignment,
-      bool obscureText,
-      Widget prefixIcon,
-      Widget suffixIcon})
+        String hint,
+        String label,
+        String error,
+        int maxLength,
+        bool maxLengthEnforced,
+        int maxLines,
+        bool enable,
+        TextAlign alignment,
+        bool obscureText,
+        Widget prefixIcon,
+        Widget suffixIcon})
       : super(text == null &&
-                hint == null &&
-                label == null &&
-                error == null &&
-                maxLength == null &&
-                maxLengthEnforced == null &&
-                maxLines == null &&
-                enable == null &&
-                alignment == null &&
-                obscureText == null &&
-                prefixIcon == null &&
-                suffixIcon == null
-            ? AdvTextFieldEditingValue.empty
-            : new AdvTextFieldEditingValue(
-                text: text,
-                hint: hint,
-                label: label,
-                error: error,
-                maxLength: maxLength,
-                maxLengthEnforced: maxLengthEnforced ?? false,
-                maxLines: maxLines,
-                enable: enable ?? true,
-                alignment: alignment ?? TextAlign.left,
-                obscureText: obscureText ?? false,
-                prefixIcon: prefixIcon,
-                suffixIcon: suffixIcon));
+      hint == null &&
+      label == null &&
+      error == null &&
+      maxLength == null &&
+      maxLengthEnforced == null &&
+      maxLines == null &&
+      enable == null &&
+      alignment == null &&
+      obscureText == null &&
+      prefixIcon == null &&
+      suffixIcon == null
+      ? AdvTextFieldEditingValue.empty
+      : new AdvTextFieldEditingValue(
+      text: text,
+      hint: hint,
+      label: label,
+      error: error,
+      maxLength: maxLength,
+      maxLengthEnforced: maxLengthEnforced ?? false,
+      maxLines: maxLines,
+      enable: enable ?? true,
+      alignment: alignment ?? TextAlign.left,
+      obscureText: obscureText ?? false,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon));
 
   AdvTextFieldController.fromValue(AdvTextFieldEditingValue value)
       : super(value ?? AdvTextFieldEditingValue.empty);
@@ -269,17 +269,17 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
 class AdvTextFieldEditingValue {
   const AdvTextFieldEditingValue(
       {this.text = '',
-      this.hint = '',
-      this.label = '',
-      this.error = '',
-      this.maxLength,
-      this.maxLengthEnforced = false,
-      this.maxLines = 1,
-      this.enable = true,
-      this.alignment = TextAlign.left,
-      this.obscureText = false,
-      this.prefixIcon,
-      this.suffixIcon});
+        this.hint = '',
+        this.label = '',
+        this.error = '',
+        this.maxLength,
+        this.maxLengthEnforced = false,
+        this.maxLines,
+        this.enable = true,
+        this.alignment = TextAlign.left,
+        this.obscureText = false,
+        this.prefixIcon,
+        this.suffixIcon});
 
   final String text;
   final String hint;
@@ -295,21 +295,21 @@ class AdvTextFieldEditingValue {
   final Widget suffixIcon;
 
   static const AdvTextFieldEditingValue empty =
-      const AdvTextFieldEditingValue();
+  const AdvTextFieldEditingValue();
 
   AdvTextFieldEditingValue copyWith(
       {String text,
-      String hint,
-      String label,
-      String error,
-      int maxLength,
-      bool maxLengthEnforced,
-      int maxLines,
-      bool enable,
-      TextAlign alignment,
-      bool obscureText,
-      Widget prefixIcon,
-      Widget suffixIcon}) {
+        String hint,
+        String label,
+        String error,
+        int maxLength,
+        bool maxLengthEnforced,
+        int maxLines,
+        bool enable,
+        TextAlign alignment,
+        bool obscureText,
+        Widget prefixIcon,
+        Widget suffixIcon}) {
     return new AdvTextFieldEditingValue(
         text: text ?? this.text,
         hint: hint ?? this.hint,

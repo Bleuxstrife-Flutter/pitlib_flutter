@@ -7,6 +7,8 @@ import 'package:pit_components/components/adv_text_field_plain.dart';
 class AdvSingleDigitInputter extends StatefulWidget {
   final AdvSingleDigitInputterController controller;
   final int digitCount;
+  final bool releaseFocusWhenDone;
+  final TextInputType keyboardType;
 
   @override
   State<StatefulWidget> createState() => _AdvSingleDigitInputter();
@@ -14,10 +16,14 @@ class AdvSingleDigitInputter extends StatefulWidget {
   AdvSingleDigitInputter(
       {String text,
       this.digitCount,
-      AdvSingleDigitInputterController controller})
+      AdvSingleDigitInputterController controller,
+      bool releaseFocusWhenDone,
+      TextInputType keyboardType})
       : assert(text == null || controller == null),
         this.controller =
-            controller ?? AdvSingleDigitInputterController(text: text);
+            controller ?? AdvSingleDigitInputterController(text: text),
+        this.releaseFocusWhenDone = releaseFocusWhenDone ?? false,
+        this.keyboardType = keyboardType ?? TextInputType.number;
 }
 
 class _AdvSingleDigitInputter extends State<AdvSingleDigitInputter> {
@@ -36,7 +42,7 @@ class _AdvSingleDigitInputter extends State<AdvSingleDigitInputter> {
             (index) =>
                 AdvTextFieldController(hint: "-", alignment: TextAlign.center))
         .toList();
-    values = List.generate(widget.digitCount, (index) => "5").toList();
+    values = List.generate(widget.digitCount, (index) => "").toList();
 
     widget.controller.addListener(() {
       String text = widget.controller.text;
@@ -59,12 +65,16 @@ class _AdvSingleDigitInputter extends State<AdvSingleDigitInputter> {
       return AdvTextFieldPlain(
         focusNode: focusNodes[index],
         controller: controllers[index],
+        keyboardType: widget.keyboardType,
         measureText: "@",
         inputFormatters: [LengthLimitingTextInputFormatter(1)],
-        textChangeListener: (oldValue, newValue) {
-          if (newValue != "" && newValue != null) {
+        textChangeListener: (String oldValue, String newValue) {
+          if (((newValue != "" && widget.keyboardType == TextInputType.text) ||
+                  (int.tryParse(newValue) != 0 &&
+                      widget.keyboardType == TextInputType.number)) &&
+              newValue != null) {
             if (index == focusNodes.length - 1) {
-              focusNodes[index].unfocus();
+              if (widget.releaseFocusWhenDone) focusNodes[index].unfocus();
             } else {
               FocusScope.of(context).requestFocus(focusNodes[index + 1]);
             }

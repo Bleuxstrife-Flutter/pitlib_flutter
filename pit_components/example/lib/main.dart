@@ -65,6 +65,16 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     possibleValue.add("Possible Value 1");
     possibleValue.add("Possible Value 2");
+    incController = AdvIncrementController(
+      label: "Increment",
+      hint: "Increment",
+//      format: "#,### Hari",
+      alignment: TextAlign.center,
+      minCounter: 0,
+      counter: 1,
+      /* maxLines: 1 ,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+    );
   }
 
   Widget _buildRadioButton(Widget icon, String value) {
@@ -76,18 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   _radioButtonValue == value ? Colors.black87 : Colors.black38))
     ]);
   }
-
+  AdvIncrementController incController;
   @override
   Widget build(BuildContext context) {
-    AdvIncrementController incController = AdvIncrementController(
-      label: "Increment",
-      hint: "Increment",
-      format: "#,### Hari",
-      minCounter: 0,
-      maxCounter: 9,
-      /* maxLines: 1 ,
-        text: "00\\00\\0000 ~ 00(00)00®000"*/
-    );
     AdvTextFieldController specialController = AdvTextFieldController(
       label: "With Button",
       hint: "Dengan Tombol",
@@ -200,17 +201,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         textStyle: ts.fs16,
                         controller: incController,
                         valueChangeListener: (before, after) {
-                          print("before => $before, after => $after");
+                          setState(() {
+                          });
                         },
                       ),
                     ),
-                    Expanded(
-                      child: AdvTextFieldWithButton(
-                        textStyle: ts.fs16,
-                        controller: specialController,
-                        buttonName: "Btn",
-                      ),
-                    ),
+//                    Expanded(
+//                      child: AdvTextFieldWithButton(
+//                        textStyle: ts.fs16,
+//                        controller: specialController,
+//                        buttonName: "Btn",
+//                      ),
+//                    ),
 //                Expanded(
 //                    child: AdvTextFieldPlain(
 //                  controller: plainController,
@@ -224,16 +226,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   buttonName: "Button",
                 ),
               ),
-              AdvButton(
-                "Pick From Increment",
-                buttonSize: ButtonSize.small,
-                onPressed: () {
-                  Utils.pickFromIncrement(context,
-                      title: "Pick from Increment",
-                      controller: incController,
-                      infoMessage: "Sewa berakhir pada 12/12/2018 12:40:40");
-                },
-              ),
+//              AdvButton(
+//                "Pick From Increment",
+//                buttonSize: ButtonSize.small,
+//                onPressed: () {
+//                  Utils.pickFromIncrement(context,
+//                      title: "Pick from Increment",
+//                      controller: incController,
+//                      infoMessage: "Sewa berakhir pada 12/12/2018 12:40:40");
+//                },
+//              ),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(
                     child: AdvTextField(
@@ -340,10 +342,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         "", Icon(Icons.headset), Axis.vertical,
                         enable: false, reverse: true)),
               ]),
-              Container(child: AdvText(
-                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
-//                maxLines: 5,
-              ), height: 1250.0, color: Colors.green),
+//              Container(child: AdvText(
+//                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
+////                maxLines: 5,
+//              ), height: 1250.0, color: Colors.green),
               Visibility(
                   visible: _date != null,
                   child: AdvText("You picked date => $_date")),
@@ -655,7 +657,6 @@ class _InfinityListDemoState extends State<InfinityListDemo> {
 
       items.addAll(List.generate(50, (i) => i));
 
-      print("isThereAnyMoreData = $isThereAnyMoreData");
       return isThereAnyMoreData;
     });
   }
