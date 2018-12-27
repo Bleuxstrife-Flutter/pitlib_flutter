@@ -40,7 +40,7 @@ class AdvText extends StatelessWidget {
         String _data = "";
         int _maxLines = maxLines;
         if (_maxLines == null) {
-          if (maxHeight == null) {
+          if (maxHeight == double.infinity) {
             _data = this.data;
           } else {
             var tpMeasureHeight = new TextPainter(

@@ -70,7 +70,7 @@ class AdvIncrement extends StatefulWidget {
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
         this.controller = controller ??
             new AdvIncrementController(
-                counter: counter ?? "",
+                counter: counter ?? 0,
                 format: format ?? "",
                 hint: hint ?? "",
                 label: label ?? "",

@@ -205,7 +205,7 @@ class Utils {
                   height: 2.0,
                   color: Theme.of(context).dividerColor
               ),
-              Expanded(
+              Flexible(
                   child: SingleChildScrollView(
                       child: AdvGroupCheck(
                         controller: controller,

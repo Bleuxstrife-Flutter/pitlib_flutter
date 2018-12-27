@@ -101,3 +101,15 @@
 ## 0.0.26
 
 * Text Field's line expansion improved, Text maxLines improved (not only constraint to maxLines, but also maxHeight from LayoutBuilder)
+
+## 0.0.27
+
+* Text Field's null icons error fixed
+
+## 0.0.28
+
+* Row, Column and ListView now can have null as children, will be ignored if it is null and will despise the divider
+
+## 0.0.29
+
+* Bug fixes

@@ -48,35 +48,32 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
   void initState() {
     super.initState();
     widget.controller.addListener(() {
-      if (this.mounted) {
-        if (widget.callback != null)
-          widget.callback(widget.controller.checkedValue);
-        setState(() {});
-      }
+      setState(() {});
+      if (widget.callback != null)
+        widget.callback(widget.controller.checkedValue);
     });
   }
 
   handleClick(data) {
     widget.controller.checkedValue = data;
-    if (widget.callback != null) widget.callback(data);
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     List<RadioGroupItem> stringChildren = widget.controller.itemList;
+    List<Widget> innerChildren = [];
     List<Widget> children = [];
 
-    Widget _title = widget.title == null
-        ? Container()
-        : Container(
-            child: Text(
-              widget.title,
-              style: ts.fs16
-                  .merge(ts.fw600)
-                  .copyWith(color: PitComponents.radioButtonTitleColor),
-            ),
-          );
+    if (widget.title != null) {
+      children.add(Container(
+        child: Text(
+          widget.title,
+          style: ts.fs16
+              .merge(ts.fw600)
+              .copyWith(color: PitComponents.radioButtonTitleColor),
+        ),
+      ));
+    }
 
     stringChildren.forEach((radioGroupItem) {
       AdvListTile item = AdvListTile(
@@ -84,34 +81,38 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
             handleClick(radioGroupItem.data);
           },
           padding: EdgeInsets.all(0.0),
-          start: AbsorbPointer(child: RoundCheckbox(
-              activeColor: PitComponents.radioButtonColor,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onChanged: (b) {
-                handleClick(radioGroupItem.data);
-              },
-              value: radioGroupItem.data == widget.controller.checkedValue),),
+          start: AbsorbPointer(
+            child: RoundCheckbox(
+                activeColor: PitComponents.radioButtonColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                onChanged: (b) {
+                  handleClick(radioGroupItem.data);
+                },
+                value: radioGroupItem.data == widget.controller.checkedValue),
+          ),
           end: radioGroupItem.data == widget.controller.checkedValue
               ? radioGroupItem.activeItem
               : radioGroupItem.inactiveItem);
 
-      children.add(item);
+      innerChildren.add(item);
     });
 
-    return AdvColumn(divider: ColumnDivider(widget.divider), crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _title,
-      widget.direction == Axis.horizontal
-          ? AdvRow(
-              divider: RowDivider(widget.divider),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: children)
-          : AdvColumn(
-              divider: ColumnDivider(widget.divider),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: children)
-    ]);
+    children.add(widget.direction == Axis.horizontal
+        ? AdvRow(
+            divider: RowDivider(widget.divider),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: innerChildren)
+        : AdvColumn(
+            divider: ColumnDivider(widget.divider),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: innerChildren));
+
+    return AdvColumn(
+        divider: ColumnDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children);
   }
 }
 
