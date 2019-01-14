@@ -91,16 +91,26 @@ class _AdvChooserState extends State<AdvChooser>
   _update() {
     if (this.mounted) {
       setState(() {
-        var cursorPos = _textEdittingCtrl.selection;
-        _textEdittingCtrl.text = widget.controller.text;
-
-        if (cursorPos.start > _textEdittingCtrl.text.length) {
-          cursorPos = new TextSelection.fromPosition(
-              new TextPosition(offset: _textEdittingCtrl.text.length));
-        }
-        _textEdittingCtrl.selection = cursorPos;
+        _updateTextController();
       });
     }
+  }
+
+  _updateTextController() {
+    var cursorPos = _textEdittingCtrl.selection;
+    _textEdittingCtrl.text = widget.controller.text;
+
+    if (cursorPos.start > _textEdittingCtrl.text.length) {
+      cursorPos = new TextSelection.fromPosition(
+          new TextPosition(offset: _textEdittingCtrl.text.length));
+    }
+    _textEdittingCtrl.selection = cursorPos;
+  }
+
+  @override
+  void didUpdateWidget(AdvChooser oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateTextController();
   }
 
   @override

@@ -70,13 +70,14 @@ class _AdvSingleDigitInputter extends State<AdvSingleDigitInputter> {
         inputFormatters: [LengthLimitingTextInputFormatter(1)],
         textChangeListener: (String oldValue, String newValue) {
           if (((newValue != "" && widget.keyboardType == TextInputType.text) ||
-                  (int.tryParse(newValue) != 0 &&
-                      widget.keyboardType == TextInputType.number)) &&
+              (newValue != "" && /*int.tryParse(newValue) != 0 &&*/
+                  widget.keyboardType == TextInputType.number)) &&
               newValue != null) {
             if (index == focusNodes.length - 1) {
               if (widget.releaseFocusWhenDone) focusNodes[index].unfocus();
             } else {
               FocusScope.of(context).requestFocus(focusNodes[index + 1]);
+              controllers[index + 1].selection = TextSelection(baseOffset: 0, extentOffset: 0);
             }
           } else {
             if (oldValue != "" && oldValue != null && index > 0) {

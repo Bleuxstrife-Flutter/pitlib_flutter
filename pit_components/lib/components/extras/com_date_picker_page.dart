@@ -18,6 +18,7 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
     with SingleTickerProviderStateMixin {
   List<DateTime> _currentDate;
   SelectionType _selectionType;
+  bool _datePicked = false;
 
   @override
   void initState() {
@@ -39,6 +40,8 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
           selectionType: _selectionType,
           weekDays: PitComponents.weekdaysArray,
           onDayPressed: (List<DateTime> dates) async {
+            if (_datePicked) return;
+            _datePicked = true;
             this.setState(() => _currentDate = dates);
             await new Future.delayed(const Duration(milliseconds: 200));
             Navigator.pop(context, _currentDate);

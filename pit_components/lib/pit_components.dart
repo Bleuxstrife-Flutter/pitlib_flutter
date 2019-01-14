@@ -57,6 +57,7 @@ class PitComponents {
   static Color ratingBarColor = Color(0xffffc100);
 
   static Color lerpColor = Color(0xffD1D1D1);
+  static Color selectedImagePreviewColor = Colors.orange;
 
   static String incrementPickerButtonName = "Save";
 

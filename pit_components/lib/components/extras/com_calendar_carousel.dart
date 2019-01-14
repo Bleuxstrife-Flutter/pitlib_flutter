@@ -1,6 +1,7 @@
 library flutter_calendar_dooboo;
 
 import 'package:flutter/material.dart';
+
 /// A Calculator.
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:pit_components/components/adv_button.dart';
@@ -8,8 +9,8 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
-/// A Calculator.
 
+/// A Calculator.
 
 class ComCalendarCarousel extends StatefulWidget {
   final TextStyle defaultHeaderTextStyle =

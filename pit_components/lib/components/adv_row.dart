@@ -27,7 +27,8 @@ class AdvRow extends StatelessWidget {
     VerticalDirection verticalDirection = VerticalDirection.down,
     TextBaseline textBaseline,
     List<Widget> children = const <Widget>[],
-  })  : this.divider = Center(child: divider) ?? Container(),
+  })
+      : this.divider = divider ?? Container(),
         this.onlyInner = onlyInner ?? true,
         this.key = key,
         this.mainAxisAlignment = mainAxisAlignment,
@@ -46,14 +47,14 @@ class AdvRow extends StatelessWidget {
       padding: padding,
       margin: margin,
       child: Row(
-        key: key,
-        mainAxisAlignment: mainAxisAlignment,
-        mainAxisSize: mainAxisSize,
-        crossAxisAlignment: crossAxisAlignment,
-        textDirection: textDirection,
-        verticalDirection: verticalDirection,
-        textBaseline: textBaseline,
-        children: newChildren,
+          key: key,
+          mainAxisAlignment: mainAxisAlignment,
+          mainAxisSize: mainAxisSize,
+          crossAxisAlignment: crossAxisAlignment,
+          textDirection: textDirection,
+          verticalDirection: verticalDirection,
+          textBaseline: textBaseline,
+          children: newChildren,
       ),
     );
   }
@@ -87,6 +88,6 @@ class RowDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: size, color: color);
+    return Container(width: size, height: 1.0, color: color);
   }
 }
