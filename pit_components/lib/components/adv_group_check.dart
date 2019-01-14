@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_list_tile.dart';
+import 'package:pit_components/mods/mod_checkbox.dart';
 import 'package:pit_components/pit_components.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 
@@ -47,6 +50,8 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
     super.initState();
   }
 
+  bool _checkedValue = true;
+
   @override
   Widget build(BuildContext context) {
     List<GroupCheckItem> stringChildren = widget.controller.itemList;
@@ -55,37 +60,50 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
     stringChildren.forEach((groupCheckItem) {
       children.add(AdvListTile(
           onTap: () {
+            _checkedValue = false;
             widget.controller.checkedValue = groupCheckItem.data;
-            if (widget.callback != null) widget.callback(groupCheckItem.data);
-            setState(() {});
+            setState(() {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  _checkedValue = true;
+                  Timer(Duration(milliseconds: 200), () {
+                    if (widget.callback != null)
+                      widget.callback(groupCheckItem.data);
+                  });
+                });
+              });
+            });
           },
           padding: EdgeInsets.all(16.0),
           start: groupCheckItem.icon,
           expanded: Text(groupCheckItem.display),
           end: groupCheckItem.data == widget.controller.checkedValue
-              ? Icon(
-                  Icons.check,
-                  color: PitComponents.groupCheckCheckColor,
-                  size: 16.0,
-                )
+              ? AbsorbPointer(
+                  child: RoundCheckbox(
+                  onChanged: (value) {},
+                  value: _checkedValue,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  activeColor: PitComponents.groupCheckCheckColor,
+                ))
               : Container()));
     });
 
-    return Container(child: AdvColumn(
+    return Container(
+        child: AdvColumn(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         widget.title == null
             ? Container()
             : Container(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            widget.title,
-            style: ts.fs18
-                .merge(ts.fw700)
-                .copyWith(color: PitComponents.groupCheckTitleColor),
-          ),
-        ),
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  widget.title,
+                  style: ts.fs18
+                      .merge(ts.fw700)
+                      .copyWith(color: PitComponents.groupCheckTitleColor),
+                ),
+              ),
         Container(
           child: AdvColumn(
               divider: Container(

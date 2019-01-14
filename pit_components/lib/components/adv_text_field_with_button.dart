@@ -19,7 +19,6 @@ enum IconType { prefix, suffix }
 class AdvTextFieldWithButton extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
   final bool autoValidate;
@@ -98,7 +97,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
                 label: label ?? "",
                 error: error ?? "",
                 maxLength: maxLength,
-                maxLines: maxLines ?? 1,
+                maxLines: 1,
                 maxLengthEnforced: maxLengthEnforced ?? false,
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.left,
@@ -108,8 +107,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
         this.measureTextSpan = TextSpan(
             text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
-        this.padding = padding ?? new EdgeInsets.all(0.0),
-        this.maxLineExpand = maxLineExpand ?? 4;
+        this.maxLineExpand = maxLineExpand ?? 1;
 
   @override
   State createState() => new _AdvTextFieldWithButtonState();
@@ -117,7 +115,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
 
 class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
     with SingleTickerProviderStateMixin {
-  TextEditingController _textEdittingCtrl = new TextEditingController();
+  TextEditingController _textEditingCtrl = new TextEditingController();
   int initialMaxLines;
 
   @override
@@ -125,20 +123,32 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
     super.initState();
     widget.controller.addListener(_update);
     initialMaxLines = widget.controller.maxLines;
-    _textEdittingCtrl.text = widget.controller.text ?? "";
+    _textEditingCtrl.text = widget.controller.text ?? "";
   }
 
   _update() {
-    setState(() {
-      var cursorPos = _textEdittingCtrl.selection;
-      _textEdittingCtrl.text = widget.controller.text;
+    if (this.mounted) {
+      setState(() {
+        _updateTextController();
+      });
+    }
+  }
 
-      if (cursorPos.start > _textEdittingCtrl.text.length) {
-        cursorPos = new TextSelection.fromPosition(
-            new TextPosition(offset: _textEdittingCtrl.text.length));
-      }
-      _textEdittingCtrl.selection = cursorPos;
-    });
+  _updateTextController() {
+    var cursorPos = widget.controller.selection;
+    _textEditingCtrl.text = widget.controller.text;
+
+    if (cursorPos.start > _textEditingCtrl.text.length) {
+      cursorPos = new TextSelection.fromPosition(
+          new TextPosition(offset: _textEditingCtrl.text.length));
+    }
+    _textEditingCtrl.selection = cursorPos;
+  }
+
+  @override
+  void didUpdateWidget(AdvTextFieldWithButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateTextController();
   }
 
   @override
@@ -194,18 +204,17 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
         ? maxWidth
         : tp.size.width +
             _defaultWidthAddition +
-            (_defaultInnerPadding * 2) +
-            (widget.padding.horizontal);
+            (_defaultInnerPadding * 2);
 
     TextSpan currentTextSpan = TextSpan(
-        text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
+        text: _textEditingCtrl.text, style: widget.measureTextSpan.style);
 
     var tp2 = new TextPainter(
         text: currentTextSpan, textDirection: ui.TextDirection.ltr);
-    tp2.layout(maxWidth: width - _iconSize - (_paddingSize * 2));
-    print(
-        "currentTextSpan => $currentTextSpan, maxWidth => ${width - _iconSize - (_paddingSize * 2)}");
-    print("TextPainter => ${tp2.size.height}");
+    tp2.layout(
+        maxWidth: width -
+            _iconSize -
+            (_paddingSize * 2));
 
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -220,10 +229,13 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
     if (widget.controller.label != null && widget.controller.label != "") {
       children.add(
-        AdvText(
-          widget.controller.label,
-          style: ts.fs11.merge(TextStyle(color: widget.labelColor)),
-          maxLines: 1,
+        Container(
+          width: width,
+          child: AdvText(
+            widget.controller.label,
+            style: ts.fs11.merge(TextStyle(color: widget.labelColor)),
+            maxLines: 1,
+          ),
         ),
       );
     }
@@ -232,8 +244,6 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
     Widget mainChild = Container(
       width: width,
-      color: Colors.purple,
-      padding: widget.padding,
       child: new ConstrainedBox(
         constraints: new BoxConstraints(
           minHeight: tp.size.height +
@@ -251,64 +261,34 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
               primaryColor: widget.borderColor),
           child: ModTextField(
             focusNode: widget.focusNode,
-            controller: _textEdittingCtrl,
+            controller: _textEditingCtrl,
             onChanged: (newText) {
-              bool valueShouldChange = false;
-
               widget.controller.removeListener(_update);
               if (widget.keyboardType == TextInputType.number && newText == "")
-                newText = "0";
-
-              var newValue = widget.keyboardType == TextInputType.number
+                newText = "";
+              var newValue = widget.keyboardType == TextInputType.number && newText != ""
                   ? newText.indexOf(".") > 0
-                      ? (double.tryParse(newText) ?? widget.controller.text)
-                          .toString()
-                      : (int.tryParse(newText) ?? widget.controller.text)
-                          .toString()
+                  ? (double.tryParse(newText) ?? widget.controller.text)
+                  .toString()
+                  : (int.tryParse(newText) ?? widget.controller.text)
+                  .toString()
                   : newText;
 
-              valueShouldChange = widget.keyboardType == TextInputType.number &&
-                  newText.indexOf(".") > 0;
-
-              int startIndex = newValue.indexOf("\n");
-              int newLineCount = 0;
-
-              while (startIndex != -1) {
-                newLineCount++;
-                startIndex = newValue.indexOf("\n", startIndex + 1);
-              }
-
-              if (initialMaxLines == 1) {
-                if (newLineCount > widget.maxLineExpand - 1) {
-                  widget.controller.maxLines = widget.maxLineExpand;
-                  valueShouldChange = true;
-                } else {
-                  widget.controller.maxLines = newLineCount + 1;
-                  valueShouldChange = true;
-                }
-              }
-
               String oldValue = widget.controller.text;
-              widget.controller.text = newValue;
+              //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya
+              widget.controller.text = newText;
+              widget.controller.selection = _textEditingCtrl.selection;
               widget.controller.error = "";
 
               widget.controller.addListener(_update);
-              if (valueShouldChange) {
-                newValue = "(setstate) $newValue";
-                if (this.mounted) {
-                  setState(() {
-                    if (widget.textChangeListener != null)
-                      widget.textChangeListener(oldValue, newValue);
-                  });
-                }
-              } else {
-                if (widget.textChangeListener != null)
-                  widget.textChangeListener(oldValue, newValue);
-              }
+
+              widget.controller.text = newValue;
+              if (widget.textChangeListener != null)
+                widget.textChangeListener(oldValue, newValue);
             },
             obscureText: widget.controller.obscureText,
             enabled: widget.controller.enable,
-            maxLines: widget.controller.maxLines,
+            maxLines: 1, //untuk ini harus 1 line maxnya, karena nanti kalo bs 2 line, harus ganti ukuran tombol
             maxLength: widget.controller.maxLength,
             keyboardType: widget.keyboardType,
             inputFormatters: formatters,
@@ -334,7 +314,7 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
                 filled: true,
                 fillColor: _backgroundColor,
                 border: InputBorder.none,
-                contentPadding: new EdgeInsets.all(_paddingSize),
+                contentPadding: EdgeInsets.all(_paddingSize),
 //                contentPadding: new EdgeInsets.only(
 //                    left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
                 hintText: widget.controller.hint,
@@ -362,11 +342,11 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
                   if (widget.onButtonTapped != null) widget.onButtonTapped();
                 },
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: _paddingSize),
+                    padding: EdgeInsets.all(_paddingSize),
                     alignment: Alignment.center,
                     child: Text(widget.buttonName,
                         style: widget.measureTextSpan.style
-                            .merge(ts.fw700)
+                            .merge(ts.fw500)
                             .copyWith(color: _backgroundColor))))),
         decoration: BoxDecoration(
           color: PitComponents.textFieldButtonColor,
@@ -386,7 +366,7 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
           .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 
       children.add(Container(
-          width: maxWidth,
+          width: width,
           child: AdvText(
             widget.controller.error,
             textAlign: TextAlign.end,

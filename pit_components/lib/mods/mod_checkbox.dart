@@ -120,7 +120,7 @@ class RoundCheckbox extends StatefulWidget {
   final MaterialTapTargetSize materialTapTargetSize;
 
   /// The width of a checkbox widget.
-  static const double width = 18.0;
+  static const double width = 16.0;
 
   @override
   _RoundCheckboxState createState() => _RoundCheckboxState();

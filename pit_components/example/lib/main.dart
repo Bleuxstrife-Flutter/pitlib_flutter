@@ -8,6 +8,7 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
 import 'package:pit_components/components/adv_group_check.dart';
+import 'package:pit_components/components/adv_image_preview.dart';
 import 'package:pit_components/components/adv_increment.dart';
 import 'package:pit_components/components/adv_infinity_list_view.dart';
 import 'package:pit_components/components/adv_list_view_with_bottom.dart';
@@ -18,11 +19,13 @@ import 'package:pit_components/components/adv_scrollable_bottom_sheet.dart';
 import 'package:pit_components/components/adv_single_digit_inputter.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/adv_text_field.dart';
+import 'package:pit_components/components/adv_text_field_plain.dart';
 import 'package:pit_components/components/adv_text_field_with_button.dart';
 import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
 import 'package:pit_components/components/controllers/adv_increment_controller.dart';
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
+import 'package:pit_components/mods/mod_checkbox.dart';
 import 'package:pit_components/utils/utils.dart';
 
 const String loremIpsum =
@@ -86,7 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   _radioButtonValue == value ? Colors.black87 : Colors.black38))
     ]);
   }
+
   AdvIncrementController incController;
+  bool _lalala = false;
+
   @override
   Widget build(BuildContext context) {
     AdvTextFieldController specialController = AdvTextFieldController(
@@ -101,13 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
 //        enable: false,
         prefixIcon: Icon(Icons.arrow_back),
         suffixIcon: Icon(Icons.arrow_forward),
-      maxLines: 1/*,
+        maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
         );
     AdvTextFieldController controller2 = AdvTextFieldController(
         label: "Just TextField MaxLines 1",
         hint: "TextField MaxLines 1 Example",
-        prefixIcon: Icon(Icons.arrow_back),
+        prefixIcon: Container(height: 35.0, width: 35.0, color: Colors.blue),
         suffixIcon: Icon(Icons.arrow_forward),
         maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
@@ -157,12 +163,20 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Color(0xffFCF6E8),
+          color: Color(0xff999999),
           child: AdvColumn(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             onlyInner: false,
             divider: ColumnDivider(16.0),
             children: [
+              AdvTextField(
+              ),
+              AdvTextFieldPlain(
+//                prefixIcon:
+//                Container(child: Icon(Icons.place), color: Colors.green),
+//                suffixIcon:
+//                Container(child: Icon(Icons.fast_forward), color: Colors.green),
+                  ),
               AdvRow(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   divider: RowDivider(8.0),
@@ -201,18 +215,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         textStyle: ts.fs16,
                         controller: incController,
                         valueChangeListener: (before, after) {
-                          setState(() {
-                          });
+                          setState(() {});
                         },
                       ),
                     ),
-//                    Expanded(
-//                      child: AdvTextFieldWithButton(
-//                        textStyle: ts.fs16,
-//                        controller: specialController,
-//                        buttonName: "Btn",
-//                      ),
-//                    ),
+                    Expanded(
+                      child: AdvTextFieldWithButton(
+                        textStyle: ts.fs16,
+                        controller: specialController,
+                        buttonName: "Btn",
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    ),
 //                Expanded(
 //                    child: AdvTextFieldPlain(
 //                  controller: plainController,
@@ -245,22 +259,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   onIconTapped: (iconType) {
                     print("iconType => $iconType");
                   },
-//                  inputFormatters: [
-//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
-//                  ],
                 )),
                 Expanded(
                     child: AdvTextField(
-//                      measureTextSpan: TextSpan(style: ts.fs10),
                   controller: controller2,
-//                  inputFormatters: [
-//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
-//                  ],
+                      keyboardType: TextInputType.number,
+                      textChangeListener: (oldText, newText) {
+                        if (double.tryParse(newText) > 75000.0) {
+controller2.text = oldText;
+                        }
+                      },
                 )),
-//                Expanded(
-//                    child: AdvTextFieldPlain(
-//                  controller: plainController,
-//                )),
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(child: AdvButton("Normal", enable: false)),
@@ -272,6 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ]),
               AdvButton(
                 "Go to List View with Bottom Button",
+                padding: EdgeInsets.all(16.0),
                 width: double.infinity,
                 buttonSize: ButtonSize.small,
                 onPressed: () {
@@ -382,6 +392,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 text: "12345",
                 digitCount: 5,
               ),
+              RoundCheckbox(
+                onChanged: (bool value) {
+                  setState(() {
+                    _lalala = !_lalala;
+                  });
+                },
+                value: _lalala,
+              ),
               AdvRadioGroup(
                 title: "this is radio Group",
                 direction: Axis.vertical,
@@ -398,6 +416,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
+              Container(
+                  child: AdvImagePreview(
+                    imageProviders: [
+                      NetworkImage(""),
+                      NetworkImage(
+                          "https://i.pinimg.com/originals/0c/48/76/0c4876e490e1e4dc925cc09be057a5a5.jpg"),
+                    ],
+                  ),
+                  height: 250.0),
               AdvBadge(
                 size: 50.0,
                 text: "5,000.00",

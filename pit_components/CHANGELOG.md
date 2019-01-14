@@ -113,3 +113,47 @@
 ## 0.0.29
 
 * Bug fixes
+
+## 0.0.30
+
+* Single Digit Inputer bug fix
+
+## 0.0.31
+
+* Text Field controller bug fix
+
+## 0.0.31+1
+
+* Adv State first trial
+
+## 0.0.31+2
+
+* Adv Future Builder remake trial
+
+## 0.0.32
+
+* Adv Image Preview added
+
+## 0.0.33
+
+* Adv Loading with Barrier added
+
+## 0.0.33+1
+
+* Adv Loading with Barrier bug fixes
+
+## 0.0.33+2
+
+* Bug fixes
+
+## 0.0.33+3
+
+* Bug fixes
+
+## 0.0.34
+
+* Bug fixes
+
+## 0.0.35
+
+* Bug fixes

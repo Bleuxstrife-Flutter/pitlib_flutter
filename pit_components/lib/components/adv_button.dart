@@ -17,6 +17,7 @@ class AdvButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double width;
+  final EdgeInsets padding;
 
   AdvButton(this.data,
       {bool circular = true,
@@ -27,7 +28,8 @@ class AdvButton extends StatelessWidget {
       this.buttonSize = ButtonSize.large,
       Color backgroundColor,
       Color textColor,
-      this.width})
+      this.width,
+      EdgeInsets padding})
       : this.enable = enable ?? true,
         this.circular = circular ?? true,
         this.onlyBorder = onlyBorder ?? false,
@@ -37,7 +39,8 @@ class AdvButton extends StatelessWidget {
             : textColor ?? PitComponents.buttonTextColor,
         this.textColor = !reverse
             ? textColor ?? PitComponents.buttonTextColor
-            : backgroundColor ?? PitComponents.buttonBackgroundColor;
+            : backgroundColor ?? PitComponents.buttonBackgroundColor,
+        this.padding = padding ?? EdgeInsets.all(0.0);
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +81,11 @@ class AdvButton extends StatelessWidget {
         child: Container(
             width: width,
             child: FlatButton(
-              padding: EdgeInsets.all(8.0 + borderWidthAdditional),
+              padding: EdgeInsets.only(
+                  left: this.padding.left + 8.0 + borderWidthAdditional,
+                  top: this.padding.top + 8.0 + borderWidthAdditional,
+                  right: this.padding.right + 8.0 + borderWidthAdditional,
+                  bottom: this.padding.bottom + 8.0 + borderWidthAdditional),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               color: _color,
               disabledColor: _disableColor,
@@ -114,7 +121,11 @@ class AdvButton extends StatelessWidget {
         child: Container(
             width: width,
             child: FlatButton(
-              padding: EdgeInsets.all(14.0 + borderWidthAdditional),
+              padding: EdgeInsets.only(
+                  left: this.padding.left + 14.0 + borderWidthAdditional,
+                  top: this.padding.top + 14.0 + borderWidthAdditional,
+                  right: this.padding.right + 14.0 + borderWidthAdditional,
+                  bottom: this.padding.bottom + 14.0 + borderWidthAdditional),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 //        borderSide:
 //            BorderSide(color: Theme.of(context).primaryColorDark, width: 3.0),
@@ -151,6 +162,7 @@ class AdvButtonWithIcon extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double width;
+  final EdgeInsets padding;
 
   AdvButtonWithIcon(this.data, this.image, this.direction,
       {bool circular = true,
@@ -161,7 +173,8 @@ class AdvButtonWithIcon extends StatelessWidget {
       this.buttonSize = ButtonSize.large,
       Color backgroundColor,
       Color textColor,
-      this.width})
+      this.width,
+        EdgeInsets padding})
       : this.enable = enable ?? true,
         this.circular = circular ?? true,
         this.onlyBorder = onlyBorder ?? false,
@@ -171,7 +184,8 @@ class AdvButtonWithIcon extends StatelessWidget {
             : textColor ?? PitComponents.buttonTextColor,
         this.textColor = !reverse
             ? textColor ?? PitComponents.buttonTextColor
-            : backgroundColor ?? PitComponents.buttonBackgroundColor;
+            : backgroundColor ?? PitComponents.buttonBackgroundColor,
+        this.padding = padding ?? EdgeInsets.all(0.0);
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +220,11 @@ class AdvButtonWithIcon extends StatelessWidget {
       child: Container(
         width: width,
         child: FlatButton(
-          padding: EdgeInsets.all(8.0 + borderWidthAdditional),
+          padding: EdgeInsets.only(
+              left: this.padding.left + 8.0 + borderWidthAdditional,
+              top: this.padding.top + 8.0 + borderWidthAdditional,
+              right: this.padding.right + 8.0 + borderWidthAdditional,
+              bottom: this.padding.bottom + 8.0 + borderWidthAdditional),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           color: _color,
           textColor: _textColor,
@@ -216,6 +234,7 @@ class AdvButtonWithIcon extends StatelessWidget {
           splashColor: Theme.of(context).dividerColor,
           child: direction == Axis.vertical
               ? new Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     image,
                     Visibility(
@@ -233,6 +252,7 @@ class AdvButtonWithIcon extends StatelessWidget {
                   ],
                 )
               : new Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     image,
@@ -283,7 +303,11 @@ class AdvButtonWithIcon extends StatelessWidget {
       child: Container(
         width: width,
         child: FlatButton(
-          padding: EdgeInsets.all(14.0 + borderWidthAdditional),
+          padding: EdgeInsets.only(
+              left: this.padding.left + 14.0 + borderWidthAdditional,
+              top: this.padding.top + 14.0 + borderWidthAdditional,
+              right: this.padding.right + 14.0 + borderWidthAdditional,
+              bottom: this.padding.bottom + 14.0 + borderWidthAdditional),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           color: _color,
           textColor: _textColor,
@@ -293,6 +317,7 @@ class AdvButtonWithIcon extends StatelessWidget {
           splashColor: Theme.of(context).dividerColor,
           child: direction == Axis.vertical
               ? new Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     image,
                     Visibility(
@@ -310,6 +335,7 @@ class AdvButtonWithIcon extends StatelessWidget {
                   ],
                 )
               : new Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     image,
