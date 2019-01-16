@@ -50,6 +50,7 @@ class PitComponents {
   static Color chooserLabelColor = Color(0xff777777);
   static Color chooserBackgroundColor = Color(0xfff7f7f7);
   static Color chooserErrorColor = Color(0xffd81920);
+  static Color chooserLineColor = Color(0xffa6a6a6);
   static Color chooserBorderColor = Color(0xffa6a6a6);
 
   static Color dropDownBackgroundColor = Color(0xffFDFDFD);

@@ -157,3 +157,19 @@
 ## 0.0.35
 
 * Bug fixes
+
+## 0.0.35+1
+
+* Bug fixes
+
+## 0.0.35+2
+
+* Bug fixes AdvTextField, AdvTextFieldPlain, AdvTextFieldWithButton
+
+## 0.0.36
+
+* New component added AdvChooserPlain
+
+## 0.0.36+1
+
+* Bug fix (AdvTextFieldPlain maxHeight issue)
