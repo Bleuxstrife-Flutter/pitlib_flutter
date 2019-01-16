@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_badge.dart';
 import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_chooser.dart';
+import 'package:pit_components/components/adv_chooser_plain.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
@@ -93,11 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
   AdvIncrementController incController;
   bool _lalala = false;
 
+  bool _first = true;
   @override
   Widget build(BuildContext context) {
     AdvTextFieldController specialController = AdvTextFieldController(
       label: "With Button",
       hint: "Dengan Tombol",
+      error: "asdasdasd"
       /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
     );
@@ -156,21 +159,27 @@ class _MyHomePageState extends State<MyHomePage> {
           GroupCheckItem('Image', 'Image'),
           GroupCheckItem('Document', 'Document')
         ]);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Color(0xff999999),
+          color: Color(0xffffedd8),
           child: AdvColumn(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             onlyInner: false,
             divider: ColumnDivider(16.0),
             children: [
+              AnimatedCrossFade(
+                duration: const Duration(seconds: 1),
+                firstChild: const FlutterLogo(style: FlutterLogoStyle.horizontal, size: 100.0),
+                secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
+                crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              ),
               AdvTextField(
               ),
+//              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
 //                prefixIcon:
 //                Container(child: Icon(Icons.place), color: Colors.green),
@@ -224,6 +233,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         textStyle: ts.fs16,
                         controller: specialController,
                         buttonName: "Btn",
+                        onButtonTapped: () {
+                          setState(() {
+                            _first = !_first;
+                          });
+                        },
                         keyboardType: TextInputType.multiline,
                       ),
                     ),
@@ -238,6 +252,9 @@ class _MyHomePageState extends State<MyHomePage> {
 //                  textStyle: ts.fs12,
                   controller: specialController,
                   buttonName: "Button",
+                  onButtonTapped: () {
+//                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryView()));
+                  },
                 ),
               ),
 //              AdvButton(
@@ -360,7 +377,7 @@ controller2.text = oldText;
                   visible: _date != null,
                   child: AdvText("You picked date => $_date")),
               AdvDatePicker(
-                selectionType: SelectionType.range,
+                selectionType: SelectionType.single,
                 onChanged: (List value) {
                   if (value == null || value.length == 0) return;
 
@@ -436,36 +453,70 @@ controller2.text = oldText;
               Row(children: [
                 Expanded(
                     child: AdvChooser(
-                  label: "Chooser Example",
-                  hint: "This is chooser example",
-                  items: {
-                    "data 1": "display 1",
-                    "data 2": "display 2",
-                    "data 3": "display 3",
-                    "data 4": "display 4",
-                    "data 5": "display 5",
-                    "data 6": "display 6",
-                    "data 7": "display 7",
-                    "data 8": "display 8",
-                    "data 9": "display 9",
-                    "data 10": "display 10",
-                    "data 11": "display 11",
-                    "data 12": "display 12",
-                    "data 13": "display 13",
-                    "data 14": "display 14",
-                    "data 15": "display 15",
-                    "data 16": "display 16",
-                    "data 17": "display 17",
-                    "data 18": "display 18",
-                    "data 19": "display 19",
-                    "data 20": "display 20",
-                    "data 21": "display 21",
-                    "data 22": "display 22",
-                    "data 23": "display 24 ",
-                    "data 24": "display 24",
-                    "data 25": "display 25"
-                  },
-                ))
+                      label: "Chooser Example",
+                      hint: "This is chooser example",
+                      items: {
+                        "data 1": "display 1",
+                        "data 2": "display 2",
+                        "data 3": "display 3",
+                        "data 4": "display 4",
+                        "data 5": "display 5",
+                        "data 6": "display 6",
+                        "data 7": "display 7",
+                        "data 8": "display 8",
+                        "data 9": "display 9",
+                        "data 10": "display 10",
+                        "data 11": "display 11",
+                        "data 12": "display 12",
+                        "data 13": "display 13",
+                        "data 14": "display 14",
+                        "data 15": "display 15",
+                        "data 16": "display 16",
+                        "data 17": "display 17",
+                        "data 18": "display 18",
+                        "data 19": "display 19",
+                        "data 20": "display 20",
+                        "data 21": "display 21",
+                        "data 22": "display 22",
+                        "data 23": "display 24 ",
+                        "data 24": "display 24",
+                        "data 25": "display 25"
+                      },
+                    ))
+              ]),
+              Row(children: [
+                Expanded(
+                    child: AdvChooserPlain(
+                      label: "Chooser Example",
+                      hint: "This is chooser example",
+                      items: {
+                        "data 1": "display 1",
+                        "data 2": "display 2",
+                        "data 3": "display 3",
+                        "data 4": "display 4",
+                        "data 5": "display 5",
+                        "data 6": "display 6",
+                        "data 7": "display 7",
+                        "data 8": "display 8",
+                        "data 9": "display 9",
+                        "data 10": "display 10",
+                        "data 11": "display 11",
+                        "data 12": "display 12",
+                        "data 13": "display 13",
+                        "data 14": "display 14",
+                        "data 15": "display 15",
+                        "data 16": "display 16",
+                        "data 17": "display 17",
+                        "data 18": "display 18",
+                        "data 19": "display 19",
+                        "data 20": "display 20",
+                        "data 21": "display 21",
+                        "data 22": "display 22",
+                        "data 23": "display 24 ",
+                        "data 24": "display 24",
+                        "data 25": "display 25"
+                      },
+                    ))
               ])
             ],
           ),

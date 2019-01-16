@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pit_components/mods/mod_editable_text.dart';
 import 'package:pit_components/mods/mod_input_decorator.dart';
 
 export 'package:flutter/services.dart'
@@ -116,6 +117,7 @@ class ModTextField extends StatefulWidget {
     this.cursorColor,
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
+    this.maxHeight,
   })  : assert(textAlign != null),
         assert(autofocus != null),
         assert(obscureText != null),
@@ -341,6 +343,8 @@ class ModTextField extends StatefulWidget {
   /// Defaults to EdgeInserts.all(20.0).
   final EdgeInsets scrollPadding;
 
+  final double maxHeight;
+
   @override
   _ModTextFieldState createState() => _ModTextFieldState();
 
@@ -374,8 +378,8 @@ class ModTextField extends StatefulWidget {
 
 class _ModTextFieldState extends State<ModTextField>
     with AutomaticKeepAliveClientMixin {
-  final GlobalKey<EditableTextState> _editableTextKey =
-      GlobalKey<EditableTextState>();
+  final GlobalKey<ModEditableTextState> _editableTextKey =
+      GlobalKey<ModEditableTextState>();
 
   Set<InteractiveInkFeature> _splashes;
   InteractiveInkFeature _currentSplash;
@@ -577,7 +581,11 @@ class _ModTextFieldState extends State<ModTextField>
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
 
     Widget child = RepaintBoundary(
-      child: EditableText(
+        child: Container(
+      constraints: widget.maxHeight == null
+          ? BoxConstraints()
+          : BoxConstraints(maxHeight: widget.maxHeight),
+      child: ModEditableText(
         key: _editableTextKey,
         controller: controller,
         focusNode: focusNode,
@@ -608,7 +616,7 @@ class _ModTextFieldState extends State<ModTextField>
         scrollPadding: widget.scrollPadding,
         keyboardAppearance: keyboardAppearance,
       ),
-    );
+    ));
 
     if (widget.decoration != null) {
       child = AnimatedBuilder(

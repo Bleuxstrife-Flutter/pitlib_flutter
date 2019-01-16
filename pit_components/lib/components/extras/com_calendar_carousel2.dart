@@ -12,25 +12,25 @@ import 'package:pit_components/pit_components.dart';
 
 /// A Calculator.
 
-class ComCalendarCarousel extends StatefulWidget {
+class ComCalendarCarousel2 extends StatefulWidget {
   final TextStyle defaultHeaderTextStyle =
-  ts.fs20.copyWith(color: PitComponents.datePickerHeaderColor);
+      ts.fs20.copyWith(color: PitComponents.datePickerHeaderColor);
   final TextStyle defaultPrevDaysTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerPrevDaysColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerPrevDaysColor);
   final TextStyle defaultNextDaysTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerNextDaysDaysColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerNextDaysDaysColor);
   final TextStyle defaultDaysTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerWeekdayColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerWeekdayColor);
   final TextStyle defaultTodayTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerTodayTextColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerTodayTextColor);
   final TextStyle defaultSelectedDayTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerSelectedTextColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerSelectedTextColor);
   final TextStyle daysLabelTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerDaysLabelColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerDaysLabelColor);
   final TextStyle defaultNotesTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerMarkedDaysDaysColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerMarkedDaysDaysColor);
   final TextStyle defaultWeekendTextStyle =
-  ts.fs14.copyWith(color: PitComponents.datePickerWeekendColor);
+      ts.fs14.copyWith(color: PitComponents.datePickerWeekendColor);
   final Widget defaultMarkedDateWidget = Positioned(
     child: Container(
       color: PitComponents.datePickerMarkedDaysDaysColor,
@@ -65,7 +65,7 @@ class ComCalendarCarousel extends StatefulWidget {
   final EdgeInsets weekDayMargin;
   final SelectionType selectionType;
 
-  ComCalendarCarousel({
+  ComCalendarCarousel2({
     this.weekDays = const ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
     this.viewportFraction = 1.0,
     this.prevMonthDayBorderColor = Colors.transparent,
@@ -91,7 +91,7 @@ class ComCalendarCarousel extends StatefulWidget {
   _CalendarState createState() => _CalendarState();
 }
 
-class _CalendarState extends State<ComCalendarCarousel> {
+class _CalendarState extends State<ComCalendarCarousel2> {
   PageController _controller;
   List<DateTime> _dates = List(3);
   int _startWeekday = 0;
@@ -151,8 +151,8 @@ class _CalendarState extends State<ComCalendarCarousel> {
                     child: widget.headerText != null
                         ? widget.headerText
                         : Text(
-                      '${DateFormat.yMMM().format(this._dates[1])}',
-                    ),
+                            '${DateFormat.yMMM().format(this._dates[1])}',
+                          ),
                   ),
                   IconButton(
                     onPressed: () => _setDate(page: 2),
@@ -172,9 +172,9 @@ class _CalendarState extends State<ComCalendarCarousel> {
                   child: widget.weekDays == null
                       ? Container()
                       : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: this._renderWeekDays(),
-                  ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: this._renderWeekDays(),
+                        ),
                 ),
                 Expanded(
                   child: PageView.builder(
@@ -211,10 +211,10 @@ class _CalendarState extends State<ComCalendarCarousel> {
   builder(int slideIndex) {
     double screenWidth = MediaQuery.of(context).size.width;
     int totalItemCount = DateTime(
-      this._dates[slideIndex].year,
-      this._dates[slideIndex].month + 1,
-      0,
-    ).day +
+          this._dates[slideIndex].year,
+          this._dates[slideIndex].month + 1,
+          0,
+        ).day +
         this._startWeekday +
         (7 - this._endWeekday);
     int year = this._dates[slideIndex].year;
@@ -248,168 +248,168 @@ class _CalendarState extends State<ComCalendarCarousel> {
               children: List.generate(totalItemCount,
 
                   /// last day of month + weekday
-                      (index) {
-                    bool isToday =
-                        DateTime.now().day == index + 1 - this._startWeekday &&
-                            DateTime.now().month == month &&
-                            DateTime.now().year == year;
-                    DateTime currentDate =
+                  (index) {
+                bool isToday =
+                    DateTime.now().day == index + 1 - this._startWeekday &&
+                        DateTime.now().month == month &&
+                        DateTime.now().year == year;
+                DateTime currentDate =
                     DateTime(year, month, index + 1 - this._startWeekday);
-                    bool isSelectedDay = (widget.selectionType !=
-                        SelectionType.range &&
+                bool isSelectedDay = (widget.selectionType !=
+                            SelectionType.range &&
                         _selectedDateTimes.length > 0 &&
                         _selectedDateTimes.indexOf(currentDate) >= 0) ||
-                        (widget.selectionType == SelectionType.range &&
-                            _selectedDateTimes.length == 2 &&
-                            currentDate.difference(_selectedDateTimes[0]).inDays >
-                                0 &&
-                            _selectedDateTimes[_selectedDateTimes.length - 1]
+                    (widget.selectionType == SelectionType.range &&
+                        _selectedDateTimes.length == 2 &&
+                        currentDate.difference(_selectedDateTimes[0]).inDays >
+                            0 &&
+                        _selectedDateTimes[_selectedDateTimes.length - 1]
                                 .difference(currentDate)
                                 .inDays >
-                                0);
-                    bool isEdgeDay = _selectedDateTimes.length > 0 &&
-                        ((_selectedDateTimes.indexOf(currentDate) == 0 ||
+                            0);
+                bool isEdgeDay = _selectedDateTimes.length > 0 &&
+                    ((_selectedDateTimes.indexOf(currentDate) == 0 ||
                             _selectedDateTimes.indexOf(currentDate) ==
                                 _selectedDateTimes.length - 1) ||
-                            (widget.selectionType != SelectionType.range &&
-                                _selectedDateTimes.indexOf(currentDate) >= 0));
-                    bool isPrevMonthDay = index < this._startWeekday;
-                    bool isNextMonthDay = index >=
-                        (DateTime(year, month + 1, 0).day) + this._startWeekday;
-                    bool isThisMonthDay = !isPrevMonthDay && !isNextMonthDay;
+                        (widget.selectionType != SelectionType.range &&
+                            _selectedDateTimes.indexOf(currentDate) >= 0));
+                bool isPrevMonthDay = index < this._startWeekday;
+                bool isNextMonthDay = index >=
+                    (DateTime(year, month + 1, 0).day) + this._startWeekday;
+                bool isThisMonthDay = !isPrevMonthDay && !isNextMonthDay;
 
-                    DateTime now = DateTime(year, month, 1);
-                    TextStyle textStyle;
-                    if (isPrevMonthDay) {
-                      now =
-                          now.subtract(Duration(days: this._startWeekday - index));
-                      textStyle = widget.defaultPrevDaysTextStyle;
-                    } else if (isThisMonthDay) {
-                      now = DateTime(year, month, index + 1 - this._startWeekday);
-                      textStyle = isSelectedDay
-                          ? widget.defaultSelectedDayTextStyle
-                          : isToday
+                DateTime now = DateTime(year, month, 1);
+                TextStyle textStyle;
+                if (isPrevMonthDay) {
+                  now =
+                      now.subtract(Duration(days: this._startWeekday - index));
+                  textStyle = widget.defaultPrevDaysTextStyle;
+                } else if (isThisMonthDay) {
+                  now = DateTime(year, month, index + 1 - this._startWeekday);
+                  textStyle = isSelectedDay
+                      ? widget.defaultSelectedDayTextStyle
+                      : isToday
                           ? widget.defaultTodayTextStyle
                           : widget.defaultDaysTextStyle;
-                    } else {
-                      now = DateTime(year, month, index + 1 - this._startWeekday);
-                      textStyle = widget.defaultNextDaysTextStyle;
-                    }
-                    return Container(
-                      margin: EdgeInsets.all(widget.dayPadding),
-                      child: FlatButton(
-                        color: isEdgeDay && widget.selectedDayButtonColor != null
-                            ? widget.selectedDayButtonColor
-                            : isSelectedDay && widget.selectedDayButtonColor != null
+                } else {
+                  now = DateTime(year, month, index + 1 - this._startWeekday);
+                  textStyle = widget.defaultNextDaysTextStyle;
+                }
+                return Container(
+                  margin: EdgeInsets.all(widget.dayPadding),
+                  child: FlatButton(
+                    color: isEdgeDay && widget.selectedDayButtonColor != null
+                        ? widget.selectedDayButtonColor
+                        : isSelectedDay && widget.selectedDayButtonColor != null
                             ? widget.selectedDayButtonColor.withAlpha(150)
                             : isToday && widget.todayBorderColor != null
-                            ? widget.todayButtonColor
-                            : widget.dayButtonColor,
-                        onPressed: () {
-                          if (widget.selectionType == SelectionType.single) {
-                            _selectedDateTimes.clear();
-                            _selectedDateTimes.add(currentDate);
-                            if (widget.onDayPressed != null)
-                              widget.onDayPressed(_selectedDateTimes);
-                          } else if (widget.selectionType == SelectionType.multi) {
-                            if (_selectedDateTimes
+                                ? widget.todayButtonColor
+                                : widget.dayButtonColor,
+                    onPressed: () {
+                      if (widget.selectionType == SelectionType.single) {
+                        _selectedDateTimes.clear();
+                        _selectedDateTimes.add(currentDate);
+                        if (widget.onDayPressed != null)
+                          widget.onDayPressed(_selectedDateTimes);
+                      } else if (widget.selectionType == SelectionType.multi) {
+                        if (_selectedDateTimes
                                 .where((date) => date == currentDate)
                                 .length ==
-                                0) {
-                              _selectedDateTimes.add(currentDate);
-                            } else {
-                              _selectedDateTimes.remove(currentDate);
-                            }
-                          } else if (widget.selectionType == SelectionType.range) {
-                            if (!rangeIsComplete) {
-                              var dateDiff = _selectedDateTimes[0]
-                                  .difference(currentDate)
-                                  .inDays;
-                              DateTime loopDate;
-                              DateTime endDate;
+                            0) {
+                          _selectedDateTimes.add(currentDate);
+                        } else {
+                          _selectedDateTimes.remove(currentDate);
+                        }
+                      } else if (widget.selectionType == SelectionType.range) {
+                        if (!rangeIsComplete) {
+                          var dateDiff = _selectedDateTimes[0]
+                              .difference(currentDate)
+                              .inDays;
+                          DateTime loopDate;
+                          DateTime endDate;
 
-                              if (dateDiff > 0) {
-                                loopDate = currentDate;
-                                endDate = _selectedDateTimes[0];
-                              } else {
-                                loopDate = _selectedDateTimes[0];
-                                endDate = currentDate;
-                              }
-
-                              _selectedDateTimes.clear();
-                              _selectedDateTimes.add(loopDate);
-                              _selectedDateTimes.add(endDate);
-
-                              if (widget.onDayPressed != null)
-                                widget.onDayPressed(_selectedDateTimes);
-                            } else {
-                              _selectedDateTimes.clear();
-                              _selectedDateTimes.add(currentDate);
-                            }
-
-                            rangeIsComplete = !rangeIsComplete;
+                          if (dateDiff > 0) {
+                            loopDate = currentDate;
+                            endDate = _selectedDateTimes[0];
+                          } else {
+                            loopDate = _selectedDateTimes[0];
+                            endDate = currentDate;
                           }
 
-                          setState(() {});
-                        },
-                        padding: EdgeInsets.all(widget.dayPadding),
-                        shape: widget.daysHaveCircularBorder == null
-                            ? CircleBorder()
-                            : widget.daysHaveCircularBorder
+                          _selectedDateTimes.clear();
+                          _selectedDateTimes.add(loopDate);
+                          _selectedDateTimes.add(endDate);
+
+                          if (widget.onDayPressed != null)
+                            widget.onDayPressed(_selectedDateTimes);
+                        } else {
+                          _selectedDateTimes.clear();
+                          _selectedDateTimes.add(currentDate);
+                        }
+
+                        rangeIsComplete = !rangeIsComplete;
+                      }
+
+                      setState(() {});
+                    },
+                    padding: EdgeInsets.all(widget.dayPadding),
+                    shape: widget.daysHaveCircularBorder == null
+                        ? CircleBorder()
+                        : widget.daysHaveCircularBorder
                             ? CircleBorder(
-                          side: BorderSide(
-                            color: isPrevMonthDay
-                                ? widget.prevMonthDayBorderColor
-                                : isNextMonthDay
-                                ? widget.nextMonthDayBorderColor
-                                : isToday &&
-                                widget.todayBorderColor !=
-                                    null
-                                ? widget.todayBorderColor
-                                : widget.thisMonthDayBorderColor,
-                          ),
-                        )
+                                side: BorderSide(
+                                  color: isPrevMonthDay
+                                      ? widget.prevMonthDayBorderColor
+                                      : isNextMonthDay
+                                          ? widget.nextMonthDayBorderColor
+                                          : isToday &&
+                                                  widget.todayBorderColor !=
+                                                      null
+                                              ? widget.todayBorderColor
+                                              : widget.thisMonthDayBorderColor,
+                                ),
+                              )
                             : RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: isPrevMonthDay
-                                ? widget.prevMonthDayBorderColor
-                                : isNextMonthDay
-                                ? widget.nextMonthDayBorderColor
-                                : isToday &&
-                                widget.todayBorderColor !=
-                                    null
-                                ? widget.todayBorderColor
-                                : widget.thisMonthDayBorderColor,
-                          ),
-                        ),
-                        child: Stack(
-                          children: <Widget>[
-                            Center(
-                              child: Text(
-                                '${now.day}',
-                                style: (index % 7 == 0 || index % 7 == 6) &&
+                                side: BorderSide(
+                                  color: isPrevMonthDay
+                                      ? widget.prevMonthDayBorderColor
+                                      : isNextMonthDay
+                                          ? widget.nextMonthDayBorderColor
+                                          : isToday &&
+                                                  widget.todayBorderColor !=
+                                                      null
+                                              ? widget.todayBorderColor
+                                              : widget.thisMonthDayBorderColor,
+                                ),
+                              ),
+                    child: Stack(
+                      children: <Widget>[
+                        Center(
+                          child: Text(
+                            '${now.day}',
+                            style: (index % 7 == 0 || index % 7 == 6) &&
                                     !isSelectedDay &&
                                     !isToday
-                                    ? widget.defaultWeekendTextStyle
-                                    : isToday
+                                ? widget.defaultWeekendTextStyle
+                                : isToday
                                     ? widget.defaultTodayTextStyle
                                     : textStyle,
-                                maxLines: 1,
-                              ),
-                            ),
-                            _renderMarked(now),
-                          ],
+                            maxLines: 1,
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                        _renderMarked(now),
+                      ],
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
           Visibility(
               visible: widget.markedDates
-                  .where((markedDate) => markedDate.date.month == month)
-                  .toList()
-                  .length >
+                      .where((markedDate) => markedDate.date.month == month)
+                      .toList()
+                      .length >
                   0,
               child: Container(
                 child: Text(
@@ -425,11 +425,11 @@ class _CalendarState extends State<ComCalendarCarousel> {
                       .where((markedDate) => markedDate.date.month == month)
                       .toList()
                       .map((markedDate) {
-                    return Text(
-                      markedDate.note,
-                      style: widget.defaultNotesTextStyle,
-                    );
-                  }).toList())),
+            return Text(
+              markedDate.note,
+              style: widget.defaultNotesTextStyle,
+            );
+          }).toList())),
         ],
       ),
     );
@@ -441,10 +441,10 @@ class _CalendarState extends State<ComCalendarCarousel> {
     if (page == null) {
       /// setup dates
       DateTime date0 =
-      DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
+          DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
       DateTime date1 = DateTime(DateTime.now().year, DateTime.now().month, 1);
       DateTime date2 =
-      DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
+          DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
 
       this.setState(() {
         /// setup current day
@@ -490,14 +490,14 @@ class _CalendarState extends State<ComCalendarCarousel> {
       list.add(
         Expanded(
             child: Container(
-              margin: widget.weekDayMargin,
-              child: Center(
-                child: Text(
-                  weekDay,
-                  style: widget.daysLabelTextStyle,
-                ),
-              ),
-            )),
+          margin: widget.weekDayMargin,
+          child: Center(
+            child: Text(
+              weekDay,
+              style: widget.daysLabelTextStyle,
+            ),
+          ),
+        )),
       );
     }
     return list;
@@ -507,9 +507,9 @@ class _CalendarState extends State<ComCalendarCarousel> {
     if (widget.markedDates != null &&
         widget.markedDates.length > 0 &&
         widget.markedDates
-            .where((markedDate) => markedDate.date == now)
-            .toList()
-            .length >
+                .where((markedDate) => markedDate.date == now)
+                .toList()
+                .length >
             0) {
       return widget.defaultMarkedDateWidget;
     }
