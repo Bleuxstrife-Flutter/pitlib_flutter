@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/extras/com_calendar_carousel.dart';
@@ -29,7 +31,6 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
 
   @override
   Widget build(BuildContext context) {
-    print("_currentDate => $_currentDate");
     return Scaffold(
       appBar: AppBar(
         title: new Text(PitComponents.datePickerTitle),
@@ -46,7 +47,6 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
             _datePicked = true;
             this.setState(() => _currentDate = dates);
             await new Future.delayed(const Duration(milliseconds: 200));
-            print("_currentDate => $_currentDate");
             Navigator.pop(context, _currentDate);
           },
           thisMonthDayBorderColor: Colors.grey,

@@ -60,11 +60,7 @@ class NumberThousandFormatter extends TextInputFormatter {
         RegExp(r'[' + "\," + ']').allMatches(nonDecimalOldText).toList().length;
 
     int selectionOffset = commaMatchesOnNew - commaMatchesOnOld;
-    print("new: ${newValue.text}, old: ${oldValue.text}");
-    print("new: ${newValueText}");
-    print("start: ${newValue.selection.start}, end: ${newValue.selection.end}");
-    print("start: ${oldValue.selection.start}, end: ${oldValue.selection.end}");
-//    print("selectionOffset: $selectionOffset, baseOffset: ${newValue.selection.start}, extentOffset: ${newValue.selection.end}");
+
     TextSelection newSelection = newValue.selection;
 
     if (newSelection.start == newSelection.end && selectionOffset != 0) {

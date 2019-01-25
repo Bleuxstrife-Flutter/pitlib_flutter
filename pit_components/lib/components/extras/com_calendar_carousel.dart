@@ -370,7 +370,7 @@ class DayCalendarState extends State<DayCalendar> {
 
   @override
   Widget build(BuildContext parentContext) {
-    timeDilation = 5.0;
+//    timeDilation = 5.0;
     Widget dayContent = _buildDayContent(parentContext);
 
     return AnimatedBuilder(
