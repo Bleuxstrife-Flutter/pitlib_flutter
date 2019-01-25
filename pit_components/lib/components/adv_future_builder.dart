@@ -37,11 +37,12 @@ class _AdvFutureBuilderState extends State<AdvFutureBuilder> {
   Widget build(BuildContext context) {
     if (!_futureExecuted) {
       _futureExecuted = true;
-      widget.futureExecutor(context).then((needRedraw) {
-        if (needRedraw) {
-          setState(() {
-          });
-        }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.futureExecutor(context).then((needRedraw) {
+          if (needRedraw && this.mounted) {
+            setState(() {});
+          }
+        });
       });
     }
 

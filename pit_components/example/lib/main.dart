@@ -159,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
           GroupCheckItem('Image', 'Image'),
           GroupCheckItem('Document', 'Document')
         ]);
+    controller.error = "asdasd";
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -177,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
                 crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
-              AdvTextField(
+              AdvTextField(controller : controller,
               ),
 //              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
@@ -193,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       child: AdvDatePicker(
                         textStyle: ts.fs16.copyWith(color: Colors.black),
-                        selectionType: SelectionType.range,
+                        selectionType: SelectionType.multi,
                         onChanged: (List value) {
                           if (value == null || value.length == 0) return;
 
@@ -436,7 +437,6 @@ controller2.text = oldText;
               Container(
                   child: AdvImagePreview(
                     imageProviders: [
-                      NetworkImage(""),
                       NetworkImage(
                           "https://i.pinimg.com/originals/0c/48/76/0c4876e490e1e4dc925cc09be057a5a5.jpg"),
                     ],

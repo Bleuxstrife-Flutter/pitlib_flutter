@@ -14,6 +14,7 @@ class PitComponents {
   static Color buttonBackgroundColor = Color(0xfff4329a);
   static String datePickerTitle = "Pick your date";
   static String datePickerMarkedDatesTitle = "Marked date";
+  static String loadingAssetName = "aaaa";
 
   static Color datePickerDaysLabelColor = Color(0xff208e5d);
   static Color datePickerTodayTextColor = Color(0xffffffff);
@@ -63,4 +64,5 @@ class PitComponents {
   static String incrementPickerButtonName = "Save";
 
   static List<String> weekdaysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+  static List<String> monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 }

@@ -145,8 +145,8 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
   _updateEffectiveSelection() {
     if (_textEditingCtrl.selection != _effectiveController.selection &&
-        _textEditingCtrl.selection.start <= _effectiveController.text.length &&
-        _textEditingCtrl.selection.end <= _effectiveController.text.length) {
+        _textEditingCtrl.selection.start <= (_effectiveController.text?.length ?? 0) &&
+        _textEditingCtrl.selection.end <= (_effectiveController.text?.length ?? 0)) {
       _effectiveController.removeListener(_update);
       _effectiveController.selection = _textEditingCtrl.selection;
       _effectiveController.addListener(_update);

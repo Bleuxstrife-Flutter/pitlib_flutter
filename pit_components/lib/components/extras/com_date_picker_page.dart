@@ -29,14 +29,16 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
 
   @override
   Widget build(BuildContext context) {
+    print("_currentDate => $_currentDate");
     return Scaffold(
       appBar: AppBar(
         title: new Text(PitComponents.datePickerTitle),
+        elevation: 0.0,
         backgroundColor: PitComponents.datePickerToolbarColor,
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.0),
-        child: ComCalendarCarousel(
+        child: CalendarCarousel(
           selectionType: _selectionType,
           weekDays: PitComponents.weekdaysArray,
           onDayPressed: (List<DateTime> dates) async {
@@ -44,6 +46,7 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
             _datePicked = true;
             this.setState(() => _currentDate = dates);
             await new Future.delayed(const Duration(milliseconds: 200));
+            print("_currentDate => $_currentDate");
             Navigator.pop(context, _currentDate);
           },
           thisMonthDayBorderColor: Colors.grey,
