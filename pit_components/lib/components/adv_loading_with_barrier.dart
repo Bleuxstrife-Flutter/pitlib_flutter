@@ -1,48 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:pit_components/pit_components.dart';
 
 class AdvLoadingWithBarrier extends StatelessWidget {
-  final String loadingImage;
   final Widget content;
-  final bool isOnLoading;
+  final bool isProcessing;
 
-  AdvLoadingWithBarrier(this.loadingImage, this.content, this.isOnLoading);
+  AdvLoadingWithBarrier({this.content, this.isProcessing});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[content, _AdvLoadingWrapper(loadingImage, isOnLoading)],
+      children: <Widget>[content, _AdvLoadingWrapper(isProcessing)],
     );
   }
 }
 
 class _AdvLoadingWrapper extends StatefulWidget {
-  final String loadingImage;
   final bool visible;
 
-  _AdvLoadingWrapper(this.loadingImage, this.visible);
+  _AdvLoadingWrapper(this.visible);
 
   @override
   State<StatefulWidget> createState() => _AdvLoadingWrapperState();
 }
 
-class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper> with TickerProviderStateMixin {
+class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
+    with TickerProviderStateMixin {
   AnimationController opacityController;
 
   @override
   void initState() {
     super.initState();
+    if (!this.mounted) return;
+
     opacityController =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
 
     opacityController.addListener(() {
-      setState(() {});
+      if (this.mounted) setState(() {});
     });
   }
 
   @override
   void dispose() {
-    super.dispose();
     opacityController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,9 +67,9 @@ class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper> with TickerProvi
                   color: const Color(0x10000000),
                   child: Center(
                       child: Image.asset(
-                        widget.loadingImage,
-                        height: 30.0,
-                      ))))),
+                    PitComponents.loadingAssetName,
+                    height: 30.0,
+                  ))))),
     );
   }
 }

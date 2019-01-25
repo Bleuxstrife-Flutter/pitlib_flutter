@@ -70,7 +70,7 @@ class AdvColumn extends StatelessWidget {
       }
     }
 
-    if (onlyInner) newChildren.removeAt(newChildren.length - 1);
+    if (onlyInner && newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }

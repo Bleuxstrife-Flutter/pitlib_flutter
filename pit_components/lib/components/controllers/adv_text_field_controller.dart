@@ -232,7 +232,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
   TextSelection get selection => value.selection;
 
   set selection(TextSelection newSelection) {
-    if (newSelection.start > text.length || newSelection.end > text.length)
+    if (newSelection.start > (text?.length ?? 0) || newSelection.end > (text?.length ?? 0))
       throw FlutterError('invalid text selection: $newSelection');
     value = value.copyWith(
         text: this.text,

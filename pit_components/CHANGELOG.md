@@ -173,3 +173,11 @@
 ## 0.0.36+1
 
 * Bug fix (AdvTextFieldPlain maxHeight issue)
+
+## 0.0.36+2
+
+* Bug fix (all AdvTextField text length issue regarding selection changing)
+
+## 0.1.0
+
+* Date Picker and Adv State improved while Loading with Barrier's changed
