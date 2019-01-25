@@ -181,3 +181,7 @@
 ## 0.1.0
 
 * Date Picker and Adv State improved while Loading with Barrier's changed
+
+## 0.1.0+1
+
+* Bug fix (some warnings and bug)
