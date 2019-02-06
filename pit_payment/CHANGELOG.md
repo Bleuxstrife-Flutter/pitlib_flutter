@@ -33,3 +33,7 @@
 ## 0.0.9
 
 * Android bugs fixed
+
+## 0.1.0
+
+* Bank Transfer now added
