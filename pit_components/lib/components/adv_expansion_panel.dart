@@ -65,8 +65,8 @@ class AdvExpansionPanel {
   /// The [headerBuilder], [body], and [isExpanded] arguments must not be null.
   AdvExpansionPanel(
       {@required this.headerBuilder,
-        @required this.body,
-        this.isExpanded = false})
+      @required this.body,
+      this.isExpanded = false})
       : assert(headerBuilder != null),
         assert(body != null),
         assert(isExpanded != null);
@@ -144,7 +144,7 @@ class AdvExpansionPanelList extends StatefulWidget {
     this.initialOpenPanelValue,
     this.padding,
   })  : children = children,
-  // ignore: prefer_initializing_formals
+        // ignore: prefer_initializing_formals
         assert(children != null),
         assert(animationDuration != null),
         _allowOnlyOnePanelOpen = true,
@@ -234,8 +234,8 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
       final AdvExpansionPanelRadio pressedChild = widget.children[index];
 
       for (int childIndex = 0;
-      childIndex < widget.children.length;
-      childIndex += 1) {
+          childIndex < widget.children.length;
+          childIndex += 1) {
         final AdvExpansionPanelRadio child = widget.children[childIndex];
         if (widget.expansionCallback != null &&
             childIndex != index &&
@@ -294,7 +294,9 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
                       activeColor: PitComponents.expansionPanelRadioColor,
                       onChanged: (checked) {
                         _handlePressed(_isChildExpanded(index), index);
-                        _radioValue = _radioValue == childRadio.value ? null : childRadio.value;
+                        _radioValue = _radioValue == childRadio.value
+                            ? null
+                            : childRadio.value;
                       },
                     ),
                   ),
@@ -302,7 +304,8 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
               )),
           onTap: () {
             _handlePressed(_isChildExpanded(index), index);
-            _radioValue = _radioValue == childRadio.value ? null : childRadio.value;
+            _radioValue =
+                _radioValue == childRadio.value ? null : childRadio.value;
           });
 
       items.add(
@@ -315,9 +318,9 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
                 firstChild: Container(height: 0.0),
                 secondChild: child.body,
                 firstCurve:
-                const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+                    const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
                 secondCurve:
-                const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
+                    const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
                 sizeCurve: Curves.fastOutSlowIn,
                 crossFadeState: _isChildExpanded(index)
                     ? CrossFadeState.showSecond

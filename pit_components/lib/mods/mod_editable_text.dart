@@ -11,12 +11,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 
-export 'package:flutter/services.dart' show TextEditingValue, TextSelection, TextInputType;
+export 'package:flutter/services.dart'
+    show TextEditingValue, TextSelection, TextInputType;
 export 'package:flutter/rendering.dart' show SelectionChangedCause;
 
 /// Signature for the callback that reports when the user changes the selection
 /// (including the cursor location).
-typedef SelectionChangedCallback = void Function(TextSelection selection, SelectionChangedCause cause);
+typedef SelectionChangedCallback = void Function(
+    TextSelection selection, SelectionChangedCause cause);
 
 const Duration _kCursorBlinkHalfPeriod = Duration(milliseconds: 500);
 
@@ -115,7 +117,7 @@ class ModEditableText extends StatefulWidget {
     this.keyboardAppearance = Brightness.light,
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection,
-  }) : assert(controller != null),
+  })  : assert(controller != null),
         assert(focusNode != null),
         assert(obscureText != null),
         assert(autocorrect != null),
@@ -128,12 +130,13 @@ class ModEditableText extends StatefulWidget {
         assert(rendererIgnoresPointer != null),
         assert(scrollPadding != null),
         assert(dragStartBehavior != null),
-        keyboardType = keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+        keyboardType = keyboardType ??
+            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         inputFormatters = maxLines == 1
-            ? (
-            <TextInputFormatter>[BlacklistingTextInputFormatter.singleLineFormatter]
-              ..addAll(inputFormatters ?? const Iterable<TextInputFormatter>.empty())
-        )
+            ? (<TextInputFormatter>[
+                BlacklistingTextInputFormatter.singleLineFormatter
+              ]..addAll(
+                inputFormatters ?? const Iterable<TextInputFormatter>.empty()))
             : inputFormatters,
         super(key: key);
 
@@ -417,23 +420,38 @@ class ModEditableText extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>('controller', controller));
+    properties.add(
+        DiagnosticsProperty<TextEditingController>('controller', controller));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode));
-    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText, defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect, defaultValue: true));
+    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText,
+        defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
+        defaultValue: true));
     style?.debugFillProperties(properties);
-    properties.add(EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null));
-    properties.add(EnumProperty<TextDirection>('textDirection', textDirection, defaultValue: null));
-    properties.add(DiagnosticsProperty<Locale>('locale', locale, defaultValue: null));
-    properties.add(DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null));
+    properties.add(
+        EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null));
+    properties.add(EnumProperty<TextDirection>('textDirection', textDirection,
+        defaultValue: null));
+    properties
+        .add(DiagnosticsProperty<Locale>('locale', locale, defaultValue: null));
+    properties.add(
+        DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null));
     properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));
-    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
-    properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType, defaultValue: null));
+    properties.add(
+        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
+    properties.add(DiagnosticsProperty<TextInputType>(
+        'keyboardType', keyboardType,
+        defaultValue: null));
   }
 }
 
 /// State for a [ModEditableText].
-class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliveClientMixin<ModEditableText>, WidgetsBindingObserver, TickerProviderStateMixin<ModEditableText> implements TextInputClient, TextSelectionDelegate {
+class ModEditableTextState extends State<ModEditableText>
+    with
+        AutomaticKeepAliveClientMixin<ModEditableText>,
+        WidgetsBindingObserver,
+        TickerProviderStateMixin<ModEditableText>
+    implements TextInputClient, TextSelectionDelegate {
   Timer _cursorTimer;
   final ValueNotifier<bool> _showCursor = ValueNotifier<bool>(false);
   final GlobalKey _editableKey = GlobalKey();
@@ -461,7 +479,9 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
     super.initState();
     widget.controller.addListener(_didChangeTextEditingValue);
     widget.focusNode.addListener(_handleFocusChanged);
-    _scrollController.addListener(() { _selectionOverlay?.updateForScroll(); });
+    _scrollController.addListener(() {
+      _selectionOverlay?.updateForScroll();
+    });
     _floatingCursorResetController = AnimationController(vsync: this);
     _floatingCursorResetController.addListener(_onFloatingCursorResetTick);
   }
@@ -525,11 +545,10 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   void performAction(TextInputAction action) {
     switch (action) {
       case TextInputAction.newline:
-      // If this is a multiline EditableText, do nothing for a "newline"
-      // action; The newline is already inserted. Otherwise, finalize
-      // editing.
-        if (widget.maxLines == 1)
-          _finalizeEditing(true);
+        // If this is a multiline EditableText, do nothing for a "newline"
+        // action; The newline is already inserted. Otherwise, finalize
+        // editing.
+        if (widget.maxLines == 1) _finalizeEditing(true);
         break;
       case TextInputAction.done:
       case TextInputAction.go:
@@ -538,8 +557,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
         _finalizeEditing(true);
         break;
       default:
-      // Finalize editing, but don't give up focus because this keyboard
-      //  action does not imply the user is done inputting information.
+        // Finalize editing, but don't give up focus because this keyboard
+        //  action does not imply the user is done inputting information.
         _finalizeEditing(false);
         break;
     }
@@ -561,53 +580,74 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   // Because the center of the cursor is preferredLineHeight / 2 below the touch
   // origin, but the touch origin is used to determine which line the cursor is
   // on, we need this offset to correctly render and move the cursor.
-  Offset get _floatingCursorOffset => Offset(0, renderEditable.preferredLineHeight / 2);
+  Offset get _floatingCursorOffset =>
+      Offset(0, renderEditable.preferredLineHeight / 2);
 
   @override
   void updateFloatingCursor(RawFloatingCursorPoint point) {
-    switch(point.state){
+    switch (point.state) {
       case FloatingCursorDragState.Start:
-        final TextPosition currentTextPosition = TextPosition(offset: renderEditable.selection.baseOffset);
-        _startCaretRect = renderEditable.getLocalRectForCaret(currentTextPosition);
-        renderEditable.setFloatingCursor(point.state, _startCaretRect.center - _floatingCursorOffset, currentTextPosition);
+        final TextPosition currentTextPosition =
+            TextPosition(offset: renderEditable.selection.baseOffset);
+        _startCaretRect =
+            renderEditable.getLocalRectForCaret(currentTextPosition);
+        renderEditable.setFloatingCursor(
+            point.state,
+            _startCaretRect.center - _floatingCursorOffset,
+            currentTextPosition);
         break;
       case FloatingCursorDragState.Update:
-      // We want to send in points that are centered around a (0,0) origin, so we cache the
-      // position on the first update call.
+        // We want to send in points that are centered around a (0,0) origin, so we cache the
+        // position on the first update call.
         if (_pointOffsetOrigin != null) {
           final Offset centeredPoint = point.offset - _pointOffsetOrigin;
-          final Offset rawCursorOffset = _startCaretRect.center + centeredPoint - _floatingCursorOffset;
-          _lastBoundedOffset = renderEditable.calculateBoundedFloatingCursorOffset(rawCursorOffset);
-          _lastTextPosition = renderEditable.getPositionForPoint(renderEditable.localToGlobal(_lastBoundedOffset + _floatingCursorOffset));
-          renderEditable.setFloatingCursor(point.state, _lastBoundedOffset, _lastTextPosition);
+          final Offset rawCursorOffset =
+              _startCaretRect.center + centeredPoint - _floatingCursorOffset;
+          _lastBoundedOffset = renderEditable
+              .calculateBoundedFloatingCursorOffset(rawCursorOffset);
+          _lastTextPosition = renderEditable.getPositionForPoint(renderEditable
+              .localToGlobal(_lastBoundedOffset + _floatingCursorOffset));
+          renderEditable.setFloatingCursor(
+              point.state, _lastBoundedOffset, _lastTextPosition);
         } else {
           _pointOffsetOrigin = point.offset;
         }
         break;
       case FloatingCursorDragState.End:
         _floatingCursorResetController.value = 0.0;
-        _floatingCursorResetController.animateTo(1.0, duration: _floatingCursorResetTime, curve: Curves.decelerate);
+        _floatingCursorResetController.animateTo(1.0,
+            duration: _floatingCursorResetTime, curve: Curves.decelerate);
         break;
     }
   }
 
   void _onFloatingCursorResetTick() {
-    final Offset finalPosition = renderEditable.getLocalRectForCaret(_lastTextPosition).center - _floatingCursorOffset;
+    final Offset finalPosition =
+        renderEditable.getLocalRectForCaret(_lastTextPosition).center -
+            _floatingCursorOffset;
     if (_floatingCursorResetController.isCompleted) {
-      renderEditable.setFloatingCursor(FloatingCursorDragState.End, finalPosition, _lastTextPosition);
+      renderEditable.setFloatingCursor(
+          FloatingCursorDragState.End, finalPosition, _lastTextPosition);
       if (_lastTextPosition.offset != renderEditable.selection.baseOffset)
         // The cause is technically the force cursor, but the cause is listed as tap as the desired functionality is the same.
-        _handleSelectionChanged(TextSelection.collapsed(offset: _lastTextPosition.offset), renderEditable, SelectionChangedCause.tap);
+        _handleSelectionChanged(
+            TextSelection.collapsed(offset: _lastTextPosition.offset),
+            renderEditable,
+            SelectionChangedCause.tap);
       _startCaretRect = null;
       _lastTextPosition = null;
       _pointOffsetOrigin = null;
       _lastBoundedOffset = null;
     } else {
       final double lerpValue = _floatingCursorResetController.value;
-      final double lerpX = ui.lerpDouble(_lastBoundedOffset.dx, finalPosition.dx, lerpValue);
-      final double lerpY = ui.lerpDouble(_lastBoundedOffset.dy, finalPosition.dy, lerpValue);
+      final double lerpX =
+          ui.lerpDouble(_lastBoundedOffset.dx, finalPosition.dx, lerpValue);
+      final double lerpY =
+          ui.lerpDouble(_lastBoundedOffset.dy, finalPosition.dy, lerpValue);
 
-      renderEditable.setFloatingCursor(FloatingCursorDragState.Update, Offset(lerpX, lerpY), _lastTextPosition, resetLerpValue: lerpValue);
+      renderEditable.setFloatingCursor(FloatingCursorDragState.Update,
+          Offset(lerpX, lerpY), _lastTextPosition,
+          resetLerpValue: lerpValue);
     }
   }
 
@@ -619,31 +659,29 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
       // Default behavior if the developer did not provide an
       // onEditingComplete callback: Finalize editing and remove focus.
       widget.controller.clearComposing();
-      if (shouldUnfocus)
-        widget.focusNode.unfocus();
+      if (shouldUnfocus) widget.focusNode.unfocus();
     }
 
     // Invoke optional callback with the user's submitted content.
-    if (widget.onSubmitted != null)
-      widget.onSubmitted(_value.text);
+    if (widget.onSubmitted != null) widget.onSubmitted(_value.text);
   }
 
   void _updateRemoteEditingValueIfNeeded() {
-    if (!_hasInputConnection)
-      return;
+    if (!_hasInputConnection) return;
     final TextEditingValue localValue = _value;
-    if (localValue == _lastKnownRemoteTextEditingValue)
-      return;
+    if (localValue == _lastKnownRemoteTextEditingValue) return;
     _lastKnownRemoteTextEditingValue = localValue;
     _textInputConnection.setEditingState(localValue);
   }
 
   TextEditingValue get _value => widget.controller.value;
+
   set _value(TextEditingValue value) {
     widget.controller.value = value;
   }
 
   bool get _hasFocus => widget.focusNode.hasFocus;
+
   bool get _isMultiline => widget.maxLines != 1;
 
   // Calculate the new scroll offset so the cursor remains visible.
@@ -663,27 +701,31 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   // Calculates where the `caretRect` would be if `_scrollController.offset` is set to `scrollOffset`.
   Rect _getCaretRectAtScrollOffset(Rect caretRect, double scrollOffset) {
     final double offsetDiff = _scrollController.offset - scrollOffset;
-    return _isMultiline ? caretRect.translate(0.0, offsetDiff) : caretRect.translate(offsetDiff, 0.0);
+    return _isMultiline
+        ? caretRect.translate(0.0, offsetDiff)
+        : caretRect.translate(offsetDiff, 0.0);
   }
 
-  bool get _hasInputConnection => _textInputConnection != null && _textInputConnection.attached;
+  bool get _hasInputConnection =>
+      _textInputConnection != null && _textInputConnection.attached;
 
   void _openInputConnection() {
     if (!_hasInputConnection) {
       final TextEditingValue localValue = _value;
       _lastKnownRemoteTextEditingValue = localValue;
-      _textInputConnection = TextInput.attach(this,
+      _textInputConnection = TextInput.attach(
+          this,
           TextInputConfiguration(
             inputType: widget.keyboardType,
             obscureText: widget.obscureText,
             autocorrect: widget.autocorrect,
-            inputAction: widget.textInputAction ?? (widget.keyboardType == TextInputType.multiline
-                ? TextInputAction.newline
-                : TextInputAction.done
-            ),
+            inputAction: widget.textInputAction ??
+                (widget.keyboardType == TextInputType.multiline
+                    ? TextInputAction.newline
+                    : TextInputAction.done),
             textCapitalization: widget.textCapitalization,
-          )
-      )..setEditingState(localValue);
+          ))
+        ..setEditingState(localValue);
     }
     _textInputConnection.show();
   }
@@ -735,7 +777,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
     }
   }
 
-  void _handleSelectionChanged(TextSelection selection, RenderEditable renderObject, SelectionChangedCause cause) {
+  void _handleSelectionChanged(TextSelection selection,
+      RenderEditable renderObject, SelectionChangedCause cause) {
     widget.controller.selection = selection;
 
     // This will show the keyboard for all selection changes on the
@@ -756,7 +799,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
         dragStartBehavior: widget.dragStartBehavior,
       );
       final bool longPress = cause == SelectionChangedCause.longPress;
-      if (cause != SelectionChangedCause.keyboard && (_value.text.isNotEmpty || longPress))
+      if (cause != SelectionChangedCause.keyboard &&
+          (_value.text.isNotEmpty || longPress))
         _selectionOverlay.showHandles();
       if (longPress || cause == SelectionChangedCause.doubleTap)
         _selectionOverlay.showToolbar();
@@ -791,29 +835,30 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
     _showCaretOnScreenScheduled = true;
     SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       _showCaretOnScreenScheduled = false;
-      if (_currentCaretRect == null || !_scrollController.hasClients){
+      if (_currentCaretRect == null || !_scrollController.hasClients) {
         return;
       }
-      final double scrollOffsetForCaret =  _getScrollOffsetForCaret(_currentCaretRect);
+      final double scrollOffsetForCaret =
+          _getScrollOffsetForCaret(_currentCaretRect);
       _scrollController.animateTo(
         scrollOffsetForCaret,
         duration: _caretAnimationDuration,
         curve: _caretAnimationCurve,
       );
 
-      final Rect newCaretRect = _getCaretRectAtScrollOffset(_currentCaretRect, scrollOffsetForCaret);
+      final Rect newCaretRect =
+          _getCaretRectAtScrollOffset(_currentCaretRect, scrollOffsetForCaret);
       // Enlarge newCaretRect by scrollPadding to ensure that caret is not positioned directly at the edge after scrolling.
       final Rect inflatedRect = Rect.fromLTRB(
           newCaretRect.left - widget.scrollPadding.left,
           newCaretRect.top - widget.scrollPadding.top,
           newCaretRect.right + widget.scrollPadding.right,
-          newCaretRect.bottom + widget.scrollPadding.bottom
-      );
+          newCaretRect.bottom + widget.scrollPadding.bottom);
       _editableKey.currentContext.findRenderObject().showOnScreen(
-        rect: inflatedRect,
-        duration: _caretAnimationDuration,
-        curve: _caretAnimationCurve,
-      );
+            rect: inflatedRect,
+            duration: _caretAnimationDuration,
+            curve: _caretAnimationCurve,
+          );
     });
   }
 
@@ -829,7 +874,9 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
 
   void _formatAndSetValue(TextEditingValue value) {
     final bool textChanged = _value?.text != value?.text;
-    if (textChanged && widget.inputFormatters != null && widget.inputFormatters.isNotEmpty) {
+    if (textChanged &&
+        widget.inputFormatters != null &&
+        widget.inputFormatters.isNotEmpty) {
       for (TextInputFormatter formatter in widget.inputFormatters)
         value = formatter.formatEditUpdate(_value, value);
       _value = value;
@@ -837,8 +884,7 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
     } else {
       _value = value;
     }
-    if (textChanged && widget.onChanged != null)
-      widget.onChanged(value.text);
+    if (textChanged && widget.onChanged != null) widget.onChanged(value.text);
   }
 
   /// Whether the blinking cursor is actually visible at this precise moment
@@ -862,7 +908,9 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   void _cursorTick(Timer timer) {
     _showCursor.value = !_showCursor.value;
     if (_obscureShowCharTicksPending > 0) {
-      setState(() { _obscureShowCharTicksPending--; });
+      setState(() {
+        _obscureShowCharTicksPending--;
+      });
     }
   }
 
@@ -881,8 +929,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   void _startOrStopCursorTimerIfNeeded() {
     if (_cursorTimer == null && _hasFocus && _value.selection.isCollapsed)
       _startCursorTimer();
-    else if (_cursorTimer != null && (!_hasFocus || !_value.selection.isCollapsed))
-      _stopCursorTimer();
+    else if (_cursorTimer != null &&
+        (!_hasFocus || !_value.selection.isCollapsed)) _stopCursorTimer();
   }
 
   void _didChangeTextEditingValue() {
@@ -892,7 +940,9 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
     _textChangedSinceLastCaretUpdate = true;
     // TODO(abarth): Teach RenderEditable about ValueNotifier<TextEditingValue>
     // to avoid this setState().
-    setState(() { /* We use widget.controller.value in build(). */ });
+    setState(() {
+      /* We use widget.controller.value in build(). */
+    });
   }
 
   void _handleFocusChanged() {
@@ -906,7 +956,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
       _showCaretOnScreen();
       if (!_value.selection.isValid) {
         // Place cursor at the end if the selection is invalid when we receive focus.
-        widget.controller.selection = TextSelection.collapsed(offset: _value.text.length);
+        widget.controller.selection =
+            TextSelection.collapsed(offset: _value.text.length);
       }
     } else {
       WidgetsBinding.instance.removeObserver(this);
@@ -917,8 +968,10 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   }
 
   TextDirection get _textDirection {
-    final TextDirection result = widget.textDirection ?? Directionality.of(context);
-    assert(result != null, '$runtimeType created without a textDirection and with no ambient Directionality.');
+    final TextDirection result =
+        widget.textDirection ?? Directionality.of(context);
+    assert(result != null,
+        '$runtimeType created without a textDirection and with no ambient Directionality.');
     return result;
   }
 
@@ -926,7 +979,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   ///
   /// This property is typically used to notify the renderer of input gestures
   /// when [ignorePointer] is true. See [RenderEditable.ignorePointer].
-  RenderEditable get renderEditable => _editableKey.currentContext.findRenderObject();
+  RenderEditable get renderEditable =>
+      _editableKey.currentContext.findRenderObject();
 
   @override
   TextEditingValue get textEditingValue => _value;
@@ -939,7 +993,8 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
 
   @override
   void bringIntoView(TextPosition position) {
-    _scrollController.jumpTo(_getScrollOffsetForCaret(renderEditable.getLocalRectForCaret(position)));
+    _scrollController.jumpTo(_getScrollOffsetForCaret(
+        renderEditable.getLocalRectForCaret(position)));
   }
 
   @override
@@ -948,19 +1003,25 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
   }
 
   VoidCallback _semanticsOnCopy(TextSelectionControls controls) {
-    return widget.selectionEnabled && _hasFocus && controls?.canCopy(this) == true
+    return widget.selectionEnabled &&
+            _hasFocus &&
+            controls?.canCopy(this) == true
         ? () => controls.handleCopy(this)
         : null;
   }
 
   VoidCallback _semanticsOnCut(TextSelectionControls controls) {
-    return widget.selectionEnabled && _hasFocus && controls?.canCut(this) == true
+    return widget.selectionEnabled &&
+            _hasFocus &&
+            controls?.canCut(this) == true
         ? () => controls.handleCut(this)
         : null;
   }
 
   VoidCallback _semanticsOnPaste(TextSelectionControls controls) {
-    return widget.selectionEnabled &&_hasFocus && controls?.canPaste(this) == true
+    return widget.selectionEnabled &&
+            _hasFocus &&
+            controls?.canPaste(this) == true
         ? () => controls.handlePaste(this)
         : null;
   }
@@ -990,11 +1051,14 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
               value: _value,
               cursorColor: widget.cursorColor,
               backgroundCursorColor: widget.backgroundCursorColor,
-              showCursor: ModEditableText.debugDeterministicCursor ? ValueNotifier<bool>(true) : _showCursor,
+              showCursor: ModEditableText.debugDeterministicCursor
+                  ? ValueNotifier<bool>(true)
+                  : _showCursor,
               hasFocus: _hasFocus,
               maxLines: widget.maxLines,
               selectionColor: widget.selectionColor,
-              textScaleFactor: widget.textScaleFactor ?? MediaQuery.textScaleFactorOf(context),
+              textScaleFactor: widget.textScaleFactor ??
+                  MediaQuery.textScaleFactorOf(context),
               textAlign: widget.textAlign,
               textDirection: _textDirection,
               locale: widget.locale,
@@ -1025,23 +1089,21 @@ class ModEditableTextState extends State<ModEditableText> with AutomaticKeepAliv
         const TextStyle(decoration: TextDecoration.underline),
       );
 
-      return TextSpan(
-          style: widget.style,
-          children: <TextSpan>[
-            TextSpan(text: _value.composing.textBefore(_value.text)),
-            TextSpan(
-              style: composingStyle,
-              text: _value.composing.textInside(_value.text),
-            ),
-            TextSpan(text: _value.composing.textAfter(_value.text)),
-          ]);
+      return TextSpan(style: widget.style, children: <TextSpan>[
+        TextSpan(text: _value.composing.textBefore(_value.text)),
+        TextSpan(
+          style: composingStyle,
+          text: _value.composing.textInside(_value.text),
+        ),
+        TextSpan(text: _value.composing.textAfter(_value.text)),
+      ]);
     }
 
     String text = _value.text;
     if (widget.obscureText) {
       text = RenderEditable.obscuringCharacter * text.length;
       final int o =
-      _obscureShowCharTicksPending > 0 ? _obscureLatestCharIndex : null;
+          _obscureShowCharTicksPending > 0 ? _obscureLatestCharIndex : null;
       if (o != null && o >= 0 && o < text.length)
         text = text.replaceRange(o, o + 1, _value.text.substring(o, o + 1));
     }
@@ -1074,7 +1136,7 @@ class _Editable extends LeafRenderObjectWidget {
     this.cursorRadius,
     this.enableInteractiveSelection,
     this.textSelectionDelegate,
-  }) : assert(textDirection != null),
+  })  : assert(textDirection != null),
         assert(rendererIgnoresPointer != null),
         super(key: key);
 

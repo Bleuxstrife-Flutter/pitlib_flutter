@@ -13,6 +13,7 @@ class PlaceholderImage extends AssetBundleImageProvider {
   final String assetName = "images/placeholder.png";
   static const double _naturalResolution = 1.0;
   static final RegExp _extractRatioRegExp = RegExp(r'/?(\d+(\.\d*)?)x$');
+
   String get keyName => assetName;
 
   @override
@@ -27,33 +28,28 @@ class PlaceholderImage extends AssetBundleImageProvider {
     Completer<AssetBundleImageKey> completer;
     Future<AssetBundleImageKey> result;
 
-    chosenBundle.loadStructuredData<Map<String, List<String>>>(_kAssetManifestFileName, _manifestParser).then<void>(
-            (Map<String, List<String>> manifest) {
-          final String chosenName = _chooseVariant(
-              keyName,
-              configuration,
-              manifest == null ? null : manifest[keyName]
-          );
-          final double chosenScale = _parseScale(chosenName);
-          final AssetBundleImageKey key = AssetBundleImageKey(
-              bundle: chosenBundle,
-              name: chosenName,
-              scale: chosenScale
-          );
-          if (completer != null) {
-            // We already returned from this function, which means we are in the
-            // asynchronous mode. Pass the value to the completer. The completer's
-            // future is what we returned.
-            completer.complete(key);
-          } else {
-            // We haven't yet returned, so we must have been called synchronously
-            // just after loadStructuredData returned (which means it provided us
-            // with a SynchronousFuture). Let's return a SynchronousFuture
-            // ourselves.
-            result = SynchronousFuture<AssetBundleImageKey>(key);
-          }
-        }
-    ).catchError((dynamic error, StackTrace stack) {
+    chosenBundle
+        .loadStructuredData<Map<String, List<String>>>(
+            _kAssetManifestFileName, _manifestParser)
+        .then<void>((Map<String, List<String>> manifest) {
+      final String chosenName = _chooseVariant(
+          keyName, configuration, manifest == null ? null : manifest[keyName]);
+      final double chosenScale = _parseScale(chosenName);
+      final AssetBundleImageKey key = AssetBundleImageKey(
+          bundle: chosenBundle, name: chosenName, scale: chosenScale);
+      if (completer != null) {
+        // We already returned from this function, which means we are in the
+        // asynchronous mode. Pass the value to the completer. The completer's
+        // future is what we returned.
+        completer.complete(key);
+      } else {
+        // We haven't yet returned, so we must have been called synchronously
+        // just after loadStructuredData returned (which means it provided us
+        // with a SynchronousFuture). Let's return a SynchronousFuture
+        // ourselves.
+        result = SynchronousFuture<AssetBundleImageKey>(key);
+      }
+    }).catchError((dynamic error, StackTrace stack) {
       // We had an error. (This guarantees we weren't called synchronously.)
       // Forward the error to the caller.
       assert(completer != null);
@@ -78,15 +74,19 @@ class PlaceholderImage extends AssetBundleImageProvider {
     final Map<String, dynamic> parsedJson = json.decode(jsonData);
     final Iterable<String> keys = parsedJson.keys;
     final Map<String, List<String>> parsedManifest =
-        Map<String, List<String>>.fromIterables(keys,
-    keys.map<List<String>>((String key) => List<String>.from(parsedJson[key])));
+        Map<String, List<String>>.fromIterables(
+            keys,
+            keys.map<List<String>>(
+                (String key) => List<String>.from(parsedJson[key])));
     // TODO(ianh): convert that data structure to the right types.
     return SynchronousFuture<Map<String, List<String>>>(parsedManifest);
   }
 
-  String _chooseVariant(String main, ImageConfiguration config, List<String> candidates) {
-    if (config.devicePixelRatio == null || candidates == null || candidates.isEmpty)
-      return main;
+  String _chooseVariant(
+      String main, ImageConfiguration config, List<String> candidates) {
+    if (config.devicePixelRatio == null ||
+        candidates == null ||
+        candidates.isEmpty) return main;
     // TODO(ianh): Consider moving this parsing logic into _manifestParser.
     final SplayTreeMap<double, String> mapping = SplayTreeMap<double, String>();
     for (String candidate in candidates)
@@ -99,14 +99,11 @@ class PlaceholderImage extends AssetBundleImageProvider {
 
   // Return the value for the key in a [SplayTreeMap] nearest the provided key.
   String _findNearest(SplayTreeMap<double, String> candidates, double value) {
-    if (candidates.containsKey(value))
-      return candidates[value];
+    if (candidates.containsKey(value)) return candidates[value];
     final double lower = candidates.lastKeyBefore(value);
     final double upper = candidates.firstKeyAfter(value);
-    if (lower == null)
-      return candidates[upper];
-    if (upper == null)
-      return candidates[lower];
+    if (lower == null) return candidates[upper];
+    if (upper == null) return candidates[lower];
     if (value > (lower + upper) / 2)
       return candidates[upper];
     else
@@ -114,8 +111,7 @@ class PlaceholderImage extends AssetBundleImageProvider {
   }
 
   double _parseScale(String key) {
-
-    if ( key == assetName){
+    if (key == assetName) {
       return _naturalResolution;
     }
 

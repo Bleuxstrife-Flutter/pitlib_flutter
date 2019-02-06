@@ -184,4 +184,8 @@
 
 ## 0.1.0+1
 
-* Bug fix (some warnings and bug)
+* Bug fix (some warnings and bugs)
+
+## 0.1.0+2
+
+* Changes were made (chooser and pick from chooser now will use GroupCheckItem to be its argument to support icon in each items), and bug fix (some warnings and bugs)

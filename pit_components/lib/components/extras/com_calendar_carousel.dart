@@ -25,23 +25,23 @@ enum PickType {
 
 class CalendarStyle {
   final TextStyle defaultHeaderTextStyle =
-      ts.fs20.copyWith(color: PitComponents.datePickerHeaderColor);
+  ts.fs20.copyWith(color: PitComponents.datePickerHeaderColor);
   final TextStyle defaultPrevDaysTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerPrevDaysColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerPrevDaysColor);
   final TextStyle defaultNextDaysTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerNextDaysDaysColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerNextDaysDaysColor);
   final TextStyle defaultDaysTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerWeekdayColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerWeekdayColor);
   final TextStyle defaultTodayTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerTodayTextColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerTodayTextColor);
   final TextStyle defaultSelectedDayTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerSelectedTextColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerSelectedTextColor);
   final TextStyle daysLabelTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerDaysLabelColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerDaysLabelColor);
   final TextStyle defaultNotesTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerMarkedDaysDaysColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerMarkedDaysDaysColor);
   final TextStyle defaultWeekendTextStyle =
-      ts.fs14.copyWith(color: PitComponents.datePickerWeekendColor);
+  ts.fs14.copyWith(color: PitComponents.datePickerWeekendColor);
   final Widget defaultMarkedDateWidget = Positioned(
     child: Container(
       color: PitComponents.datePickerMarkedDaysDaysColor,
@@ -171,7 +171,7 @@ class _CalendarCarouselState extends State<CalendarCarousel>
   Widget build(BuildContext context) {
     List<DateTime> _selectedDateTimes = widget.selectedDateTimes
         .map((DateTime dateTime) =>
-            DateTime(dateTime.year, dateTime.month, dateTime.day))
+        DateTime(dateTime.year, dateTime.month, dateTime.day))
         .toList();
 
     return Column(children: [
@@ -237,7 +237,7 @@ class _CalendarCarouselState extends State<CalendarCarousel>
           builder: (BuildContext context, Widget child) {
             return AdvVisibility(
                 visibility: widget.selectionType == SelectionType.multi &&
-                        _dayMonthAnim.value != 1.0
+                    _dayMonthAnim.value != 1.0
                     ? VisibilityFlag.visible
                     : VisibilityFlag.invisible,
                 child: Opacity(
@@ -487,10 +487,10 @@ class DayCalendarState extends State<DayCalendar> {
 
   _buildCalendar(int slideIndex) {
     int totalItemCount = DateTime(
-          this._pageDates[slideIndex].year,
-          this._pageDates[slideIndex].month + 1,
-          0,
-        ).day +
+      this._pageDates[slideIndex].year,
+      this._pageDates[slideIndex].month + 1,
+      0,
+    ).day +
         this._startWeekday +
         (7 - this._endWeekday);
     int year = this._pageDates[slideIndex].year;
@@ -507,14 +507,14 @@ class DayCalendarState extends State<DayCalendar> {
             padding: EdgeInsets.zero,
             children: List.generate(totalItemCount, (index) {
               DateTime currentDate =
-                  DateTime(year, month, index + 1 - this._startWeekday);
+              DateTime(year, month, index + 1 - this._startWeekday);
               bool isToday = DateTime.now().day == currentDate.day &&
                   DateTime.now().month == currentDate.month &&
                   DateTime.now().year == currentDate.year;
               bool isSelectedDay = (widget.selectionType !=
-                          SelectionType.range &&
-                      _selectedDateTimes.length > 0 &&
-                      _selectedDateTimes.indexOf(currentDate) >= 0) ||
+                  SelectionType.range &&
+                  _selectedDateTimes.length > 0 &&
+                  _selectedDateTimes.indexOf(currentDate) >= 0) ||
                   (widget.selectionType == SelectionType.range &&
                       _selectedDateTimes.length == 2 &&
                       currentDate.difference(_selectedDateTimes[0]).inDays >
@@ -525,8 +525,8 @@ class DayCalendarState extends State<DayCalendar> {
               /// this is for range selection type
               bool isStartEndDay = _selectedDateTimes.length > 0 &&
                   ((_selectedDateTimes.indexOf(currentDate) == 0 ||
-                          _selectedDateTimes.indexOf(currentDate) ==
-                              _selectedDateTimes.length - 1) ||
+                      _selectedDateTimes.indexOf(currentDate) ==
+                          _selectedDateTimes.length - 1) ||
                       (widget.selectionType != SelectionType.range &&
                           _selectedDateTimes.indexOf(currentDate) >= 0));
 
@@ -538,19 +538,23 @@ class DayCalendarState extends State<DayCalendar> {
               TextStyle textStyle;
               Color borderColor;
               if (isPrevMonthDay) {
-                textStyle = widget.calendarStyle.defaultPrevDaysTextStyle;
+                textStyle = isSelectedDay || isStartEndDay
+                    ? widget.calendarStyle.defaultSelectedDayTextStyle
+                    : widget.calendarStyle.defaultPrevDaysTextStyle;
                 borderColor = widget.calendarStyle.prevMonthDayBorderColor;
               } else if (isThisMonthDay) {
-                textStyle = isSelectedDay
+                textStyle = isSelectedDay || isStartEndDay
                     ? widget.calendarStyle.defaultSelectedDayTextStyle
                     : isToday
-                        ? widget.calendarStyle.defaultTodayTextStyle
-                        : widget.calendarStyle.defaultDaysTextStyle;
+                    ? widget.calendarStyle.defaultTodayTextStyle
+                    : widget.calendarStyle.defaultDaysTextStyle;
                 borderColor = isToday
                     ? widget.calendarStyle.todayBorderColor
                     : widget.calendarStyle.nextMonthDayBorderColor;
               } else if (isNextMonthDay) {
-                textStyle = widget.calendarStyle.defaultNextDaysTextStyle;
+                textStyle = isSelectedDay || isStartEndDay
+                    ? widget.calendarStyle.defaultSelectedDayTextStyle
+                    : widget.calendarStyle.defaultNextDaysTextStyle;
                 borderColor = widget.calendarStyle.nextMonthDayBorderColor;
               }
 
@@ -581,18 +585,19 @@ class DayCalendarState extends State<DayCalendar> {
                   shape: (widget.calendarStyle.daysHaveCircularBorder ?? false)
                       ? CircleBorder(side: BorderSide(color: borderColor))
                       : RoundedRectangleBorder(
-                          side: BorderSide(color: borderColor)),
+                      side: BorderSide(color: borderColor)),
                   child: Stack(children: <Widget>[
                     Center(
                       child: Text(
                         '${currentDate.day}',
                         style: (index % 7 == 0 || index % 7 == 6) &&
-                                !isSelectedDay &&
-                                !isToday
+                            !isSelectedDay &&
+                            !isStartEndDay &&
+                            !isToday
                             ? widget.calendarStyle.defaultWeekendTextStyle
                             : isToday
-                                ? widget.calendarStyle.defaultTodayTextStyle
-                                : textStyle,
+                            ? widget.calendarStyle.defaultTodayTextStyle
+                            : textStyle,
                         maxLines: 1,
                       ),
                     ),
@@ -605,11 +610,11 @@ class DayCalendarState extends State<DayCalendar> {
         ),
         Visibility(
             visible: widget.markedDates
-                    .where((markedDate) =>
-                        markedDate.date.month == month &&
-                        markedDate.date.year == year)
-                    .toList()
-                    .length >
+                .where((markedDate) =>
+            markedDate.date.month == month &&
+                markedDate.date.year == year)
+                .toList()
+                .length >
                 0,
             child: Container(
               child: Text(
@@ -623,15 +628,15 @@ class DayCalendarState extends State<DayCalendar> {
             child: ListView(
                 children: widget.markedDates
                     .where((markedDate) =>
-                        markedDate.date.month == month &&
-                        markedDate.date.year == year)
+                markedDate.date.month == month &&
+                    markedDate.date.year == year)
                     .toList()
                     .map((markedDate) {
-          return Text(
-            markedDate.note,
-            style: widget.calendarStyle.defaultNotesTextStyle,
-          );
-        }).toList())),
+                  return Text(
+                    markedDate.note,
+                    style: widget.calendarStyle.defaultNotesTextStyle,
+                  );
+                }).toList())),
       ],
     );
   }
@@ -642,14 +647,14 @@ class DayCalendarState extends State<DayCalendar> {
       list.add(
         Expanded(
             child: Container(
-          margin: widget.calendarStyle.weekDayMargin,
-          child: Center(
-            child: Text(
-              weekDay,
-              style: widget.calendarStyle.daysLabelTextStyle,
-            ),
-          ),
-        )),
+              margin: widget.calendarStyle.weekDayMargin,
+              child: Center(
+                child: Text(
+                  weekDay,
+                  style: widget.calendarStyle.daysLabelTextStyle,
+                ),
+              ),
+            )),
       );
     }
     return list;
@@ -661,9 +666,9 @@ class DayCalendarState extends State<DayCalendar> {
     if (widget.markedDates != null &&
         widget.markedDates.length > 0 &&
         widget.markedDates
-                .where((markedDate) => markedDate.date == now)
-                .toList()
-                .length >
+            .where((markedDate) => markedDate.date == now)
+            .toList()
+            .length >
             0) {
       return widget.calendarStyle.defaultMarkedDateWidget;
     }
@@ -746,10 +751,10 @@ class DayCalendarState extends State<DayCalendar> {
     /// for initial set
     if (page == null) {
       DateTime date0 =
-          DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
+      DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
       DateTime date1 = DateTime(DateTime.now().year, DateTime.now().month, 1);
       DateTime date2 =
-          DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
+      DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
 
       this.setState(() {
         _startWeekday = date1.weekday;
@@ -802,9 +807,9 @@ class DayCalendarState extends State<DayCalendar> {
   /// an open method for [MonthCalendar] to trigger whenever it itself changes
   /// its month value
   void setMonth(
-    int month,
-    int year,
-  ) {
+      int month,
+      int year,
+      ) {
     List<DateTime> dates = List(3);
     dates[0] = DateTime(year, month - 1, 1);
     dates[1] = DateTime(year, month, 1);
@@ -986,7 +991,7 @@ class MonthCalendarState extends State<MonthCalendar>
                     ? VisibilityFlag.gone
                     : VisibilityFlag.visible,
                 child:
-                    Opacity(opacity: opacityCtrl.value, child: monthContent));
+                Opacity(opacity: opacityCtrl.value, child: monthContent));
 
           /// rect tween set when one of these two occasions occurs
           /// 1. Month Title tapped so it has to be squeezed inside year boxes
@@ -1102,25 +1107,25 @@ class MonthCalendarState extends State<MonthCalendar>
             DateTime.now().year == currentDate.year;
 
         DateTime firstDate =
-            _selectedDateTimes.length == 2 ? _selectedDateTimes.first : null;
+        _selectedDateTimes.length == 2 ? _selectedDateTimes.first : null;
         int firstDateInt = _selectedDateTimes.length == 2
             ? int.tryParse("${firstDate.year}${firstDate.month}")
             : 0;
 
         DateTime lastDate =
-            _selectedDateTimes.length == 2 ? _selectedDateTimes.last : null;
+        _selectedDateTimes.length == 2 ? _selectedDateTimes.last : null;
         int lastDateInt = _selectedDateTimes.length == 2
             ? int.tryParse("${lastDate.year}${lastDate.month}")
             : 0;
 
         bool isSelectedDay = (widget.selectionType != SelectionType.range &&
-                _selectedDateTimes.length > 0 &&
-                _selectedDateTimes
-                        .where((loopDate) =>
-                            loopDate.month == currentDate.month &&
-                            loopDate.year == currentDate.year)
-                        .length >
-                    0) ||
+            _selectedDateTimes.length > 0 &&
+            _selectedDateTimes
+                .where((loopDate) =>
+            loopDate.month == currentDate.month &&
+                loopDate.year == currentDate.year)
+                .length >
+                0) ||
             (widget.selectionType == SelectionType.range &&
                 _selectedDateTimes.length == 2 &&
                 currentDateInt > firstDateInt &&
@@ -1128,20 +1133,20 @@ class MonthCalendarState extends State<MonthCalendar>
 
         bool isStartEndDay = _selectedDateTimes.length > 0 &&
             ((widget.selectionType == SelectionType.range &&
-                    _selectedDateTimes.length == 2 &&
-                    ((_selectedDateTimes.first.month == currentDate.month &&
-                            _selectedDateTimes.first.year ==
-                                currentDate.year) ||
-                        (_selectedDateTimes.last.month == currentDate.month &&
-                            _selectedDateTimes.last.year ==
-                                currentDate.year))) ||
+                _selectedDateTimes.length == 2 &&
+                ((_selectedDateTimes.first.month == currentDate.month &&
+                    _selectedDateTimes.first.year ==
+                        currentDate.year) ||
+                    (_selectedDateTimes.last.month == currentDate.month &&
+                        _selectedDateTimes.last.year ==
+                            currentDate.year))) ||
                 (widget.selectionType != SelectionType.range &&
                     _selectedDateTimes.length > 0 &&
                     _selectedDateTimes
-                            .where((loopDate) =>
-                                loopDate.month == currentDate.month &&
-                                loopDate.year == currentDate.year)
-                            .length >
+                        .where((loopDate) =>
+                    loopDate.month == currentDate.month &&
+                        loopDate.year == currentDate.year)
+                        .length >
                         0));
 
         TextStyle textStyle;
@@ -1193,11 +1198,11 @@ class MonthCalendarState extends State<MonthCalendar>
                 padding: EdgeInsets.all(widget.calendarStyle.dayPadding),
                 shape: (widget.calendarStyle.daysHaveCircularBorder ?? false)
                     ? CircleBorder(
-                        side: BorderSide(color: borderColor),
-                      )
+                  side: BorderSide(color: borderColor),
+                )
                     : RoundedRectangleBorder(
-                        side: BorderSide(color: borderColor),
-                      ),
+                  side: BorderSide(color: borderColor),
+                ),
                 child: Center(
                   child: Text(
                     '${PitComponents.monthsArray[currentDate.month - 1]}',
@@ -1608,25 +1613,25 @@ class YearCalendarState extends State<YearCalendar>
         bool isToday = DateTime.now().year == year + index + 1;
         DateTime currentDate = DateTime(year + index + 1);
         bool isSelectedDay = (widget.selectionType != SelectionType.range &&
-                _selectedDateTimes.length > 0 &&
-                _selectedDateTimes
-                        .where((loopDate) => loopDate.year == currentDate.year)
-                        .length >
-                    0) ||
+            _selectedDateTimes.length > 0 &&
+            _selectedDateTimes
+                .where((loopDate) => loopDate.year == currentDate.year)
+                .length >
+                0) ||
             (widget.selectionType == SelectionType.range &&
                 _selectedDateTimes.length == 2 &&
                 currentDate.year > _selectedDateTimes.first.year &&
                 currentDate.year < _selectedDateTimes.last.year);
         bool isStartEndDay = _selectedDateTimes.length > 0 &&
             ((widget.selectionType == SelectionType.range &&
-                    ((_selectedDateTimes.first.year == currentDate.year) ||
-                        (_selectedDateTimes.last.year == currentDate.year))) ||
+                ((_selectedDateTimes.first.year == currentDate.year) ||
+                    (_selectedDateTimes.last.year == currentDate.year))) ||
                 (widget.selectionType != SelectionType.range &&
                     _selectedDateTimes.length > 0 &&
                     _selectedDateTimes
-                            .where(
-                                (loopDate) => loopDate.year == currentDate.year)
-                            .length >
+                        .where(
+                            (loopDate) => loopDate.year == currentDate.year)
+                        .length >
                         0));
 
         TextStyle textStyle;
@@ -1659,10 +1664,10 @@ class YearCalendarState extends State<YearCalendar>
               RenderBox renderBox = context.findRenderObject();
               RenderBox mainRenderBox = widget.mainContext.findRenderObject();
               var offset =
-                  renderBox.localToGlobal(Offset.zero, ancestor: mainRenderBox);
+              renderBox.localToGlobal(Offset.zero, ancestor: mainRenderBox);
               var size = renderBox.size;
               Rect rect =
-                  Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height);
+              Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height);
               boxRects[index] = rect;
             });
           }
@@ -1675,11 +1680,11 @@ class YearCalendarState extends State<YearCalendar>
               padding: EdgeInsets.all(widget.calendarStyle.dayPadding),
               shape: (widget.calendarStyle.daysHaveCircularBorder ?? false)
                   ? CircleBorder(
-                      side: BorderSide(color: borderColor),
-                    )
+                side: BorderSide(color: borderColor),
+              )
                   : RoundedRectangleBorder(
-                      side: BorderSide(color: borderColor),
-                    ),
+                side: BorderSide(color: borderColor),
+              ),
               child: Center(
                 child: Text(
                   "${currentDate.year}",

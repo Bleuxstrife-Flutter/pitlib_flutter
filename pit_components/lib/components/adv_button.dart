@@ -174,7 +174,7 @@ class AdvButtonWithIcon extends StatelessWidget {
       Color backgroundColor,
       Color textColor,
       this.width,
-        EdgeInsets padding})
+      EdgeInsets padding})
       : this.enable = enable ?? true,
         this.circular = circular ?? true,
         this.onlyBorder = onlyBorder ?? false,

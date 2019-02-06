@@ -27,8 +27,7 @@ class AdvRow extends StatelessWidget {
     VerticalDirection verticalDirection = VerticalDirection.down,
     TextBaseline textBaseline,
     List<Widget> children = const <Widget>[],
-  })
-      : this.divider = divider ?? Container(),
+  })  : this.divider = divider ?? Container(),
         this.onlyInner = onlyInner ?? true,
         this.key = key,
         this.mainAxisAlignment = mainAxisAlignment,
@@ -47,14 +46,14 @@ class AdvRow extends StatelessWidget {
       padding: padding,
       margin: margin,
       child: Row(
-          key: key,
-          mainAxisAlignment: mainAxisAlignment,
-          mainAxisSize: mainAxisSize,
-          crossAxisAlignment: crossAxisAlignment,
-          textDirection: textDirection,
-          verticalDirection: verticalDirection,
-          textBaseline: textBaseline,
-          children: newChildren,
+        key: key,
+        mainAxisAlignment: mainAxisAlignment,
+        mainAxisSize: mainAxisSize,
+        crossAxisAlignment: crossAxisAlignment,
+        textDirection: textDirection,
+        verticalDirection: verticalDirection,
+        textBaseline: textBaseline,
+        children: newChildren,
       ),
     );
   }
@@ -72,7 +71,8 @@ class AdvRow extends StatelessWidget {
       }
     }
 
-    if (onlyInner && newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
+    if (onlyInner && newChildren.length > 0)
+      newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }

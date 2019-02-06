@@ -82,7 +82,8 @@ class AdvListView extends StatelessWidget {
       }
     }
 
-    if (this.onlyInner && newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
+    if (this.onlyInner && newChildren.length > 0)
+      newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }

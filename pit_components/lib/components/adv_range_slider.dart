@@ -112,8 +112,8 @@ class _AdvRangeSliderState extends State<AdvRangeSlider>
                   _controller.upperValue = newUpperValue;
                 });
               },
-              onChangeStart: (double startLowerValue, double startUpperValue) {
-              },
+              onChangeStart:
+                  (double startLowerValue, double startUpperValue) {},
               onChangeEnd: (double newLowerValue, double newUpperValue) {
                 widget.onChanged(newLowerValue, newUpperValue);
               },

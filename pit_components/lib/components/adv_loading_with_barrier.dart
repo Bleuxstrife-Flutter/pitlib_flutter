@@ -4,21 +4,27 @@ import 'package:pit_components/pit_components.dart';
 class AdvLoadingWithBarrier extends StatelessWidget {
   final Widget content;
   final bool isProcessing;
+  final Color barrierColor;
 
-  AdvLoadingWithBarrier({this.content, this.isProcessing});
+  AdvLoadingWithBarrier({this.content, this.isProcessing, Color barrierColor})
+      : this.barrierColor = barrierColor ?? const Color(0x10000000);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[content, _AdvLoadingWrapper(isProcessing)],
+      children: <Widget>[
+        content,
+        _AdvLoadingWrapper(isProcessing, barrierColor)
+      ],
     );
   }
 }
 
 class _AdvLoadingWrapper extends StatefulWidget {
   final bool visible;
+  final Color barrierColor;
 
-  _AdvLoadingWrapper(this.visible);
+  _AdvLoadingWrapper(this.visible, this.barrierColor);
 
   @override
   State<StatefulWidget> createState() => _AdvLoadingWrapperState();
@@ -64,7 +70,7 @@ class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
           child: Opacity(
               opacity: opacityController.value,
               child: Container(
-                  color: const Color(0x10000000),
+                  color: widget.barrierColor,
                   child: Center(
                       child: Image.asset(
                     PitComponents.loadingAssetName,

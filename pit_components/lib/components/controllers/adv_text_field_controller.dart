@@ -232,7 +232,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
   TextSelection get selection => value.selection;
 
   set selection(TextSelection newSelection) {
-    if (newSelection.start > (text?.length ?? 0) || newSelection.end > (text?.length ?? 0))
+    if (newSelection.start > (text?.length ?? 0) ||
+        newSelection.end > (text?.length ?? 0))
       throw FlutterError('invalid text selection: $newSelection');
     value = value.copyWith(
         text: this.text,
@@ -262,8 +263,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
       TextAlign alignment,
       bool obscureText,
       Widget prefixIcon,
-        Widget suffixIcon,
-        TextSelection selection})
+      Widget suffixIcon,
+      TextSelection selection})
       : super(text == null &&
                 hint == null &&
                 label == null &&
@@ -275,8 +276,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 alignment == null &&
                 obscureText == null &&
                 prefixIcon == null &&
-      suffixIcon == null &&
-      selection == null
+                suffixIcon == null &&
+                selection == null
             ? AdvTextFieldEditingValue.empty
             : new AdvTextFieldEditingValue(
                 text: text,
@@ -290,8 +291,10 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 alignment: alignment ?? TextAlign.left,
                 obscureText: obscureText ?? false,
                 prefixIcon: prefixIcon,
-      suffixIcon: suffixIcon,
-      selection: selection = const TextSelection.collapsed(offset: -1),));
+                suffixIcon: suffixIcon,
+                selection: selection =
+                    const TextSelection.collapsed(offset: -1),
+              ));
 
   AdvTextFieldController.fromValue(AdvTextFieldEditingValue value)
       : super(value ?? AdvTextFieldEditingValue.empty);
@@ -315,8 +318,8 @@ class AdvTextFieldEditingValue {
       this.alignment = TextAlign.left,
       this.obscureText = false,
       this.prefixIcon,
-        this.suffixIcon,
-        this.selection = const TextSelection.collapsed(offset: -1)});
+      this.suffixIcon,
+      this.selection = const TextSelection.collapsed(offset: -1)});
 
   final String text;
   final String hint;
@@ -347,8 +350,8 @@ class AdvTextFieldEditingValue {
       TextAlign alignment,
       bool obscureText,
       Widget prefixIcon,
-        Widget suffixIcon,
-        TextSelection selection}) {
+      Widget suffixIcon,
+      TextSelection selection}) {
     return new AdvTextFieldEditingValue(
         text: text ?? this.text,
         hint: hint ?? this.hint,

@@ -10,7 +10,10 @@ class ComDatePickerPage extends StatefulWidget {
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
 
-  ComDatePickerPage({this.currentDate = const[], this.markedDates = const[], this.selectionType});
+  ComDatePickerPage(
+      {this.currentDate = const [],
+      this.markedDates = const [],
+      this.selectionType});
 
   @override
   State createState() => new _ComDatePickerPageState();

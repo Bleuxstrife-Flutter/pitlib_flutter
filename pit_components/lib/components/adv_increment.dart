@@ -31,37 +31,37 @@ class AdvIncrement extends StatefulWidget {
 
   AdvIncrement(
       {int counter,
-        String format,
-        String hint,
-        String label,
-        String error,
-        int minCounter,
-        int maxCounter,
-        int maxLines,
-        bool enable,
-        TextAlign alignment,
-        String measureText,
-        TextStyle textStyle,
-        EdgeInsetsGeometry padding,
-        this.valueChangeListener,
-        AdvIncrementController controller,
-        int maxLineExpand,
-        Color hintColor,
-        Color labelColor,
-        Color backgroundColor,
-        Color borderColor,
-        Color errorColor})
+      String format,
+      String hint,
+      String label,
+      String error,
+      int minCounter,
+      int maxCounter,
+      int maxLines,
+      bool enable,
+      TextAlign alignment,
+      String measureText,
+      TextStyle textStyle,
+      EdgeInsetsGeometry padding,
+      this.valueChangeListener,
+      AdvIncrementController controller,
+      int maxLineExpand,
+      Color hintColor,
+      Color labelColor,
+      Color backgroundColor,
+      Color borderColor,
+      Color errorColor})
       : assert(controller == null ||
-      (counter == null &&
-          format == null &&
-          hint == null &&
-          label == null &&
-          error == null &&
-          minCounter == null &&
-          maxCounter == null &&
-          maxLines == null &&
-          enable == null &&
-          alignment == null)),
+            (counter == null &&
+                format == null &&
+                hint == null &&
+                label == null &&
+                error == null &&
+                minCounter == null &&
+                maxCounter == null &&
+                maxLines == null &&
+                enable == null &&
+                alignment == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.backgroundColor =
@@ -157,7 +157,7 @@ class _AdvIncrementState extends State<AdvIncrement>
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
         : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-        PitComponents.lerpColor, 0.6);
+            PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -173,9 +173,9 @@ class _AdvIncrementState extends State<AdvIncrement>
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-        _defaultWidthAddition +
-        (_defaultInnerPadding * 2) +
-        (widget.padding.horizontal);
+            _defaultWidthAddition +
+            (_defaultInnerPadding * 2) +
+            (widget.padding.horizontal);
 
     TextSpan currentTextSpan = TextSpan(
         text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
@@ -254,8 +254,8 @@ class _AdvIncrementState extends State<AdvIncrement>
 //                border: InputBorder.none,
                   border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
-                        const Radius.circular(4.0),
-                      )),
+                    const Radius.circular(4.0),
+                  )),
                   contentPadding: new EdgeInsets.symmetric(
                       vertical: _paddingSize,
                       horizontal: _iconSize + 1.0 + (_paddingSize * 2)),

@@ -46,47 +46,48 @@ class AdvTextFieldPlain extends StatefulWidget {
   final TextAlign alignment;
   final bool obscureText;
 
-  AdvTextFieldPlain({this.text,
-    this.hint,
-    this.label,
-    this.error,
-    this.maxLength,
-    this.maxLines,
-    this.maxLengthEnforced,
-    this.needsCounter = false,
-    this.enable,
-    this.alignment,
-    this.obscureText,
-    String measureText,
-    TextStyle textStyle,
-    EdgeInsetsGeometry padding,
-    this.textChangeListener,
-    this.validator,
-    this.autoValidate = false,
-    List<TextInputFormatter> inputFormatters,
-    this.keyboardType = TextInputType.text,
-    this.controller,
-    int maxLineExpand,
-    this.focusNode,
-    Color hintColor,
-    Color labelColor,
-    Color lineColor,
-    Color errorColor,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.onIconTapped})
+  AdvTextFieldPlain(
+      {this.text,
+      this.hint,
+      this.label,
+      this.error,
+      this.maxLength,
+      this.maxLines,
+      this.maxLengthEnforced,
+      this.needsCounter = false,
+      this.enable,
+      this.alignment,
+      this.obscureText,
+      String measureText,
+      TextStyle textStyle,
+      EdgeInsetsGeometry padding,
+      this.textChangeListener,
+      this.validator,
+      this.autoValidate = false,
+      List<TextInputFormatter> inputFormatters,
+      this.keyboardType = TextInputType.text,
+      this.controller,
+      int maxLineExpand,
+      this.focusNode,
+      Color hintColor,
+      Color labelColor,
+      Color lineColor,
+      Color errorColor,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.onIconTapped})
       : assert(controller == null ||
-      (text == null &&
-          hint == null &&
-          label == null &&
-          error == null &&
-          maxLength == null &&
-          maxLines == null &&
-          maxLengthEnforced == null &&
-          enable == null &&
-          alignment == null &&
-          obscureText == null &&
-          suffixIcon == null)),
+            (text == null &&
+                hint == null &&
+                label == null &&
+                error == null &&
+                maxLength == null &&
+                maxLines == null &&
+                maxLengthEnforced == null &&
+                enable == null &&
+                alignment == null &&
+                obscureText == null &&
+                suffixIcon == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.lineColor = lineColor ?? PitComponents.textFieldLineColor,
@@ -118,18 +119,18 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
 
     _ctrl = _effectiveController == null
         ? AdvTextFieldController(
-        text: widget.text ?? "",
-        hint: widget.hint ?? "",
-        label: widget.label ?? "",
-        error: widget.error ?? "",
-        maxLength: widget.maxLength,
-        maxLines: widget.maxLines,
-        maxLengthEnforced: widget.maxLengthEnforced ?? false,
-        enable: widget.enable ?? true,
-        alignment: widget.alignment ?? TextAlign.left,
-        obscureText: widget.obscureText ?? false,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon)
+            text: widget.text ?? "",
+            hint: widget.hint ?? "",
+            label: widget.label ?? "",
+            error: widget.error ?? "",
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines,
+            maxLengthEnforced: widget.maxLengthEnforced ?? false,
+            enable: widget.enable ?? true,
+            alignment: widget.alignment ?? TextAlign.left,
+            obscureText: widget.obscureText ?? false,
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: widget.suffixIcon)
         : null;
 
     _effectiveController.addListener(_update);
@@ -141,8 +142,10 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
 
   _updateEffectiveSelection() {
     if (_textEditingCtrl.selection != _effectiveController.selection &&
-        _textEditingCtrl.selection.start <= (_effectiveController.text?.length ?? 0) &&
-        _textEditingCtrl.selection.end <= (_effectiveController.text?.length ?? 0)) {
+        _textEditingCtrl.selection.start <=
+            (_effectiveController.text?.length ?? 0) &&
+        _textEditingCtrl.selection.end <=
+            (_effectiveController.text?.length ?? 0)) {
       _effectiveController.removeListener(_update);
       _effectiveController.selection = _textEditingCtrl.selection;
       _effectiveController.addListener(_update);
@@ -159,13 +162,13 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
 
   _updateTextController() {
     var cursorPos = _effectiveController.selection;
+    _textEditingCtrl.removeListener(_updateEffectiveSelection);
     _textEditingCtrl.text = _effectiveController.text;
 
     if (cursorPos.start > _textEditingCtrl.text.length) {
       cursorPos = new TextSelection.fromPosition(
           new TextPosition(offset: _textEditingCtrl.text.length));
     }
-    _textEditingCtrl.removeListener(_updateEffectiveSelection);
     _textEditingCtrl.selection = cursorPos;
     _textEditingCtrl.addListener(_updateEffectiveSelection);
   }
@@ -202,7 +205,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     final Color _textColor = _effectiveController.enable
         ? widget.measureTextSpan.style.color
         : Color.lerp(
-        widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
     final Color _hintColor = _effectiveController.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -210,8 +213,8 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     int maxLengthHeight = _effectiveController == null
         ? 0
         : _effectiveController.maxLength != null && widget.needsCounter
-        ? 22
-        : 0;
+            ? 22
+            : 0;
 
     var tp = new TextPainter(
         text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
@@ -228,9 +231,9 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-        _defaultWidthAddition +
-        (_defaultInnerPadding * 2) +
-        (widget.padding.horizontal);
+            _defaultWidthAddition +
+            (_defaultInnerPadding * 2) +
+            (widget.padding.horizontal);
 
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -256,7 +259,8 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     }
 
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
-    double _currentHeight = tp.size.height > maxHeightExpand ? maxHeightExpand : tp.size.height;
+    double _currentHeight =
+        tp.size.height > maxHeightExpand ? maxHeightExpand : tp.size.height;
 
     Widget mainChild = Container(
       width: width,
@@ -270,9 +274,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
         ),
         child: Theme(
           data: new ThemeData(
-            cursorColor: Theme
-                .of(context)
-                .cursorColor,
+            cursorColor: Theme.of(context).cursorColor,
             hintColor: widget.lineColor,
             primaryColor: widget.lineColor,
             accentColor: widget.lineColor,
@@ -285,13 +287,13 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
               _effectiveController.removeListener(_update);
               if (widget.keyboardType == TextInputType.number && newText == "")
                 newText = "";
-              var newValue =
-              widget.keyboardType == TextInputType.number && newText != ""
+              var newValue = widget.keyboardType == TextInputType.number &&
+                      newText != ""
                   ? newText.indexOf(".") > 0
-                  ? (double.tryParse(newText) ?? _effectiveController.text)
-                  .toString()
-                  : (int.tryParse(newText) ?? _effectiveController.text)
-                  .toString()
+                      ? (double.tryParse(newText) ?? _effectiveController.text)
+                          .toString()
+                      : (int.tryParse(newText) ?? _effectiveController.text)
+                          .toString()
                   : newText;
 
               String oldValue = _effectiveController.text;
@@ -318,24 +320,24 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
             decoration: ModInputDecoration(
                 prefixIcon: _effectiveController.prefixIcon != null
                     ? InkWell(
-                    onTap: () {
-                      widget.onIconTapped(IconType.prefix);
-                    },
-                    child: Container(
-                        child: _effectiveController.prefixIcon,
-                        margin: EdgeInsets.only(right: _paddingSize)))
+                        onTap: () {
+                          widget.onIconTapped(IconType.prefix);
+                        },
+                        child: Container(
+                            child: _effectiveController.prefixIcon,
+                            margin: EdgeInsets.only(right: _paddingSize)))
                     : null,
                 suffixIcon: _effectiveController.suffixIcon != null
                     ? InkWell(
-                    onTap: () {
-                      widget.onIconTapped(IconType.suffix);
-                    },
-                    child: Container(
-                        child: _effectiveController.suffixIcon,
-                        margin: EdgeInsets.only(left: _paddingSize)))
+                        onTap: () {
+                          widget.onIconTapped(IconType.suffix);
+                        },
+                        child: Container(
+                            child: _effectiveController.suffixIcon,
+                            margin: EdgeInsets.only(left: _paddingSize)))
                     : null,
                 contentPadding:
-                new EdgeInsets.symmetric(vertical: _paddingSize),
+                    new EdgeInsets.symmetric(vertical: _paddingSize),
                 //untuk ini padding horizontalnya aneh, leftnya gk ada paddingnya, jadinya pake margin untuk icon aja
                 hintText: _effectiveController.hint,
                 hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),

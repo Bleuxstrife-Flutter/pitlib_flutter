@@ -50,50 +50,50 @@ class AdvTextFieldWithButton extends StatefulWidget {
 
   AdvTextFieldWithButton(
       {this.text,
-        this.hint,
-        this.label,
-        this.error,
-        this.maxLength,
-        this.maxLines,
-        this.maxLengthEnforced,
-        this.needsCounter = false,
-        this.enable,
-        this.alignment,
-        this.obscureText,
-        String measureText,
-        TextStyle textStyle,
-        EdgeInsetsGeometry padding,
-        this.textChangeListener,
-        this.validator,
-        this.autoValidate = false,
-        List<TextInputFormatter> inputFormatters,
-        this.keyboardType = TextInputType.text,
-        this.controller,
-        int maxLineExpand,
-        this.focusNode,
-        Color hintColor,
-        Color labelColor,
-        Color backgroundColor,
-        Color borderColor,
-        Color errorColor,
-        this.prefixIcon,
-        this.suffixIcon,
-        this.onIconTapped,
-        this.buttonName,
-        this.onButtonTapped})
+      this.hint,
+      this.label,
+      this.error,
+      this.maxLength,
+      this.maxLines,
+      this.maxLengthEnforced,
+      this.needsCounter = false,
+      this.enable,
+      this.alignment,
+      this.obscureText,
+      String measureText,
+      TextStyle textStyle,
+      EdgeInsetsGeometry padding,
+      this.textChangeListener,
+      this.validator,
+      this.autoValidate = false,
+      List<TextInputFormatter> inputFormatters,
+      this.keyboardType = TextInputType.text,
+      this.controller,
+      int maxLineExpand,
+      this.focusNode,
+      Color hintColor,
+      Color labelColor,
+      Color backgroundColor,
+      Color borderColor,
+      Color errorColor,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.onIconTapped,
+      this.buttonName,
+      this.onButtonTapped})
       : assert(controller == null ||
-      (text == null &&
-          hint == null &&
-          label == null &&
-          error == null &&
-          maxLength == null &&
-          maxLines == null &&
-          maxLengthEnforced == null &&
-          enable == null &&
-          alignment == null &&
-          obscureText == null &&
-          prefixIcon == null &&
-          suffixIcon == null)),
+            (text == null &&
+                hint == null &&
+                label == null &&
+                error == null &&
+                maxLength == null &&
+                maxLines == null &&
+                maxLengthEnforced == null &&
+                enable == null &&
+                alignment == null &&
+                obscureText == null &&
+                prefixIcon == null &&
+                suffixIcon == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.backgroundColor =
@@ -124,18 +124,18 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
     _ctrl = _effectiveController == null
         ? AdvTextFieldController(
-        text: widget.text ?? "",
-        hint: widget.hint ?? "",
-        label: widget.label ?? "",
-        error: widget.error ?? "",
-        maxLength: widget.maxLength,
-        maxLines: widget.maxLines,
-        maxLengthEnforced: widget.maxLengthEnforced ?? false,
-        enable: widget.enable ?? true,
-        alignment: widget.alignment ?? TextAlign.left,
-        obscureText: widget.obscureText ?? false,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon)
+            text: widget.text ?? "",
+            hint: widget.hint ?? "",
+            label: widget.label ?? "",
+            error: widget.error ?? "",
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines,
+            maxLengthEnforced: widget.maxLengthEnforced ?? false,
+            enable: widget.enable ?? true,
+            alignment: widget.alignment ?? TextAlign.left,
+            obscureText: widget.obscureText ?? false,
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: widget.suffixIcon)
         : null;
 
     _effectiveController.addListener(_update);
@@ -145,8 +145,10 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
   _updateEffectiveSelection() {
     if (_textEditingCtrl.selection != _effectiveController.selection &&
-        _textEditingCtrl.selection.start <= (_effectiveController.text?.length ?? 0) &&
-        _textEditingCtrl.selection.end <= (_effectiveController.text?.length ?? 0)) {
+        _textEditingCtrl.selection.start <=
+            (_effectiveController.text?.length ?? 0) &&
+        _textEditingCtrl.selection.end <=
+            (_effectiveController.text?.length ?? 0)) {
       _effectiveController.removeListener(_update);
       _effectiveController.selection = _textEditingCtrl.selection;
       _effectiveController.addListener(_update);
@@ -163,13 +165,13 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
   _updateTextController() {
     var cursorPos = _effectiveController.selection;
+    _textEditingCtrl.removeListener(_updateEffectiveSelection);
     _textEditingCtrl.text = _effectiveController.text;
 
     if (cursorPos.start > _textEditingCtrl.text.length) {
       cursorPos = new TextSelection.fromPosition(
           new TextPosition(offset: _textEditingCtrl.text.length));
     }
-    _textEditingCtrl.removeListener(_updateEffectiveSelection);
     _textEditingCtrl.selection = cursorPos;
     _textEditingCtrl.addListener(_updateEffectiveSelection);
   }
@@ -209,7 +211,7 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
     final Color _textColor = _effectiveController.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
         : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-        PitComponents.lerpColor, 0.6);
+            PitComponents.lerpColor, 0.6);
     final Color _hintColor = _effectiveController.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -221,7 +223,9 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 //    );
     int maxLengthHeight = _effectiveController == null
         ? 0
-        : _effectiveController.maxLength != null && widget.needsCounter ? 22 : 0;
+        : _effectiveController.maxLength != null && widget.needsCounter
+            ? 22
+            : 0;
 
     double _iconSize = 24.0 / 16.0 * widget.measureTextSpan.style.fontSize;
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
@@ -233,19 +237,14 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
     double width = tp.size.width == 0
         ? maxWidth
-        : tp.size.width +
-        _defaultWidthAddition +
-        (_defaultInnerPadding * 2);
+        : tp.size.width + _defaultWidthAddition + (_defaultInnerPadding * 2);
 
     TextSpan currentTextSpan = TextSpan(
         text: _textEditingCtrl.text, style: widget.measureTextSpan.style);
 
     var tp2 = new TextPainter(
         text: currentTextSpan, textDirection: ui.TextDirection.ltr);
-    tp2.layout(
-        maxWidth: width -
-            _iconSize -
-            (_paddingSize * 2));
+    tp2.layout(maxWidth: width - _iconSize - (_paddingSize * 2));
 
     final List<TextInputFormatter> formatters =
         widget.inputFormatters ?? <TextInputFormatter>[];
@@ -254,11 +253,13 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
       if (_effectiveController.maxLength == null) {
         formatters.add(LengthLimitingTextInputFormatter(18));
       } else {
-        if (_effectiveController.maxLength > 18) _effectiveController.maxLength = 18;
+        if (_effectiveController.maxLength > 18)
+          _effectiveController.maxLength = 18;
       }
     }
 
-    if (_effectiveController.label != null && _effectiveController.label != "") {
+    if (_effectiveController.label != null &&
+        _effectiveController.label != "") {
       children.add(
         Container(
           width: width,
@@ -297,12 +298,13 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
               _effectiveController.removeListener(_update);
               if (widget.keyboardType == TextInputType.number && newText == "")
                 newText = "";
-              var newValue = widget.keyboardType == TextInputType.number && newText != ""
+              var newValue = widget.keyboardType == TextInputType.number &&
+                      newText != ""
                   ? newText.indexOf(".") > 0
-                  ? (double.tryParse(newText) ?? _effectiveController.text)
-                  .toString()
-                  : (int.tryParse(newText) ?? _effectiveController.text)
-                  .toString()
+                      ? (double.tryParse(newText) ?? _effectiveController.text)
+                          .toString()
+                      : (int.tryParse(newText) ?? _effectiveController.text)
+                          .toString()
                   : newText;
 
               String oldValue = _effectiveController.text;
@@ -319,7 +321,8 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
             },
             obscureText: _effectiveController.obscureText,
             enabled: _effectiveController.enable,
-            maxLines: 1, //untuk ini harus 1 line maxnya, karena nanti kalo bs 2 line, harus ganti ukuran tombol
+            maxLines: 1,
+            //untuk ini harus 1 line maxnya, karena nanti kalo bs 2 line, harus ganti ukuran tombol
             maxLength: _effectiveController.maxLength,
             keyboardType: widget.keyboardType,
             inputFormatters: formatters,
@@ -330,17 +333,19 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
                 iconSize: _iconSize,
                 prefixIcon: _effectiveController.prefixIcon != null
                     ? InkWell(
-                    onTap: () {
-                      widget.onIconTapped(IconType.prefix);
-                    },
-                    child: Container(child: _effectiveController.prefixIcon))
+                        onTap: () {
+                          widget.onIconTapped(IconType.prefix);
+                        },
+                        child:
+                            Container(child: _effectiveController.prefixIcon))
                     : null,
                 suffixIcon: _effectiveController.suffixIcon != null
                     ? InkWell(
-                    onTap: () {
-                      widget.onIconTapped(IconType.suffix);
-                    },
-                    child: Container(child: _effectiveController.suffixIcon))
+                        onTap: () {
+                          widget.onIconTapped(IconType.suffix);
+                        },
+                        child:
+                            Container(child: _effectiveController.suffixIcon))
                     : null,
                 filled: true,
                 fillColor: _backgroundColor,
@@ -392,7 +397,8 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: innerChildren)));
 
-    if (_effectiveController.error != null && _effectiveController.error != "") {
+    if (_effectiveController.error != null &&
+        _effectiveController.error != "") {
       TextStyle style = ts.fs11
           .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 

@@ -34,7 +34,7 @@ class AdvDropDown extends StatefulWidget {
       EdgeInsetsGeometry padding,
       this.validator,
       AdvDropDownController controller,
-        Color backgroundColor,
+      Color backgroundColor,
       @required this.onChanged})
       : assert(measureText == null || measureTextSpan == null),
         assert(controller == null ||
@@ -45,7 +45,8 @@ class AdvDropDown extends StatefulWidget {
                 hint: hint ?? "",
                 alignment: alignment ?? TextAlign.left,
                 items: items ?? Map()),
-        this.backgroundColor = backgroundColor ?? PitComponents.dropDownBackgroundColor,
+        this.backgroundColor =
+            backgroundColor ?? PitComponents.dropDownBackgroundColor,
         this.measureTextSpan = measureTextSpan ??
             new TextSpan(
                 text: measureText,
@@ -232,8 +233,7 @@ class _AdvDropDownState extends State<AdvDropDown>
       _controller.text = newValue.result.value;
       widget.controller.text = newValue.result.value;
 
-      if (widget.onChanged != null)
-        widget.onChanged(newValue.result.value);
+      if (widget.onChanged != null) widget.onChanged(newValue.result.value);
 
       _update();
     });

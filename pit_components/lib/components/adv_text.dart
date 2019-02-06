@@ -17,18 +17,18 @@ class AdvText extends StatelessWidget {
   final String semanticsLabel;
 
   AdvText(
-      this.data, {
-        this.key,
-        this.style,
-        this.textAlign,
-        this.textDirection,
-        this.locale,
-        this.softWrap,
-        this.overflow,
-        this.textScaleFactor,
-        this.maxLines,
-        this.semanticsLabel,
-      });
+    this.data, {
+    this.key,
+    this.style,
+    this.textAlign,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.overflow,
+    this.textScaleFactor,
+    this.maxLines,
+    this.semanticsLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +94,13 @@ class AdvText extends StatelessWidget {
     while (maxLines > 0) {
       if (maxLines == 1) {
         String croppedText =
-        Utils.getEllipsizedText(text, this.style, maxWidth);
+            Utils.getEllipsizedText(text, this.style, maxWidth);
         _data += "$croppedText";
 
         text = text.substring(croppedText.length);
       } else {
         String croppedText =
-        Utils.getEllipsizedText(text, this.style, maxWidth, withDot: false);
+            Utils.getEllipsizedText(text, this.style, maxWidth, withDot: false);
         _data += "$croppedText";
         text = text.substring(croppedText.length);
         if (text.length > 0) {

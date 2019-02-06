@@ -20,13 +20,15 @@ abstract class AdvState<T extends StatefulWidget> extends State<T> {
 
   bool isProcessing() => _processing;
 
-  void process(Function f) async {
+  Future<void> process(Function f) async {
     setState(() {
       _processing = true;
     });
     await f();
-    setState(() {
-      _processing = false;
-    });
+    if (this.mounted) {
+      setState(() {
+        _processing = false;
+      });
+    }
   }
 }

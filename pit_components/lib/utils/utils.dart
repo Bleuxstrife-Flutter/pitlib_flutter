@@ -29,8 +29,11 @@ class Utils {
 
     if (wholeWidth <= maxWidth) return text;
 
-    int startPositionPercentage = (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
-    int startPosition = (startPositionPercentage * text.length / 100).ceil().clamp(0, text.length);
+    int startPositionPercentage =
+        (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
+    int startPosition = (startPositionPercentage * text.length / 100)
+        .ceil()
+        .clamp(0, text.length);
 
     tp.text = TextSpan(
         text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}",
@@ -88,7 +91,7 @@ class Utils {
 
   static parseStringToTextSpan(String fullString, List<String> findString) {
     String stringWithSmallestIndex =
-    findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
+        findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
     int index = fullString.indexOf(stringWithSmallestIndex);
     int startCropFrom = 0;
     List<TextSpan> textSpans = [];
@@ -112,7 +115,7 @@ class Utils {
     }
 
     String croppedString =
-    fullString.substring(startCropFrom, fullString.length);
+        fullString.substring(startCropFrom, fullString.length);
     textSpans.add(TextSpan(text: croppedString));
 
     return textSpans;
@@ -134,8 +137,8 @@ class Utils {
       wordWithSmallestIndex = tempSmallestIndex == null
           ? findString[i]
           : tempSmallestIndex < tempIndex
-          ? wordWithSmallestIndex
-          : findString[i];
+              ? wordWithSmallestIndex
+              : findString[i];
       tempSmallestIndex = tempSmallestIndex == null
           ? tempIndex
           : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
@@ -146,8 +149,8 @@ class Utils {
 
   static Future<List<DateTime>> pickDate(BuildContext context,
       {List<DateTime> dates,
-        List<MarkedDate> markedDates,
-        SelectionType selectionType}) async {
+      List<MarkedDate> markedDates,
+      SelectionType selectionType}) async {
     List<DateTime> result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -176,16 +179,17 @@ class Utils {
 
   static pickFromChooser(BuildContext context,
       {String title = "",
-        Map<String, dynamic> items,
-        String currentItem = "",
-        OnItemChanged callback}) {
+      List<GroupCheckItem> items,
+      String currentItem = "",
+      OnItemChanged callback}) {
     assert(items != null);
 
-    List<GroupCheckItem> itemList = items.keys.map((key) {
-      return GroupCheckItem(key, items[key]);
-    }).toList();
+//    List<GroupCheckItem> itemList = items.keys.map((key) {
+//      return GroupCheckItem(key, items[key]);
+//    }).toList();
+
     AdvGroupCheckController controller =
-    AdvGroupCheckController(checkedValue: currentItem, itemList: itemList);
+        AdvGroupCheckController(checkedValue: currentItem, itemList: items);
 
     showModalBottomSheet(
         context: context,
@@ -201,20 +205,17 @@ class Utils {
                   Navigator.pop(context);
                 },
               ),
-              Container(
-                  height: 2.0,
-                  color: Theme.of(context).dividerColor
-              ),
+              Container(height: 2.0, color: Theme.of(context).dividerColor),
               Flexible(
                   child: SingleChildScrollView(
                       child: AdvGroupCheck(
-                        controller: controller,
-                        callback: (itemSelected) async {
-                          await Future.delayed(Duration(milliseconds: 200));
-                          Navigator.of(context).pop();
-                          callback(context, currentItem, itemSelected);
-                        },
-                      )))
+                controller: controller,
+                callback: (itemSelected) async {
+                  await Future.delayed(Duration(milliseconds: 200));
+                  Navigator.of(context).pop();
+                  callback(context, currentItem, itemSelected);
+                },
+              )))
             ],
           );
         });
@@ -222,10 +223,10 @@ class Utils {
 
   static pickFromIncrement(BuildContext context,
       {String title = "",
-        AdvIncrementController controller,
-        int currentItem,
-        String infoMessage = "",
-        OnValueChanged callback}) async {
+      AdvIncrementController controller,
+      int currentItem,
+      String infoMessage = "",
+      OnValueChanged callback}) async {
     int after;
 
     showModalBottomSheet(
@@ -243,10 +244,7 @@ class Utils {
                   Navigator.pop(context);
                 },
               ),
-              Container(
-                  height: 2.0,
-                  color: Theme.of(context).dividerColor
-              ),
+              Container(height: 2.0, color: Theme.of(context).dividerColor),
               Flexible(
                 child: SingleChildScrollView(
                   child: AdvColumn(
