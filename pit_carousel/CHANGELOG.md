@@ -13,3 +13,7 @@
 ## 0.0.4
 
 * Bug fixes
+
+## 0.1.0
+
+* Initial stable release
