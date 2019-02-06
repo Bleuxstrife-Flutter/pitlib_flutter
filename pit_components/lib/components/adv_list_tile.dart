@@ -37,7 +37,7 @@ class AdvListTile extends StatelessWidget {
           child: Container(
               padding: padding,
               child: AdvRow(
-                mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: crossAxisAlignment,
                   divider: RowDivider(divider),
                   children: children)),

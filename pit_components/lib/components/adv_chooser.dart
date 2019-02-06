@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_column.dart';
+import 'package:pit_components/components/adv_group_check.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/controllers/adv_chooser_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
@@ -12,7 +13,8 @@ import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 import 'package:pit_components/utils/utils.dart';
 
-typedef void OnItemChanged(BuildContext context, String oldValue, String newValue);
+typedef void OnItemChanged(
+    BuildContext context, String oldValue, String newValue);
 
 class AdvChooser extends StatefulWidget {
   final AdvChooserController controller;
@@ -27,23 +29,23 @@ class AdvChooser extends StatefulWidget {
 
   AdvChooser(
       {String text,
-        String hint,
-        String label,
-        String error,
-        bool enable,
-        TextAlign alignment,
-        String measureText,
-        TextSpan measureTextSpan,
-        EdgeInsetsGeometry padding,
-        AdvChooserController controller,
-        Map<String, dynamic> items,
-        int maxLineExpand,
-        Color hintColor,
-        Color labelColor,
-        Color backgroundColor,
-        Color borderColor,
-        Color errorColor,
-        this.itemChangeListener})
+      String hint,
+      String label,
+      String error,
+      bool enable,
+      TextAlign alignment,
+      String measureText,
+      TextSpan measureTextSpan,
+      EdgeInsetsGeometry padding,
+      AdvChooserController controller,
+      List<GroupCheckItem> items,
+      int maxLineExpand,
+      Color hintColor,
+      Color labelColor,
+      Color backgroundColor,
+      Color borderColor,
+      Color errorColor,
+      this.itemChangeListener})
       : assert(measureText == null || measureTextSpan == null),
         assert(controller == null ||
             (text == null &&
@@ -67,7 +69,7 @@ class AdvChooser extends StatefulWidget {
                 error: error ?? "",
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.left,
-                items: items ?? Map()),
+                items: items ?? const []),
         this.measureTextSpan = measureTextSpan ??
             new TextSpan(text: measureText, style: ts.fs16.merge(ts.tcBlack)),
         this.padding = padding ?? new EdgeInsets.all(0.0);
@@ -140,7 +142,7 @@ class _AdvChooserState extends State<AdvChooser>
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color
         : Color.lerp(
-        widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -156,9 +158,9 @@ class _AdvChooserState extends State<AdvChooser>
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-        _defaultWidthAddition +
-        (_defaultInnerPadding * 2) +
-        (widget.padding.horizontal);
+            _defaultWidthAddition +
+            (_defaultInnerPadding * 2) +
+            (widget.padding.horizontal);
 
     if (widget.controller.label != null && widget.controller.label != "") {
       children.add(
@@ -172,9 +174,9 @@ class _AdvChooserState extends State<AdvChooser>
 
     TextEditingController controller = new TextEditingController();
 
-    widget.controller.items.forEach((key, value) {
-      if (key == widget.controller.text) {
-        controller.text = value;
+    widget.controller.items.forEach((GroupCheckItem item) {
+      if (item.data == widget.controller.text) {
+        controller.text = item.display;
       }
     });
 
@@ -185,10 +187,11 @@ class _AdvChooserState extends State<AdvChooser>
       padding: widget.padding,
       child: new ConstrainedBox(
         constraints: new BoxConstraints(
-            minHeight: tp.size.height + _defaultHeightAddition -
-                /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
-                8.0 -
-                ((8.0 - _paddingSize) * 2),
+          minHeight: tp.size.height +
+              _defaultHeightAddition -
+              /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
+              8.0 -
+              ((8.0 - _paddingSize) * 2),
           /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result,
         ),
         child: new GestureDetector(
@@ -197,7 +200,8 @@ class _AdvChooserState extends State<AdvChooser>
             Utils.pickFromChooser(context,
                 title: widget.controller.label,
                 items: widget.controller.items,
-                currentItem: widget.controller.text, callback: _handleItemChanged);
+                currentItem: widget.controller.text,
+                callback: _handleItemChanged);
           },
           child: AbsorbPointer(
             child: Theme(

@@ -23,7 +23,10 @@ class NumberThousandFormatter extends TextInputFormatter {
     if (oldValueText.indexOf(".") != -1) {
       nonDecimalOldText = oldValueText.substring(0, oldValueText.indexOf("."));
     } else {
-      nonDecimalOldText = (int.tryParse(oldValueText.substring(0, oldValueText.length)) ?? 0 ~/ 100).toString();
+      nonDecimalOldText =
+          (int.tryParse(oldValueText.substring(0, oldValueText.length)) ??
+                  0 ~/ 100)
+              .toString();
     }
 
     String nonDecimalNewText = "";
@@ -31,7 +34,9 @@ class NumberThousandFormatter extends TextInputFormatter {
 
     if (newValueText.indexOf(".") != -1) {
       nonDecimalNewText = newValueText.substring(0, newValueText.indexOf("."));
-      decimalNewText = newValueText.substring(newValueText.indexOf("."), newValueText.length).replaceAll(".", "");
+      decimalNewText = newValueText
+          .substring(newValueText.indexOf("."), newValueText.length)
+          .replaceAll(".", "");
     } else {
       nonDecimalNewText = newValueText.substring(0, newValueText.length);
     }
@@ -45,7 +50,6 @@ class NumberThousandFormatter extends TextInputFormatter {
     NumberFormat nf = NumberFormat("#,###.00");
 
     newValueText = nf.format(value);
-
 
     if (newValueText.indexOf(".") != -1) {
       nonDecimalNewText = newValueText.substring(0, newValueText.indexOf("."));
@@ -69,10 +73,7 @@ class NumberThousandFormatter extends TextInputFormatter {
           extentOffset: newValue.selection.end + selectionOffset);
     }
 
-
-    return newValue.copyWith(
-        text: newValueText,
-        selection: newSelection);
+    return newValue.copyWith(text: newValueText, selection: newSelection);
   }
 
   TextSelection updateCursorPosition(String text) {

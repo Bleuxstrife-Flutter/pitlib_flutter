@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pit_components/components/adv_column.dart';
+import 'package:pit_components/components/adv_group_check.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/controllers/adv_chooser_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
@@ -36,7 +37,7 @@ class AdvChooserPlain extends StatefulWidget {
       TextSpan measureTextSpan,
       EdgeInsetsGeometry padding,
       AdvChooserController controller,
-      Map<String, dynamic> items,
+      List<GroupCheckItem> items,
       int maxLineExpand,
       Color hintColor,
       Color labelColor,
@@ -64,7 +65,7 @@ class AdvChooserPlain extends StatefulWidget {
                 error: error ?? "",
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.left,
-                items: items ?? Map()),
+                items: items ?? const []),
         this.measureTextSpan = measureTextSpan ??
             new TextSpan(text: measureText, style: ts.fs16.merge(ts.tcBlack)),
         this.padding = padding ?? new EdgeInsets.all(0.0);
@@ -166,9 +167,9 @@ class _AdvChooserPlainState extends State<AdvChooserPlain>
 
     TextEditingController controller = new TextEditingController();
 
-    widget.controller.items.forEach((key, value) {
-      if (key == widget.controller.text) {
-        controller.text = value;
+    widget.controller.items.forEach((GroupCheckItem item) {
+      if (item.data == widget.controller.text) {
+        controller.text = item.display;
       }
     });
 

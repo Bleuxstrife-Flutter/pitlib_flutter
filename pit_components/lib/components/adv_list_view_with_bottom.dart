@@ -115,7 +115,8 @@ class _AdvListViewWithBottomState extends State<AdvListViewWithBottom>
       newChildren.add(widget.divider);
     }
 
-    if (widget.onlyInner && newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
+    if (widget.onlyInner && newChildren.length > 0)
+      newChildren.removeAt(newChildren.length - 1);
 
     newChildren.add(AdvVisibility(
         visibility: VisibilityFlag.invisible, child: widget.footerItem));
@@ -159,4 +160,3 @@ class ListViewDivider extends StatelessWidget {
         color: color);
   }
 }
-

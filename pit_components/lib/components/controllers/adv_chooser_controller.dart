@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pit_components/components/adv_group_check.dart';
 
 class AdvChooserController extends ValueNotifier<AdvChooserEditingValue> {
   String get text => value.text;
@@ -79,9 +80,9 @@ class AdvChooserController extends ValueNotifier<AdvChooserEditingValue> {
         items: this.items);
   }
 
-  Map<String, dynamic> get items => value.items;
+  List<GroupCheckItem> get items => value.items;
 
-  set items(Map<String, dynamic> newItems) {
+  set items(List<GroupCheckItem> newItems) {
     value = value.copyWith(
         text: this.text,
         hint: this.hint,
@@ -99,7 +100,7 @@ class AdvChooserController extends ValueNotifier<AdvChooserEditingValue> {
       String error,
       bool enable,
       TextAlign alignment,
-      Map<String, dynamic> items})
+      List<GroupCheckItem> items})
       : super(text == null &&
                 hint == null &&
                 label == null &&
@@ -142,7 +143,7 @@ class AdvChooserEditingValue {
   final String error;
   final bool enable;
   final TextAlign alignment;
-  final Map<String, dynamic> items;
+  final List<GroupCheckItem> items;
 
   static const AdvChooserEditingValue empty = const AdvChooserEditingValue();
 
@@ -153,7 +154,7 @@ class AdvChooserEditingValue {
       String error,
       bool enable,
       TextAlign alignment,
-      Map<String, dynamic> items}) {
+      List<GroupCheckItem> items}) {
     return new AdvChooserEditingValue(
         text: text ?? this.text,
         hint: hint ?? this.hint,

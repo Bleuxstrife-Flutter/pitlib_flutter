@@ -95,15 +95,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _lalala = false;
 
   bool _first = true;
+
   @override
   Widget build(BuildContext context) {
     AdvTextFieldController specialController = AdvTextFieldController(
-      label: "With Button",
-      hint: "Dengan Tombol",
-      error: "asdasdasd"
-      /* maxLines: 1 ,
+        label: "With Button", hint: "Dengan Tombol", error: "asdasdasd"
+        /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
-    );
+        );
     AdvTextFieldController controller = AdvTextFieldController(
         label: "Just",
         hint: "TextField MaxLines 1 Example",
@@ -174,11 +173,16 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               AnimatedCrossFade(
                 duration: const Duration(seconds: 1),
-                firstChild: const FlutterLogo(style: FlutterLogoStyle.horizontal, size: 100.0),
-                secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
-                crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                firstChild: const FlutterLogo(
+                    style: FlutterLogoStyle.horizontal, size: 100.0),
+                secondChild: const FlutterLogo(
+                    style: FlutterLogoStyle.stacked, size: 100.0),
+                crossFadeState: _first
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
               ),
-              AdvTextField(controller : controller,
+              AdvTextField(
+                controller: controller,
               ),
 //              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
@@ -194,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       child: AdvDatePicker(
                         textStyle: ts.fs16.copyWith(color: Colors.black),
-                        selectionType: SelectionType.multi,
+                        selectionType: SelectionType.range,
                         onChanged: (List value) {
                           if (value == null || value.length == 0) return;
 
@@ -281,12 +285,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                     child: AdvTextField(
                   controller: controller2,
-                      keyboardType: TextInputType.number,
-                      textChangeListener: (oldText, newText) {
-                        if (double.tryParse(newText) > 75000.0) {
-controller2.text = oldText;
-                        }
-                      },
+                  keyboardType: TextInputType.number,
+                  textChangeListener: (oldText, newText) {
+                    if (double.tryParse(newText) > 75000.0) {
+                      controller2.text = oldText;
+                    }
+                  },
                 )),
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
@@ -453,70 +457,70 @@ controller2.text = oldText;
               Row(children: [
                 Expanded(
                     child: AdvChooser(
-                      label: "Chooser Example",
-                      hint: "This is chooser example",
-                      items: {
-                        "data 1": "display 1",
-                        "data 2": "display 2",
-                        "data 3": "display 3",
-                        "data 4": "display 4",
-                        "data 5": "display 5",
-                        "data 6": "display 6",
-                        "data 7": "display 7",
-                        "data 8": "display 8",
-                        "data 9": "display 9",
-                        "data 10": "display 10",
-                        "data 11": "display 11",
-                        "data 12": "display 12",
-                        "data 13": "display 13",
-                        "data 14": "display 14",
-                        "data 15": "display 15",
-                        "data 16": "display 16",
-                        "data 17": "display 17",
-                        "data 18": "display 18",
-                        "data 19": "display 19",
-                        "data 20": "display 20",
-                        "data 21": "display 21",
-                        "data 22": "display 22",
-                        "data 23": "display 24 ",
-                        "data 24": "display 24",
-                        "data 25": "display 25"
-                      },
-                    ))
+                  label: "Chooser Example",
+                  hint: "This is chooser example",
+                  items: [
+                    GroupCheckItem("data 1", "display 1"),
+                    GroupCheckItem("data 2", "display 2"),
+                    GroupCheckItem("data 3", "display 3"),
+                    GroupCheckItem("data 4", "display 4"),
+                    GroupCheckItem("data 5", "display 5"),
+                    GroupCheckItem("data 6", "display 6"),
+                    GroupCheckItem("data 7", "display 7"),
+                    GroupCheckItem("data 8", "display 8"),
+                    GroupCheckItem("data 9", "display 9"),
+                    GroupCheckItem("data 10", "display 10"),
+                    GroupCheckItem("data 11", "display 11"),
+                    GroupCheckItem("data 12", "display 12"),
+                    GroupCheckItem("data 13", "display 13"),
+                    GroupCheckItem("data 14", "display 14"),
+                    GroupCheckItem("data 15", "display 15"),
+                    GroupCheckItem("data 16", "display 16"),
+                    GroupCheckItem("data 17", "display 17"),
+                    GroupCheckItem("data 18", "display 18"),
+                    GroupCheckItem("data 19", "display 19"),
+                    GroupCheckItem("data 20", "display 20"),
+                    GroupCheckItem("data 21", "display 21"),
+                    GroupCheckItem("data 22", "display 22"),
+                    GroupCheckItem("data 23", "display 23"),
+                    GroupCheckItem("data 24", "display 24"),
+                    GroupCheckItem("data 25", "display 25"),
+                  ],
+                ))
               ]),
               Row(children: [
                 Expanded(
                     child: AdvChooserPlain(
-                      label: "Chooser Example",
-                      hint: "This is chooser example",
-                      items: {
-                        "data 1": "display 1",
-                        "data 2": "display 2",
-                        "data 3": "display 3",
-                        "data 4": "display 4",
-                        "data 5": "display 5",
-                        "data 6": "display 6",
-                        "data 7": "display 7",
-                        "data 8": "display 8",
-                        "data 9": "display 9",
-                        "data 10": "display 10",
-                        "data 11": "display 11",
-                        "data 12": "display 12",
-                        "data 13": "display 13",
-                        "data 14": "display 14",
-                        "data 15": "display 15",
-                        "data 16": "display 16",
-                        "data 17": "display 17",
-                        "data 18": "display 18",
-                        "data 19": "display 19",
-                        "data 20": "display 20",
-                        "data 21": "display 21",
-                        "data 22": "display 22",
-                        "data 23": "display 24 ",
-                        "data 24": "display 24",
-                        "data 25": "display 25"
-                      },
-                    ))
+                  label: "Chooser Example",
+                  hint: "This is chooser example",
+                  items: [
+                    GroupCheckItem("data 1", "display 1"),
+                    GroupCheckItem("data 2", "display 2"),
+                    GroupCheckItem("data 3", "display 3"),
+                    GroupCheckItem("data 4", "display 4"),
+                    GroupCheckItem("data 5", "display 5"),
+                    GroupCheckItem("data 6", "display 6"),
+                    GroupCheckItem("data 7", "display 7"),
+                    GroupCheckItem("data 8", "display 8"),
+                    GroupCheckItem("data 9", "display 9"),
+                    GroupCheckItem("data 10", "display 10"),
+                    GroupCheckItem("data 11", "display 11"),
+                    GroupCheckItem("data 12", "display 12"),
+                    GroupCheckItem("data 13", "display 13"),
+                    GroupCheckItem("data 14", "display 14"),
+                    GroupCheckItem("data 15", "display 15"),
+                    GroupCheckItem("data 16", "display 16"),
+                    GroupCheckItem("data 17", "display 17"),
+                    GroupCheckItem("data 18", "display 18"),
+                    GroupCheckItem("data 19", "display 19"),
+                    GroupCheckItem("data 20", "display 20"),
+                    GroupCheckItem("data 21", "display 21"),
+                    GroupCheckItem("data 22", "display 22"),
+                    GroupCheckItem("data 23", "display 23"),
+                    GroupCheckItem("data 24", "display 24"),
+                    GroupCheckItem("data 25", "display 25"),
+                  ],
+                ))
               ])
             ],
           ),

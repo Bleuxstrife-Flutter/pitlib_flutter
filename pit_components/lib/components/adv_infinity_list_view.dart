@@ -130,9 +130,10 @@ class _AdvInfiniteListViewState extends State<AdvInfiniteListView> {
         }
       });
 
-      if (widget.remote != null) widget.remote.reset = () {
-        _reset(context);
-      };
+      if (widget.remote != null)
+        widget.remote.reset = () {
+          _reset(context);
+        };
 
       _tryFetchMore(context);
       firstBuild = false;

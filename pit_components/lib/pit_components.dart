@@ -14,13 +14,13 @@ class PitComponents {
   static Color buttonBackgroundColor = Color(0xfff4329a);
   static String datePickerTitle = "Pick your date";
   static String datePickerMarkedDatesTitle = "Marked date";
-  static String loadingAssetName = "aaaa";
+  static String loadingAssetName = "images/nemob_loading.gif";
 
   static Color datePickerDaysLabelColor = Color(0xff208e5d);
   static Color datePickerTodayTextColor = Color(0xffffffff);
   static Color datePickerTodayColor = Color(0xffff6378);
-  static Color datePickerSelectedTextColor = Color(0xff000000);
   static Color datePickerSelectedColor = Color(0xff9bf0ff);
+  static Color datePickerSelectedTextColor = Color(0xffffffff);
 
   static Color datePickerWeekendColor = Color(0xffff235e);
   static Color datePickerWeekdayColor = Color(0xff44363a);

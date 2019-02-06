@@ -80,8 +80,8 @@ class AdvDatePicker extends StatefulWidget {
                 label: label ?? "",
                 enable: enable ?? true),
         this.measureTextSpan = TextSpan(
-                text: "",
-                style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
+            text: "",
+            style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
         this.padding = padding ?? new EdgeInsets.all(0.0);
 
   @override
@@ -206,12 +206,13 @@ class _AdvDatePickerState extends State<AdvDatePicker>
                         fillColor: _backgroundColor,
                         border: OutlineInputBorder(
                             borderRadius: const BorderRadius.all(
-                              const Radius.circular(4.0),
-                            )/*,
+                          const Radius.circular(4.0),
+                        ) /*,
                             borderSide: new BorderSide(
                               color: Colors.amber,
                               width: 1111.0,
-                            )*/),
+                            )*/
+                            ),
                         contentPadding: new EdgeInsets.all(_paddingSize),
                         hintText: widget.controller.hint,
                         hintStyle:
@@ -247,7 +248,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
   }
 
   _update() {
-    setState(() {});
+    if (this.mounted) setState(() {});
   }
 
   void _handleTap(BuildContext context) async {
@@ -255,7 +256,8 @@ class _AdvDatePickerState extends State<AdvDatePicker>
 
     List<DateTime> result = await Utils.pickDate(context,
         dates: widget.controller.dates,
-        markedDates: widget.controller.markedDates, selectionType: widget.selectionType);
+        markedDates: widget.controller.markedDates,
+        selectionType: widget.selectionType);
 
     if (widget.onChanged != null) widget.onChanged(result);
     widget.controller.dates = result;
