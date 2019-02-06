@@ -74,8 +74,6 @@ class AdvCarousel extends StatefulWidget {
 class _AdvCarouselState extends State<AdvCarousel>
     with SingleTickerProviderStateMixin {
   PageController _pageController = new PageController();
-  AdvCarouselController _initialCarouselController;
-  AdvCarouselController _carouselController;
 
   Timer _timer;
 
@@ -104,36 +102,11 @@ class _AdvCarouselState extends State<AdvCarousel>
   @override
   void initState() {
     super.initState();
-
-    _carouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
     widget.carouselController.addListener(_updateFromWidget);
   }
 
   _updateFromWidget() {
-    if (widget.carouselController.widgets != _initialCarouselController.widgets)
-      _carouselController.widgets = widget.carouselController.widgets;
-
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
     setState(() {});
-  }
-
-  @override
-  void didUpdateWidget(AdvCarousel oldWidget) {
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
-
-    if (widget.carouselController != oldWidget.carouselController) {
-      widget.carouselController.value =
-          AdvCarouselEditingValue.fromValue(oldWidget.carouselController.value);
-      oldWidget.carouselController.removeListener(_updateFromWidget);
-      widget.carouselController.addListener(_updateFromWidget);
-    }
-
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
