@@ -139,7 +139,7 @@ class _RoundCheckboxState extends State<RoundCheckbox>
             kRadialReactionRadius + 8.0, kRadialReactionRadius + 8.0);
         break;
       case MaterialTapTargetSize.shrinkWrap:
-        size = const Size(kRadialReactionRadius, kRadialReactionRadius);
+        size = const Size(16.0, 16.0); //ZSize(kRadialReactionRadius, kRadialReactionRadius);
         break;
     }
     final BoxConstraints additionalConstraints = BoxConstraints.tight(size);
