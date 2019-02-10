@@ -610,8 +610,6 @@ class _ModTextFieldState extends State<ModTextField>
         rendererIgnoresPointer: true,
         cursorWidth: widget.cursorWidth,
         cursorRadius: widget.cursorRadius,
-        backgroundCursorColor:
-            widget.cursorColor ?? Theme.of(context).cursorColor,
         cursorColor: widget.cursorColor ?? Theme.of(context).cursorColor,
         scrollPadding: widget.scrollPadding,
         keyboardAppearance: keyboardAppearance,

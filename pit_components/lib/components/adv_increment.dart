@@ -31,37 +31,37 @@ class AdvIncrement extends StatefulWidget {
 
   AdvIncrement(
       {int counter,
-      String format,
-      String hint,
-      String label,
-      String error,
-      int minCounter,
-      int maxCounter,
-      int maxLines,
-      bool enable,
-      TextAlign alignment,
-      String measureText,
-      TextStyle textStyle,
-      EdgeInsetsGeometry padding,
-      this.valueChangeListener,
-      AdvIncrementController controller,
-      int maxLineExpand,
-      Color hintColor,
-      Color labelColor,
-      Color backgroundColor,
-      Color borderColor,
-      Color errorColor})
+        String format,
+        String hint,
+        String label,
+        String error,
+        int minCounter,
+        int maxCounter,
+        int maxLines,
+        bool enable,
+        TextAlign alignment,
+        String measureText,
+        TextStyle textStyle,
+        EdgeInsetsGeometry padding,
+        this.valueChangeListener,
+        AdvIncrementController controller,
+        int maxLineExpand,
+        Color hintColor,
+        Color labelColor,
+        Color backgroundColor,
+        Color borderColor,
+        Color errorColor})
       : assert(controller == null ||
-            (counter == null &&
-                format == null &&
-                hint == null &&
-                label == null &&
-                error == null &&
-                minCounter == null &&
-                maxCounter == null &&
-                maxLines == null &&
-                enable == null &&
-                alignment == null)),
+      (counter == null &&
+          format == null &&
+          hint == null &&
+          label == null &&
+          error == null &&
+          minCounter == null &&
+          maxCounter == null &&
+          maxLines == null &&
+          enable == null &&
+          alignment == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.backgroundColor =
@@ -157,7 +157,7 @@ class _AdvIncrementState extends State<AdvIncrement>
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
         : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-            PitComponents.lerpColor, 0.6);
+        PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -173,9 +173,9 @@ class _AdvIncrementState extends State<AdvIncrement>
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-            _defaultWidthAddition +
-            (_defaultInnerPadding * 2) +
-            (widget.padding.horizontal);
+        _defaultWidthAddition +
+        (_defaultInnerPadding * 2) +
+        (widget.padding.horizontal);
 
     TextSpan currentTextSpan = TextSpan(
         text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
@@ -233,38 +233,41 @@ class _AdvIncrementState extends State<AdvIncrement>
               8.0 -
               ((8.0 - _paddingSize) * 2),
         ),
-        child: AbsorbPointer(
-          child: new Theme(
-            data: new ThemeData(
-                cursorColor: Theme.of(context).cursorColor,
-                accentColor: _backgroundColor,
-                hintColor: widget.borderColor,
-                primaryColor: widget.borderColor),
-            child: ModTextField(
-              controller: _textEdittingCtrl,
-              enabled: widget.controller.enable,
-              maxLines: widget.controller.maxLines,
-              keyboardType: TextInputType.number,
-              textAlign: widget.controller.alignment,
-              style: widget.measureTextSpan.style.copyWith(color: _textColor),
-              decoration: ModInputDecoration(
-                  iconSize: _iconSize,
-                  filled: true,
-                  fillColor: _backgroundColor,
+        child: Theme(
+          data: new ThemeData(
+              cursorColor: Theme.of(context).cursorColor,
+              accentColor: _backgroundColor,
+              hintColor: widget.borderColor,
+              primaryColor: widget.borderColor),
+          child: ModTextField(
+            controller: _textEdittingCtrl,
+            enabled: widget.controller.enable,
+            maxLines: widget.controller.maxLines,
+            keyboardType: TextInputType.number,
+            textAlign: widget.controller.alignment,
+            style: widget.measureTextSpan.style.copyWith(color: _textColor),
+            onChanged: (String newValue) {
+              int oldCounter = widget.controller.counter;
+              int newCounter = int.tryParse(newValue) ?? oldCounter;
+              widget.controller.counter = newCounter;
+            },
+            decoration: ModInputDecoration(
+                iconSize: _iconSize,
+                filled: true,
+                fillColor: _backgroundColor,
 //                border: InputBorder.none,
-                  border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                    const Radius.circular(4.0),
-                  )),
-                  contentPadding: new EdgeInsets.symmetric(
-                      vertical: _paddingSize,
-                      horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
+                border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(4.0),
+                    )),
+                contentPadding: new EdgeInsets.symmetric(
+                    vertical: _paddingSize + 1.0,
+                    horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
 //                contentPadding: new EdgeInsets.only(
 //                    left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
-                  hintText: widget.controller.hint,
-                  hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
-                  maxLines: widget.controller.maxLines),
-            ),
+                hintText: widget.controller.hint,
+                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
+                maxLines: widget.controller.maxLines),
           ),
         ),
       ),
