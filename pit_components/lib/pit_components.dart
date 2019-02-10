@@ -1,6 +1,7 @@
 library pit_components;
 
 import 'package:flutter/material.dart';
+import 'package:pit_components/consts/textstyles.dart';
 
 class PitComponents {
   static Color textFieldHintColor = Color(0xffa6a6a6);
@@ -65,4 +66,8 @@ class PitComponents {
 
   static List<String> weekdaysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
   static List<String> monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  static TextStyle getLabelTextStyle() {
+    return fs11.merge(TextStyle(color: PitComponents.textFieldLabelColor));
+  }
 }

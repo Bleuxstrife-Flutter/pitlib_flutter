@@ -26,14 +26,14 @@ class AdvRadioGroup extends StatefulWidget {
 
   AdvRadioGroup(
       {this.title,
-      String checkedValue,
-      List<RadioGroupItem> itemList,
-      AdvRadioGroupController controller,
-      this.callback,
-      Axis direction,
-      this.divider = 0.0})
+        String checkedValue,
+        List<RadioGroupItem> itemList,
+        AdvRadioGroupController controller,
+        this.callback,
+        Axis direction,
+        this.divider = 0.0})
       : assert(
-            controller == null || (checkedValue == null && itemList == null)),
+  controller == null || (checkedValue == null && itemList == null)),
         this.direction = direction ?? Axis.horizontal,
         this.controller = controller ??
             new AdvRadioGroupController(
@@ -48,7 +48,8 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
   void initState() {
     super.initState();
     widget.controller.addListener(() {
-      setState(() {});
+      if (this.mounted)
+        setState(() {});
       if (widget.callback != null)
         widget.callback(widget.controller.checkedValue);
     });
@@ -99,15 +100,15 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
 
     children.add(widget.direction == Axis.horizontal
         ? AdvRow(
-            divider: RowDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: innerChildren)
+        divider: RowDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: innerChildren)
         : AdvColumn(
-            divider: ColumnDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: innerChildren));
+        divider: ColumnDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: innerChildren));
 
     return AdvColumn(
         divider: ColumnDivider(widget.divider),
@@ -133,9 +134,9 @@ class AdvRadioGroupController extends ValueNotifier<AdvRadioGroupEditingValue> {
 
   AdvRadioGroupController({String checkedValue, List<RadioGroupItem> itemList})
       : super(checkedValue == null && itemList == null
-            ? AdvRadioGroupEditingValue.empty
-            : new AdvRadioGroupEditingValue(
-                checkedValue: checkedValue, itemList: itemList));
+      ? AdvRadioGroupEditingValue.empty
+      : new AdvRadioGroupEditingValue(
+      checkedValue: checkedValue, itemList: itemList));
 
   AdvRadioGroupController.fromValue(AdvRadioGroupEditingValue value)
       : super(value ?? AdvRadioGroupEditingValue.empty);
@@ -153,7 +154,7 @@ class AdvRadioGroupEditingValue {
   final List<RadioGroupItem> itemList;
 
   static const AdvRadioGroupEditingValue empty =
-      const AdvRadioGroupEditingValue();
+  const AdvRadioGroupEditingValue();
 
   AdvRadioGroupEditingValue copyWith(
       {String checkedValue, List<RadioGroupItem> itemList}) {
