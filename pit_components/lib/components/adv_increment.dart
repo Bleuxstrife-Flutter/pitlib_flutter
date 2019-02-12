@@ -29,28 +29,27 @@ class AdvIncrement extends StatefulWidget {
   final Color borderColor;
   final Color errorColor;
 
-  AdvIncrement(
-      {int counter,
-        String format,
-        String hint,
-        String label,
-        String error,
-        int minCounter,
-        int maxCounter,
-        int maxLines,
-        bool enable,
-        TextAlign alignment,
-        String measureText,
-        TextStyle textStyle,
-        EdgeInsetsGeometry padding,
-        this.valueChangeListener,
-        AdvIncrementController controller,
-        int maxLineExpand,
-        Color hintColor,
-        Color labelColor,
-        Color backgroundColor,
-        Color borderColor,
-        Color errorColor})
+  AdvIncrement({int counter,
+    String format,
+    String hint,
+    String label,
+    String error,
+    int minCounter,
+    int maxCounter,
+    int maxLines,
+    bool enable,
+    TextAlign alignment,
+    String measureText,
+    TextStyle textStyle,
+    EdgeInsetsGeometry padding,
+    this.valueChangeListener,
+    AdvIncrementController controller,
+    int maxLineExpand,
+    Color hintColor,
+    Color labelColor,
+    Color backgroundColor,
+    Color borderColor,
+    Color errorColor})
       : assert(controller == null ||
       (counter == null &&
           format == null &&
@@ -235,13 +234,16 @@ class _AdvIncrementState extends State<AdvIncrement>
         ),
         child: Theme(
           data: new ThemeData(
-              cursorColor: Theme.of(context).cursorColor,
+              cursorColor: Theme
+                  .of(context)
+                  .cursorColor,
               accentColor: _backgroundColor,
               hintColor: widget.borderColor,
               primaryColor: widget.borderColor),
           child: ModTextField(
             controller: _textEdittingCtrl,
             enabled: widget.controller.enable,
+            maxLength: 18,
             maxLines: widget.controller.maxLines,
             keyboardType: TextInputType.number,
             textAlign: widget.controller.alignment,
@@ -249,7 +251,16 @@ class _AdvIncrementState extends State<AdvIncrement>
             onChanged: (String newValue) {
               int oldCounter = widget.controller.counter;
               int newCounter = int.tryParse(newValue) ?? oldCounter;
+
+              if (newCounter < widget.controller.minCounter) {
+                newCounter = widget.controller.minCounter;
+              } else if (newCounter > widget.controller.maxCounter) {
+                newCounter = widget.controller.maxCounter;
+              }
+
               widget.controller.counter = newCounter;
+
+              if (widget.controller.counter == newCounter) _update();
             },
             decoration: ModInputDecoration(
                 iconSize: _iconSize,
@@ -257,6 +268,11 @@ class _AdvIncrementState extends State<AdvIncrement>
                 fillColor: _backgroundColor,
 //                border: InputBorder.none,
                 border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(4.0),
+                    )),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: widget.borderColor),
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(4.0),
                     )),
