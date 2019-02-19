@@ -31,7 +31,9 @@ class _AdvFutureBuilderState extends State<AdvFutureBuilder> {
     super.initState();
 
     widget.remote?.reset = () {
-      _futureExecuted = false;
+      setState(() {
+        _futureExecuted = false;
+      });
     };
   }
 
