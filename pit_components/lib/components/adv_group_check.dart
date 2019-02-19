@@ -96,7 +96,7 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
             widget.title == null
                 ? Container()
                 : Container(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: 16.0, bottom: 4.0),
               child: Text(
                 widget.title,
                 style: ts.fs18
