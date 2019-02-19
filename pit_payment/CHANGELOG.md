@@ -37,3 +37,7 @@
 ## 0.1.0
 
 * Bank Transfer now added
+
+## 0.1.1
+
+* Dependencies to Stable channel Flutter
