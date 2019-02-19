@@ -24,12 +24,12 @@ class AdvGroupCheck extends StatefulWidget {
 
   AdvGroupCheck(
       {this.title,
-      String checkedValue,
-      List<GroupCheckItem> itemList,
-      AdvGroupCheckController controller,
-      this.callback})
+        String checkedValue,
+        List<GroupCheckItem> itemList,
+        AdvGroupCheckController controller,
+        this.callback})
       : assert(
-            controller == null || (checkedValue == null && itemList == null)),
+  controller == null || (checkedValue == null && itemList == null)),
         this.controller = controller ??
             new AdvGroupCheckController(
                 checkedValue: checkedValue ?? "", itemList: itemList ?? []);
@@ -58,66 +58,64 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
     List<Widget> children = [];
 
     stringChildren.forEach((groupCheckItem) {
-      children.add(Container(
-          margin: EdgeInsets.symmetric(vertical: 8.0),
-          child: AdvListTile(
-              onTap: () {
-                _checkedValue = false;
-                widget.controller.checkedValue = groupCheckItem.data;
+      children.add(Container(child: AdvListTile(
+          onTap: () {
+            _checkedValue = false;
+            widget.controller.checkedValue = groupCheckItem.data;
+            setState(() {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    setState(() {
-                      _checkedValue = true;
-                      Timer(Duration(milliseconds: 200), () {
-                        if (widget.callback != null)
-                          widget.callback(groupCheckItem.data);
-                      });
-                    });
+                  _checkedValue = true;
+                  Timer(Duration(milliseconds: 200), () {
+                    if (widget.callback != null)
+                      widget.callback(groupCheckItem.data);
                   });
                 });
-              },
-              padding: EdgeInsets.all(8.0),
-              start: groupCheckItem.icon,
-              expanded: Text(groupCheckItem.display),
-              end: groupCheckItem.data == widget.controller.checkedValue
-                  ? AbsorbPointer(
-                      child: RoundCheckbox(
-                      onChanged: (value) {},
-                      value: _checkedValue,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      activeColor: PitComponents.groupCheckCheckColor,
-                    ))
-                  : Container())));
+              });
+            });
+          },
+          padding: EdgeInsets.all(16.0),
+          start: groupCheckItem.icon,
+          expanded: Text(groupCheckItem.display),
+          end: groupCheckItem.data == widget.controller.checkedValue
+              ? AbsorbPointer(
+              child: RoundCheckbox(
+                onChanged: (value) {},
+                value: _checkedValue,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                activeColor: PitComponents.groupCheckCheckColor,
+              ))
+              : Container())));
     });
 
     return Container(
         child: AdvColumn(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        widget.title == null
-            ? Container()
-            : Container(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  widget.title,
-                  style: ts.fs18
-                      .merge(ts.fw700)
-                      .copyWith(color: PitComponents.groupCheckTitleColor),
-                ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            widget.title == null
+                ? Container()
+                : Container(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                widget.title,
+                style: ts.fs18
+                    .merge(ts.fw700)
+                    .copyWith(color: PitComponents.groupCheckTitleColor),
               ),
-        Container(
-          child: AdvColumn(
-              divider: Container(
-                height: 1.0,
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                color: Theme.of(context).dividerColor,
-              ),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children),
-        )
-      ],
-    ));
+            ),
+            Container(
+              child: AdvColumn(
+                  divider: Container(
+                    height: 1.0,
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    color: Theme.of(context).dividerColor,
+                  ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children),
+            )
+          ],
+        ));
   }
 }
 
@@ -138,9 +136,9 @@ class AdvGroupCheckController extends ValueNotifier<AdvGroupCheckEditingValue> {
 
   AdvGroupCheckController({String checkedValue, List<GroupCheckItem> itemList})
       : super(checkedValue == null && itemList == null
-            ? AdvGroupCheckEditingValue.empty
-            : new AdvGroupCheckEditingValue(
-                checkedValue: checkedValue, itemList: itemList));
+      ? AdvGroupCheckEditingValue.empty
+      : new AdvGroupCheckEditingValue(
+      checkedValue: checkedValue, itemList: itemList));
 
   AdvGroupCheckController.fromValue(AdvGroupCheckEditingValue value)
       : super(value ?? AdvGroupCheckEditingValue.empty);
@@ -158,7 +156,7 @@ class AdvGroupCheckEditingValue {
   final List<GroupCheckItem> itemList;
 
   static const AdvGroupCheckEditingValue empty =
-      const AdvGroupCheckEditingValue();
+  const AdvGroupCheckEditingValue();
 
   AdvGroupCheckEditingValue copyWith(
       {String checkedValue, List<GroupCheckItem> itemList}) {
