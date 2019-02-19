@@ -75,7 +75,7 @@ class PitPayment extends StatefulWidget {
   static Color expansionPanelRadioColor = Colors.blue;
   static Color expansionPanelBackgroundColor = Color(0xffF4FAFE);
   static Color expansionPanelButtonColor = Colors.blue;
-  static String bcaAssetName = "images/ic_logo_mandiri.png";
+  static String bcaAssetName = "images/ic_logo_bca.png";
   static String bcaAccountNumber = "123 456 7890";
   static String bcaAccountName = "Mr. BCA";
   static String bcaAccountBranch = "Central BCA";
