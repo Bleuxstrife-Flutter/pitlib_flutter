@@ -197,3 +197,7 @@
 ## 0.2.0
 
 * Refactor to Flutter 0.1.0 stable channel
+
+## 0.2.1
+
+* Minor issues fixed
