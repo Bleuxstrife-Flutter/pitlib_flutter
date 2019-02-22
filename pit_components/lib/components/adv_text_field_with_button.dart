@@ -207,20 +207,14 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
 
     final Color _backgroundColor = _effectiveController.enable
         ? widget.backgroundColor
-        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+        : Color.lerp(Colors.black, Colors.white, 0.97);
     final Color _textColor = _effectiveController.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
-        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-            PitComponents.lerpColor, 0.6);
+        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black, Colors.white, 0.57);
     final Color _hintColor = _effectiveController.enable
         ? widget.hintColor
-        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
-//    return LayoutBuilder(
-//        builder: (context, constraints) {
-//      final double maxWidth = constraints.maxWidth;
-//
-//        },
-//    );
+        : Color.lerp(widget.hintColor, Colors.white, 0.39);
+
     int maxLengthHeight = _effectiveController == null
         ? 0
         : _effectiveController.maxLength != null && widget.needsCounter

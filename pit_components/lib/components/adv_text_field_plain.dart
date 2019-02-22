@@ -203,12 +203,11 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
     final double _defaultInnerPadding = 8.0;
 
     final Color _textColor = _effectiveController.enable
-        ? widget.measureTextSpan.style.color
-        : Color.lerp(
-            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+        ? widget.measureTextSpan.style.color ?? Colors.black
+        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black, Colors.white, 0.57);
     final Color _hintColor = _effectiveController.enable
         ? widget.hintColor
-        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+        : Color.lerp(widget.hintColor, Colors.white, 0.39);
 
     int maxLengthHeight = _effectiveController == null
         ? 0
@@ -340,7 +339,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
                     new EdgeInsets.symmetric(vertical: _paddingSize),
                 //untuk ini padding horizontalnya aneh, leftnya gk ada paddingnya, jadinya pake margin untuk icon aja
                 hintText: _effectiveController.hint,
-                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
+                hintStyle: TextStyle(color: _hintColor),
                 maxLines: _effectiveController.maxLines),
           ),
         ),
