@@ -363,8 +363,8 @@ class AdvTextFieldEditingValue {
         enable: enable ?? this.enable,
         alignment: alignment ?? this.alignment,
         obscureText: obscureText ?? this.obscureText,
-        prefixIcon: prefixIcon ?? this.prefixIcon,
-        suffixIcon: suffixIcon ?? this.suffixIcon,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
         selection: selection ?? this.selection);
   }
 

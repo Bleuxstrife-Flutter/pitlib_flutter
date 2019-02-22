@@ -6,7 +6,7 @@ import 'package:pit_components/consts/textstyles.dart';
 class PitComponents {
   static Color textFieldHintColor = Color(0xffa6a6a6);
   static Color textFieldLabelColor = Color(0xff777777);
-  static Color textFieldBackgroundColor = Color(0xfff7f7f7);
+  static Color textFieldBackgroundColor = Color(0xffffffff);
   static Color textFieldErrorColor = Color(0xffd81920);
   static Color textFieldBorderColor = Color(0xffa6a6a6);
   static Color textFieldLineColor = Color(0xffa6a6a6);
