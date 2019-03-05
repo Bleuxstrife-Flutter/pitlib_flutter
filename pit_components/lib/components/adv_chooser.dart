@@ -174,11 +174,13 @@ class _AdvChooserState extends State<AdvChooser>
 
     TextEditingController controller = new TextEditingController();
 
-    widget.controller.items.forEach((GroupCheckItem item) {
-      if (item.data == widget.controller.text) {
-        controller.text = item.display;
-      }
-    });
+    if (widget.controller.items != null) {
+      widget.controller.items.forEach((GroupCheckItem item) {
+        if (item.data == widget.controller.text) {
+          controller.text = item.display;
+        }
+      });
+    }
 
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
 

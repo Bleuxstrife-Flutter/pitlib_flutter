@@ -201,3 +201,7 @@
 ## 0.2.1
 
 * Minor issues fixed
+
+## 0.2.2
+
+* Text Field theme color changed
