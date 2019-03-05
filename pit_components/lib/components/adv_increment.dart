@@ -252,15 +252,13 @@ class _AdvIncrementState extends State<AdvIncrement>
               int oldCounter = widget.controller.counter;
               int newCounter = int.tryParse(newValue) ?? oldCounter;
 
-              if (newCounter < widget.controller.minCounter) {
-                newCounter = widget.controller.minCounter;
-              } else if (newCounter > widget.controller.maxCounter) {
-                newCounter = widget.controller.maxCounter;
+              if (widget.controller.maxCounter != null && widget.controller.maxCounter != null) {
+                newCounter = newCounter.clamp(widget.controller.minCounter, widget.controller.maxCounter);
               }
 
               widget.controller.counter = newCounter;
 
-              if (widget.controller.counter == newCounter) _update();
+              if (oldCounter == newCounter) _update();
             },
             decoration: ModInputDecoration(
                 iconSize: _iconSize,
