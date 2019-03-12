@@ -20,6 +20,7 @@ class AdvTextField extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
   final EdgeInsets padding;
+  final EdgeInsets margin;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
   final bool autoValidate;
@@ -53,7 +54,7 @@ class AdvTextField extends StatefulWidget {
         this.label,
         this.error,
         this.maxLength,
-        this.maxLines,
+        int maxLines,
         this.maxLengthEnforced,
         this.needsCounter = false,
         this.enable,
@@ -62,6 +63,7 @@ class AdvTextField extends StatefulWidget {
         String measureText,
         TextStyle textStyle,
         EdgeInsetsGeometry padding,
+        EdgeInsetsGeometry margin,
         this.textChangeListener,
         this.validator,
         this.autoValidate = false,
@@ -91,6 +93,7 @@ class AdvTextField extends StatefulWidget {
           obscureText == null &&
           prefixIcon == null &&
           suffixIcon == null)),
+        this.maxLines = maxLines ?? 1,
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.backgroundColor =
@@ -101,6 +104,7 @@ class AdvTextField extends StatefulWidget {
             text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
         this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 4;
 
   @override
@@ -189,6 +193,7 @@ class _AdvTextFieldState extends State<AdvTextField> {
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),

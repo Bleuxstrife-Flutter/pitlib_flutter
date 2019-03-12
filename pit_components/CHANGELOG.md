@@ -205,3 +205,29 @@
 ## 0.2.2
 
 * Text Field theme color changed
+
+## 0.2.3
+
+* Increment fix and Group check fix
+
+## 0.2.4
+
+* Date Picker now has min date and max date for its argument, and some fixes
+
+## 0.2.5
+
+* All editable now have margin argument, its default is 8 vertically and adjustable via PitComponents.editableMargin
+
+## 0.2.5+1
+
+* Calendar style fixes, now next and previous month days is the same color as this month days, except, they are lerp to white with 80% value
+* Calendar Previous & Next Icon, is now adjustable via PitComponents.datePickerIconPrevious & PitComponents.datePickerIconNext
+* Adjust PickFromIncrement's infoMessage padding
+* Group Check delay's has been taken care of, that it will not be clicked anywhere on the screen, because i push a tranparent page on the top of it
+
+## 0.2.5+2
+
+* Group Check delay's has been reduced to 300
+* All delay (Pick from increment and CalendarPage) has been taken out
+
+

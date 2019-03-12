@@ -19,7 +19,8 @@ enum IconType { prefix, suffix }
 class AdvTextFieldPlain extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
   final bool autoValidate;
@@ -52,7 +53,7 @@ class AdvTextFieldPlain extends StatefulWidget {
       this.label,
       this.error,
       this.maxLength,
-      this.maxLines,
+      int maxLines,
       this.maxLengthEnforced,
       this.needsCounter = false,
       this.enable,
@@ -60,7 +61,8 @@ class AdvTextFieldPlain extends StatefulWidget {
       this.obscureText,
       String measureText,
       TextStyle textStyle,
-      EdgeInsetsGeometry padding,
+        EdgeInsets padding,
+        EdgeInsets margin,
       this.textChangeListener,
       this.validator,
       this.autoValidate = false,
@@ -88,6 +90,7 @@ class AdvTextFieldPlain extends StatefulWidget {
                 alignment == null &&
                 obscureText == null &&
                 suffixIcon == null)),
+        this.maxLines = maxLines ?? 1,
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.lineColor = lineColor ?? PitComponents.textFieldLineColor,
@@ -97,6 +100,7 @@ class AdvTextFieldPlain extends StatefulWidget {
             style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
         this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 4;
 
   @override
@@ -188,6 +192,7 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),

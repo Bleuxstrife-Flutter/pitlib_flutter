@@ -15,29 +15,21 @@ import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
 
 class Utils {
-  static String getEllipsizedText(
-      String text, TextStyle textStyle, double maxWidth,
+  static String getEllipsizedText(String text, TextStyle textStyle, double maxWidth,
       {bool withDot = true, bool wholeWord = true}) {
     if (maxWidth == null) return text;
 
-    var tp = new TextPainter(
-        text: TextSpan(text: text, style: textStyle),
-        textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: TextSpan(text: text, style: textStyle), textDirection: ui.TextDirection.ltr);
     tp.layout();
 
     double wholeWidth = tp.width;
 
     if (wholeWidth <= maxWidth) return text;
 
-    int startPositionPercentage =
-        (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
-    int startPosition = (startPositionPercentage * text.length / 100)
-        .ceil()
-        .clamp(0, text.length);
+    int startPositionPercentage = (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
+    int startPosition = (startPositionPercentage * text.length / 100).ceil().clamp(0, text.length);
 
-    tp.text = TextSpan(
-        text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}",
-        style: textStyle);
+    tp.text = TextSpan(text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}", style: textStyle);
 
     tp.layout();
 
@@ -45,9 +37,7 @@ class Utils {
 
     if (tp.width > maxWidth) {
       for (i = startPosition; i > 0; i--) {
-        tp.text = TextSpan(
-            text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}",
-            style: textStyle);
+        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -55,9 +45,7 @@ class Utils {
       }
     } else if (tp.width < maxWidth) {
       for (i = startPosition; i < text.length; i++) {
-        tp.text = TextSpan(
-            text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}",
-            style: textStyle);
+        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -84,14 +72,11 @@ class Utils {
   static String leadingZeroInt(int value, int count) {
     String stringInt = value.toString();
 
-    return stringInt.length > count
-        ? stringInt
-        : "${stringRepeat("0", count - stringInt.length)}$stringInt";
+    return stringInt.length > count ? stringInt : "${stringRepeat("0", count - stringInt.length)}$stringInt";
   }
 
   static parseStringToTextSpan(String fullString, List<String> findString) {
-    String stringWithSmallestIndex =
-        findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
+    String stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
     int index = fullString.indexOf(stringWithSmallestIndex);
     int startCropFrom = 0;
     List<TextSpan> textSpans = [];
@@ -107,22 +92,18 @@ class Utils {
 
       if (index > fullString.length) break;
 
-      stringWithSmallestIndex = findWordWithSmallestIndex(
-          fullString, findString,
-          startFindFrom: index);
+      stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: index);
 
       index = fullString.indexOf(stringWithSmallestIndex, index);
     }
 
-    String croppedString =
-        fullString.substring(startCropFrom, fullString.length);
+    String croppedString = fullString.substring(startCropFrom, fullString.length);
     textSpans.add(TextSpan(text: croppedString));
 
     return textSpans;
   }
 
-  static findWordWithSmallestIndex(String fullString, List<String> findString,
-      {int startFindFrom}) {
+  static findWordWithSmallestIndex(String fullString, List<String> findString, {int startFindFrom}) {
     int tempSmallestIndex;
     int tempIndex;
     String wordWithSmallestIndex;
@@ -134,31 +115,34 @@ class Utils {
         i++;
         continue;
       }
-      wordWithSmallestIndex = tempSmallestIndex == null
-          ? findString[i]
-          : tempSmallestIndex < tempIndex
-              ? wordWithSmallestIndex
-              : findString[i];
-      tempSmallestIndex = tempSmallestIndex == null
-          ? tempIndex
-          : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
+      wordWithSmallestIndex =
+          tempSmallestIndex == null ? findString[i] : tempSmallestIndex < tempIndex ? wordWithSmallestIndex : findString[i];
+      tempSmallestIndex = tempSmallestIndex == null ? tempIndex : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
       i++;
     }
     return wordWithSmallestIndex ?? findString[0];
   }
 
-  static Future<List<DateTime>> pickDate(BuildContext context,
-      {List<DateTime> dates,
-      List<MarkedDate> markedDates,
-      SelectionType selectionType}) async {
+  static Future<List<DateTime>> pickDate(
+    BuildContext context, {
+        String title,
+        List<DateTime> dates,
+    List<MarkedDate> markedDates,
+    SelectionType selectionType,
+    DateTime minDate,
+    DateTime maxDate,
+  }) async {
     List<DateTime> result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) {
           return ComDatePickerPage(
+            title: title,
             currentDate: dates ?? const [],
             markedDates: markedDates ?? const [],
             selectionType: selectionType ?? SelectionType.single,
+            minDate: minDate,
+            maxDate: maxDate,
           );
         },
         transitionsBuilder: (context, animation1, animation2, child) {
@@ -178,18 +162,14 @@ class Utils {
   }
 
   static pickFromChooser(BuildContext context,
-      {String title = "",
-      List<GroupCheckItem> items,
-      String currentItem = "",
-      OnItemChanged callback}) {
+      {String title = "", List<GroupCheckItem> items, String currentItem = "", OnItemChanged callback}) {
     assert(items != null);
 
 //    List<GroupCheckItem> itemList = items.keys.map((key) {
 //      return GroupCheckItem(key, items[key]);
 //    }).toList();
 
-    AdvGroupCheckController controller =
-        AdvGroupCheckController(checkedValue: currentItem, itemList: items);
+    AdvGroupCheckController controller = AdvGroupCheckController(checkedValue: currentItem, itemList: items);
 
     showModalBottomSheet(
         context: context,
@@ -211,7 +191,6 @@ class Utils {
                       child: AdvGroupCheck(
                 controller: controller,
                 callback: (itemSelected) async {
-                  await Future.delayed(Duration(milliseconds: 200));
                   Navigator.of(context).pop();
                   callback(context, currentItem, itemSelected);
                 },
@@ -248,28 +227,32 @@ class Utils {
               Flexible(
                 child: SingleChildScrollView(
                   child: AdvColumn(
-                    divider: ColumnDivider(10.0),
-                    margin: EdgeInsets.all(16.0),
                     children: <Widget>[
-                      Center(
-                        child: AdvIncrement(
-                          controller: controller,
-                          valueChangeListener: (before, after) {
-                            after = after;
-                          },
-                        ),
-                      ),
-                      Text(
-                        infoMessage,
-                        textAlign: TextAlign.center,
-                        style: ts.fs14.merge(ts.tcBlack54),
+                      AdvColumn(
+                        divider: ColumnDivider(4.0),
+                        margin: EdgeInsets.all(16.0),
+                        children: <Widget>[
+                          Center(
+                            child: AdvIncrement(
+                              controller: controller,
+                              valueChangeListener: (before, after) {
+                                after = after;
+                              },
+                            ),
+                          ),
+                          Text(
+                            infoMessage,
+                            textAlign: TextAlign.center,
+                            style: ts.fs14.merge(ts.tcBlack54),
+                          ),
+                        ],
                       ),
                       Container(
+                        margin: EdgeInsets.all(16.0),
                         width: MediaQuery.of(context).size.width,
                         child: AdvButton(
                           PitComponents.incrementPickerButtonName,
                           onPressed: () async {
-                            await Future.delayed(Duration(milliseconds: 200));
                             callback(currentItem, after);
                             Navigator.of(context).pop();
                           },

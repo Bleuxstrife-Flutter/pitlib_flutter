@@ -19,6 +19,7 @@ enum IconType { prefix, suffix }
 class AdvTextFieldWithButton extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
+  final EdgeInsets margin;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
   final bool autoValidate;
@@ -54,7 +55,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
       this.label,
       this.error,
       this.maxLength,
-      this.maxLines,
+      int maxLines,
       this.maxLengthEnforced,
       this.needsCounter = false,
       this.enable,
@@ -62,7 +63,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
       this.obscureText,
       String measureText,
       TextStyle textStyle,
-      EdgeInsetsGeometry padding,
+      EdgeInsets margin,
       this.textChangeListener,
       this.validator,
       this.autoValidate = false,
@@ -94,6 +95,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
                 obscureText == null &&
                 prefixIcon == null &&
                 suffixIcon == null)),
+        this.maxLines = maxLines ?? 1,
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
         this.backgroundColor =
@@ -103,6 +105,7 @@ class AdvTextFieldWithButton extends StatefulWidget {
         this.measureTextSpan = TextSpan(
             text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
+        this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 1;
 
   @override
@@ -191,6 +194,7 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),

@@ -6,14 +6,19 @@ import 'package:pit_components/components/extras/com_calendar_carousel.dart';
 import 'package:pit_components/pit_components.dart';
 
 class ComDatePickerPage extends StatefulWidget {
+  final String title;
   final List<DateTime> currentDate;
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
+  final DateTime minDate;
+  final DateTime maxDate;
 
   ComDatePickerPage(
-      {this.currentDate = const [],
+      {this.title, this.currentDate = const [],
       this.markedDates = const [],
-      this.selectionType});
+        this.selectionType,
+        this.minDate,
+        this.maxDate});
 
   @override
   State createState() => new _ComDatePickerPageState();
@@ -36,8 +41,8 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: new Text(PitComponents.datePickerTitle),
-        elevation: 0.0,
+        title: new Text(widget.title ?? ""),
+        elevation: 1.0,
         backgroundColor: PitComponents.datePickerToolbarColor,
       ),
       body: Container(
@@ -49,13 +54,14 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
             if (_datePicked) return;
             _datePicked = true;
             this.setState(() => _currentDate = dates);
-            await new Future.delayed(const Duration(milliseconds: 200));
             Navigator.pop(context, _currentDate);
           },
           thisMonthDayBorderColor: Colors.grey,
           selectedDateTimes: _currentDate,
           daysHaveCircularBorder: false,
           markedDates: widget.markedDates,
+          minDate: widget.minDate,
+          maxDate: widget.maxDate,
         ),
       ),
     );

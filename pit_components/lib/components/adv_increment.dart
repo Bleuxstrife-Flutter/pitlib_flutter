@@ -20,7 +20,8 @@ enum IconType { prefix, suffix }
 class AdvIncrement extends StatefulWidget {
   final AdvIncrementController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final OnValueChanged valueChangeListener;
   final int maxLineExpand;
   final Color hintColor;
@@ -41,7 +42,8 @@ class AdvIncrement extends StatefulWidget {
     TextAlign alignment,
     String measureText,
     TextStyle textStyle,
-    EdgeInsetsGeometry padding,
+    EdgeInsets padding,
+    EdgeInsets margin,
     this.valueChangeListener,
     AdvIncrementController controller,
     int maxLineExpand,
@@ -82,6 +84,7 @@ class AdvIncrement extends StatefulWidget {
         this.measureTextSpan = TextSpan(
             text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 4;
 
   @override
@@ -136,6 +139,7 @@ class _AdvIncrementState extends State<AdvIncrement>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),

@@ -21,7 +21,7 @@ class AdvGroupCheck extends StatefulWidget {
   final AdvGroupCheckController controller;
   final String title;
   final GroupCheckCallback callback;
-
+  Completer c;
   AdvGroupCheck(
       {this.title,
         String checkedValue,
@@ -66,7 +66,16 @@ class _AdvGroupCheckState extends State<AdvGroupCheck> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
                   _checkedValue = true;
-                  Timer(Duration(milliseconds: 200), () {
+
+                  Navigator.of(context).push(PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (BuildContext context, _, __) {
+                        return Container();
+                      }
+                  ));
+
+                  Timer(Duration(milliseconds: 300), () {
+                    Navigator.pop(context);
                     if (widget.callback != null)
                       widget.callback(groupCheckItem.data);
                   });

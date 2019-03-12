@@ -252,7 +252,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //                )),
                   ]),
               Container(
-                padding: EdgeInsets.all(8.0),
                 child: AdvTextFieldWithButton(
 //                  textStyle: ts.fs12,
                   controller: specialController,
@@ -351,6 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Utils.pickDate(
                     context,
                     selectionType: SelectionType.range,
+                    maxDate: DateTime(2000, 1, 1),
                   ).then((dates) {
                     print("dates => $dates");
                   });
@@ -395,6 +395,9 @@ class _MyHomePageState extends State<MyHomePage> {
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
                 controller: AdvDatePickerController(
+
+                    minDate: DateTime(2000, 1, 1),
+                    maxDate: DateTime(2001, 1, 1),
 //                    enable: false,
                     label: "Just TextField MaxLines 1",
                     hint: "test",
