@@ -19,7 +19,8 @@ typedef void OnItemChanged(
 class AdvChooserPlain extends StatefulWidget {
   final AdvChooserController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final Color hintColor;
   final Color labelColor;
   final Color lineColor;
@@ -35,7 +36,8 @@ class AdvChooserPlain extends StatefulWidget {
       TextAlign alignment,
       String measureText,
       TextSpan measureTextSpan,
-      EdgeInsetsGeometry padding,
+        EdgeInsets padding,
+        EdgeInsets margin,
       AdvChooserController controller,
       List<GroupCheckItem> items,
       int maxLineExpand,
@@ -68,7 +70,8 @@ class AdvChooserPlain extends StatefulWidget {
                 items: items ?? const []),
         this.measureTextSpan = measureTextSpan ??
             new TextSpan(text: measureText, style: ts.fs16.merge(ts.tcBlack)),
-        this.padding = padding ?? new EdgeInsets.all(0.0);
+        this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin;
 
   @override
   State createState() => new _AdvChooserPlainState();
@@ -118,6 +121,7 @@ class _AdvChooserPlainState extends State<AdvChooserPlain>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(context, maxWidth),

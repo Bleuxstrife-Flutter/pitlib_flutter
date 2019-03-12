@@ -27,7 +27,8 @@ class AdvDatePicker extends StatefulWidget {
   final AdvDatePickerController controller;
   final SelectionType selectionType;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final ValueChanged<List<DateTime>> onChanged;
   final DateFormat format;
   final Color backgroundColor;
@@ -40,12 +41,15 @@ class AdvDatePicker extends StatefulWidget {
       {DateTime initialValue,
       List<DateTime> dates,
       List<MarkedDate> markedDates,
-      String label,
+        DateTime minDate,
+        DateTime maxDate,
+        String label,
       String hint,
       String error,
       bool enable,
       TextStyle textStyle,
-      EdgeInsetsGeometry padding,
+        EdgeInsets padding,
+        EdgeInsets margin,
       this.selectionType,
       DateFormat format,
       AdvDatePickerController controller,
@@ -60,14 +64,15 @@ class AdvDatePicker extends StatefulWidget {
                 hint == null &&
                 dates == null &&
                 markedDates == null &&
+                minDate == null &&
+                maxDate == null &&
                 error == null &&
                 label == null &&
                 enable == null)),
         this.format = format ?? new DateFormat("dd/MM/yyyy"),
         this.hintColor = hintColor ?? PitComponents.datePickerHintColor,
         this.labelColor = labelColor ?? PitComponents.datePickerLabelColor,
-        this.backgroundColor =
-            backgroundColor ?? PitComponents.datePickerBackgroundColor,
+        this.backgroundColor = backgroundColor ?? PitComponents.datePickerBackgroundColor,
         this.borderColor = borderColor ?? PitComponents.datePickerBorderColor,
         this.errorColor = errorColor ?? PitComponents.datePickerErrorColor,
         this.controller = controller ??
@@ -75,24 +80,27 @@ class AdvDatePicker extends StatefulWidget {
                 initialValue: initialValue,
                 dates: dates ?? [],
                 markedDates: markedDates ?? [],
+                minDate: minDate,
+                maxDate: maxDate,
                 hint: hint ?? "",
                 error: error ?? "",
                 label: label ?? "",
                 enable: enable ?? true),
-        this.measureTextSpan = TextSpan(
-            text: "",
-            style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
-        this.padding = padding ?? new EdgeInsets.all(0.0);
+        this.measureTextSpan = TextSpan(text: "", style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
+        this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin;
 
   @override
   State createState() => new _AdvDatePickerState();
 }
 
-class _AdvDatePickerState extends State<AdvDatePicker>
-    with SingleTickerProviderStateMixin {
+class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    print("river of grace 0 => ${widget.controller.label}");
+    print("river of grace 1 => ${widget.controller.minDate}");
+    print("river of grace 2 => ${widget.controller.maxDate}");
     widget.controller.addListener(_update);
   }
 
@@ -103,6 +111,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           mainAxisSize: MainAxisSize.min,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,38 +126,28 @@ class _AdvDatePickerState extends State<AdvDatePicker>
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
-    final Color _backgroundColor = widget.controller.enable
-        ? widget.backgroundColor
-        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+    final Color _backgroundColor =
+        widget.controller.enable ? widget.backgroundColor : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color
-        : Color.lerp(
-            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
-    final Color _hintColor = widget.controller.enable
-        ? widget.hintColor
-        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
-    final Color _iconColor = widget.controller.enable
-        ? Colors.grey.shade700
-        : Color.lerp(Colors.grey.shade700, PitComponents.lerpColor, 0.6);
+        : Color.lerp(widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
+    final Color _hintColor =
+        widget.controller.enable ? widget.hintColor : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+    final Color _iconColor =
+        widget.controller.enable ? Colors.grey.shade700 : Color.lerp(Colors.grey.shade700, PitComponents.lerpColor, 0.6);
 
     List<Widget> children = [];
 
     TextEditingController controller = new TextEditingController(
-        text: widget.controller.initialValue == null
-            ? ""
-            : widget.format.format(widget.controller.initialValue));
+        text: widget.controller.initialValue == null ? "" : widget.format.format(widget.controller.initialValue));
 
-    var tp = new TextPainter(
-        text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
     tp.layout();
 
     double width = tp.size.width == 0
         ? maxWidth
-        : tp.size.width +
-            _defaultWidthAddition +
-            (_defaultInnerPadding * 2) +
-            (widget.padding.horizontal);
+        : tp.size.width + _defaultWidthAddition + (_defaultInnerPadding * 2) + (widget.padding.horizontal);
 
     if (widget.controller.label != null && widget.controller.label != "") {
       children.add(
@@ -193,8 +192,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
                     child: ModTextField(
                       controller: controller,
                       textAlign: TextAlign.center,
-                      style: widget.measureTextSpan.style
-                          .copyWith(color: _textColor),
+                      style: widget.measureTextSpan.style.copyWith(color: _textColor),
                       decoration: ModInputDecoration(
                         suffixIcon: Container(
                             padding: EdgeInsets.only(right: 8.0),
@@ -215,8 +213,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
                             ),
                         contentPadding: new EdgeInsets.all(_paddingSize),
                         hintText: widget.controller.hint,
-                        hintStyle:
-                            TextStyle(color: _hintColor.withOpacity(0.6)),
+                        hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
                       ),
                     ),
                   ),
@@ -231,8 +228,7 @@ class _AdvDatePickerState extends State<AdvDatePicker>
     children.add(mainChild);
 
     if (widget.controller.error != null && widget.controller.error != "") {
-      TextStyle style = ts.fs11
-          .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
+      TextStyle style = ts.fs11.copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 
       children.add(Container(
           width: maxWidth,
@@ -254,10 +250,15 @@ class _AdvDatePickerState extends State<AdvDatePicker>
   void _handleTap(BuildContext context) async {
     if (!widget.controller.enable) return;
 
-    List<DateTime> result = await Utils.pickDate(context,
-        dates: widget.controller.dates,
-        markedDates: widget.controller.markedDates,
-        selectionType: widget.selectionType);
+    List<DateTime> result = await Utils.pickDate(
+      context,
+      title: widget.controller.label,
+      dates: widget.controller.dates,
+      markedDates: widget.controller.markedDates,
+      selectionType: widget.selectionType,
+      minDate: widget.controller.minDate,
+      maxDate: widget.controller.maxDate,
+    );
 
     if (widget.onChanged != null) widget.onChanged(result);
     widget.controller.dates = result;
