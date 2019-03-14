@@ -230,4 +230,17 @@
 * Group Check delay's has been reduced to 300
 * All delay (Pick from increment and CalendarPage) has been taken out
 
+## 0.2.5+3
+
+* Change Adv Text Field Controller maxLines default value to 1 instead of null
+
+## 0.2.6
+
+* Single Inputter now has error and label argument, as well as margin
+
+## 0.2.6+1
+
+* Single Inputter fixes and centering text
+* AdvTextField and AdvTextFieldPlain now have numberAcknowledgeZero, if true, there'll no parsing to number datatype
+
 
