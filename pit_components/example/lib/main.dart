@@ -1,3 +1,4 @@
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -105,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
     AdvTextFieldController controller = AdvTextFieldController(
         label: "Just",
+        alignment: TextAlign.center,
         hint: "TextField MaxLines 1 Example",
 //        enable: false,
         prefixIcon: Icon(Icons.arrow_back),
@@ -182,10 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     : CrossFadeState.showSecond,
               ),
               AdvTextField(
-                controller: controller,
+//                controller: controller,
               ),
 //              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
+                controller: controller,
+//                numberAcknowledgeZero: true,
+keyboardType: TextInputType.number,
 //                prefixIcon:
 //                Container(child: Icon(Icons.place), color: Colors.green),
 //                suffixIcon:
@@ -416,6 +421,8 @@ class _MyHomePageState extends State<MyHomePage> {
               AdvSingleDigitInputter(
                 text: "12345",
                 digitCount: 5,
+                label: "Syalalalala",
+                error: "Error nih gk "
               ),
               RoundCheckbox(
                 onChanged: (bool value) {
