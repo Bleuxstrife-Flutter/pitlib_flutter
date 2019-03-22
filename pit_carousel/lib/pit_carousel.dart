@@ -9,9 +9,9 @@ class Position {
 
   const Position(
       {double top = 8.0,
-      double bottom = 8.0,
-      double left = 8.0,
-      double right = 8.0})
+        double bottom = 8.0,
+        double left = 8.0,
+        double right = 8.0})
       : this.top = top,
         this.bottom = bottom,
         this.left = left,
@@ -42,6 +42,7 @@ class AdvCarousel extends StatefulWidget {
 
   final Alignment dotAlignment;
   final Position dotPosition;
+  final Widget placeholder;
 
   AdvCarousel({
     double height,
@@ -55,6 +56,7 @@ class AdvCarousel extends StatefulWidget {
     bool repeat = true,
     this.dotAlignment = Alignment.bottomCenter,
     this.dotPosition = const Position(),
+    Widget placeholder,
   })  : assert(height == null || height > 0),
         assert(children == null || carouselController == null),
         assert(animationCurve != null),
@@ -65,7 +67,8 @@ class AdvCarousel extends StatefulWidget {
         this.height = height ?? 210.0,
         this.margin = margin ?? new EdgeInsets.all(0.0),
         this.autoPlay = autoPlay ?? true,
-        this.repeat = repeat ?? true;
+        this.repeat = repeat ?? true,
+        this.placeholder = placeholder ?? Container();
 
   @override
   State createState() => new _AdvCarouselState();
@@ -117,12 +120,11 @@ class _AdvCarouselState extends State<AdvCarousel>
   }
 
   Widget createCarouselPlaceHolder() {
-    return new AspectRatio(
-        aspectRatio: 16 / 9,
-        child: new Container(
-            height: widget.height,
-            color: Colors.amber,
-            child: Text("Loading...")));
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      return Container(
+          width: constraints.maxWidth,
+          height: widget.height, child: widget.placeholder);
+    },);
   }
 
   @override
@@ -136,7 +138,7 @@ class _AdvCarouselState extends State<AdvCarousel>
     _pageController.addListener(() => setState(() {}));
 
     return new Container(
-      height: widget.height,
+        height: widget.height,
         margin: widget.margin,
         child: new Stack(children: [
           new PageView(
@@ -144,8 +146,8 @@ class _AdvCarouselState extends State<AdvCarousel>
             physics: new AlwaysScrollableScrollPhysics(),
             children: widget.carouselController.widgets
                 .map((widget) => new Container(
-                      child: widget,
-                    ))
+              child: widget,
+            ))
                 .toList(),
           ),
           new Positioned(
@@ -166,12 +168,12 @@ class _AdvCarouselState extends State<AdvCarousel>
 
   Widget _buildDot(int index) {
     double currentPage =
-        !_pageController.hasClients ? 0.0 : _pageController.page ?? 0.0;
+    !_pageController.hasClients ? 0.0 : _pageController.page ?? 0.0;
     double zoom = (currentPage).floor() == index
         ? ((1.0 - (currentPage - index)) * (dotIncreaseSize - 1)) + 1
         : (currentPage + 1).floor() == index
-            ? ((currentPage + 1.0 - index) * (dotIncreaseSize - 1)) + 1
-            : 1.0;
+        ? ((currentPage + 1.0 - index) * (dotIncreaseSize - 1)) + 1
+        : 1.0;
 
     return new Container(
       width: dotSpacing,
@@ -208,7 +210,7 @@ class _AdvCarouselState extends State<AdvCarousel>
     //Every widget.displayDuration (time) the tabbar controller will animate to the next index.
     _timer = new Timer.periodic(
       widget.displayDuration,
-      (_) {
+          (_) {
         if (!widget.repeat) {
           if (this.nextIndex == 0) _timer.cancel();
 
@@ -236,8 +238,8 @@ class AdvCarouselController extends ValueNotifier<AdvCarouselEditingValue> {
 
   AdvCarouselController({List<Widget> widgets})
       : super(widgets == null
-            ? AdvCarouselEditingValue.empty
-            : new AdvCarouselEditingValue(widgets: widgets));
+      ? AdvCarouselEditingValue.empty
+      : new AdvCarouselEditingValue(widgets: widgets));
 
   AdvCarouselController.fromValue(AdvCarouselEditingValue value)
       : super(value ?? AdvCarouselEditingValue.empty);
