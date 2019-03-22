@@ -17,3 +17,11 @@
 ## 0.1.0
 
 * Initial stable release
+
+## 0.2.0
+
+* Upgrade to AndroidX
+
+## 0.2.1
+
+* Add placeholder argument for Carousel
