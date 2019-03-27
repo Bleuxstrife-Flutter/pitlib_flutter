@@ -31,10 +31,6 @@ public class PitPaymentPlugin implements MethodCallHandler, PluginRegistry.Activ
     private static final int REQUEST_RENT_FEE = 4569;
     private String token;
     private Result result;
-    private static final String VT_KEY_DEBUG = "VT-client-j_y7RRFZJETHsqMe";
-    private static final String VT_KEY_PRODUCTION = "VT-client-ZgRC-r-WntD2epbI";
-    private static final String BASE_URL_DEBUG = "https://api.sandbox.veritrans.co.id/v2/transactions";
-    private static final String BASE_URL_PRODUCTION = "https://api.veritrans.co.id/v2/transactions";
 
     /**
      * Plugin registration.
