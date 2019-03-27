@@ -3,18 +3,6 @@ import UIKit
 import MidtransCoreKit
 
 struct Midtrans{
-    static var clientKey: String{
-        //        return "VT-client-ZgRC-r-WntD2epbI"; //production
-        return "VT-client-j_y7RRFZJETHsqMe"; //debug
-    }
-    static var merchantServerUrl: String{
-        //        return "https://api.veritrans.co.id/v2/transactions"; //production
-        return "https://api.sandbox.veritrans.co.id/v2/transactions"; //debug
-    }
-    static var serverEnvironment: MidtransServerEnvironment{
-        //        return .production; //production
-        return .sandbox; //debug
-    }
 }
 
 public class SwiftPitPaymentPlugin: NSObject, FlutterPlugin {

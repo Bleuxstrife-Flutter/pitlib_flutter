@@ -49,3 +49,7 @@
 ## 0.2.0+1
 
 * Migrate to AndroidX
+
+## 0.3.0
+
+* I have shut down this plugin for now, please move to this plugin to connect to Midtrans Payment [MidFlutter](https://pub.dartlang.org/packages/mid_flutter/versions/0.0.1)
