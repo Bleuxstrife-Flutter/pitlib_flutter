@@ -243,4 +243,8 @@
 * Single Inputter fixes and centering text
 * AdvTextField and AdvTextFieldPlain now have numberAcknowledgeZero, if true, there'll no parsing to number datatype
 
+## 0.2.6+2
+
+* AndroidX Migration
+
 
