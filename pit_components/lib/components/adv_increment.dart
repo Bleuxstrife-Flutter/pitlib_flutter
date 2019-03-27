@@ -263,6 +263,8 @@ class _AdvIncrementState extends State<AdvIncrement>
               widget.controller.counter = newCounter;
 
               if (oldCounter == newCounter) _update();
+
+              widget.valueChangeListener(oldCounter, newCounter);
             },
             decoration: ModInputDecoration(
                 iconSize: _iconSize,

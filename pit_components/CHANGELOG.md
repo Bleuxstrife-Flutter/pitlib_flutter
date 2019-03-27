@@ -247,4 +247,10 @@
 
 * AndroidX Migration
 
+## 0.2.7
+
+* Now AdvRadioGroup's title Style can be edited
+* Now added AdvCheckbox
+* Fix Increment doesn't trigger valueChangeListener when typing
+
 

@@ -5,17 +5,19 @@ class AdvLoadingWithBarrier extends StatelessWidget {
   final Widget content;
   final bool isProcessing;
   final Color barrierColor;
+  final double width;
+  final double height;
 
-  AdvLoadingWithBarrier({this.content, this.isProcessing, Color barrierColor})
-      : this.barrierColor = barrierColor ?? const Color(0x10000000);
+  AdvLoadingWithBarrier(
+      {this.content, this.isProcessing, Color barrierColor, double width, double height})
+      : this.barrierColor = barrierColor ?? const Color(0x10000000),
+        this.width = width ?? 100.0,
+        this.height = height ?? 100.0;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[
-        content,
-        _AdvLoadingWrapper(isProcessing, barrierColor)
-      ],
+      children: <Widget>[content, _AdvLoadingWrapper(isProcessing, barrierColor, width, height)],
     );
   }
 }
@@ -23,15 +25,16 @@ class AdvLoadingWithBarrier extends StatelessWidget {
 class _AdvLoadingWrapper extends StatefulWidget {
   final bool visible;
   final Color barrierColor;
+  final double width;
+  final double height;
 
-  _AdvLoadingWrapper(this.visible, this.barrierColor);
+  _AdvLoadingWrapper(this.visible, this.barrierColor, this.width, this.height);
 
   @override
   State<StatefulWidget> createState() => _AdvLoadingWrapperState();
 }
 
-class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
-    with TickerProviderStateMixin {
+class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper> with TickerProviderStateMixin {
   AnimationController opacityController;
 
   @override
@@ -39,8 +42,7 @@ class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
     super.initState();
     if (!this.mounted) return;
 
-    opacityController =
-        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+    opacityController = AnimationController(duration: Duration(milliseconds: 200), vsync: this);
 
     opacityController.addListener(() {
       if (this.mounted) setState(() {});
@@ -57,10 +59,8 @@ class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!opacityController.isAnimating) {
-        if (widget.visible && opacityController.value == 0.0)
-          opacityController.forward(from: 0.0);
-        if (!widget.visible && opacityController.value == 1.0)
-          opacityController.reverse(from: 1.0);
+        if (widget.visible && opacityController.value == 0.0) opacityController.forward(from: 0.0);
+        if (!widget.visible && opacityController.value == 1.0) opacityController.reverse(from: 1.0);
       }
     });
 
@@ -74,7 +74,8 @@ class _AdvLoadingWrapperState extends State<_AdvLoadingWrapper>
                   child: Center(
                       child: Image.asset(
                     PitComponents.loadingAssetName,
-                    height: 30.0,
+                    height: widget.height,
+                    width: widget.width,
                   ))))),
     );
   }
