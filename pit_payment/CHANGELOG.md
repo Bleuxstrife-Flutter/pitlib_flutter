@@ -41,3 +41,11 @@
 ## 0.1.1
 
 * Dependencies to Stable channel Flutter
+
+## 0.2.0
+
+* Migrate to AndroidX
+
+## 0.2.0+1
+
+* Migrate to AndroidX

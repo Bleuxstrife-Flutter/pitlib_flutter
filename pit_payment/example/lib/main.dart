@@ -14,14 +14,17 @@ class _PitPaymentDemoState extends State<PitPaymentDemo> {
     InkWell();
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Pit Payment Demo'),
         ),
         body: SingleChildScrollView(
-          child: PitPayment(100000.0, (type, {result}) {
-            print("I got payment : $type, $result");
-          }),
-        ),
+            child: Container(
+              margin: EdgeInsets.all(16.0),
+              child: PitPayment(100000.0, (type, {result}) {
+                print("I got payment : $type, $result");
+              }, locale: Locale("id"),),
+            )),
       ),
     );
   }

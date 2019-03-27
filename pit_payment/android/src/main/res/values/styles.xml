@@ -22,7 +22,7 @@
         <item name="colorControlNormal">@color/normal_text_tertier</item>
         <item name="colorControlActivated">@color/yellow_accent</item>
         <item name="colorControlHighlight">@color/yellow_accent</item>
-        <item name="textColorError">@color/error_text_color</item>
+        <item name="colorError">@color/error_text_color</item>
     </style>
 
     <style name="Theme.NeedMobile.Base.NoActionBar" parent="Theme.NeedMobile.Base">
