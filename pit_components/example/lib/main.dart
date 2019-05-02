@@ -422,7 +422,8 @@ keyboardType: TextInputType.number,
                 text: "12345",
                 digitCount: 5,
                 label: "Syalalalala",
-                error: "Error nih gk "
+                error: "Error nih gk ",
+                keyboardType: TextInputType.number,
               ),
               RoundCheckbox(
                 onChanged: (bool value) {

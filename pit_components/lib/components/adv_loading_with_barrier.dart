@@ -10,9 +10,9 @@ class AdvLoadingWithBarrier extends StatelessWidget {
 
   AdvLoadingWithBarrier(
       {this.content, this.isProcessing, Color barrierColor, double width, double height})
-      : this.barrierColor = barrierColor ?? const Color(0x10000000),
-        this.width = width ?? 100.0,
-        this.height = height ?? 100.0;
+      : this.barrierColor = barrierColor ?? PitComponents.loadingBarrierColor,
+        this.width = width ?? PitComponents.loadingWidth,
+        this.height = height ?? PitComponents.loadingHeight;
 
   @override
   Widget build(BuildContext context) {
