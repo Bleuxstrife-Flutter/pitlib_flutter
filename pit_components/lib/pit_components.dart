@@ -64,6 +64,10 @@ class PitComponents {
   static Color lerpColor = Color(0xffD1D1D1);
   static Color selectedImagePreviewColor = Colors.orange;
 
+  static Color loadingBarrierColor = const Color(0x10000000);
+  static double loadingWidth = 100.0;
+  static double loadingHeight = 100.0;
+
   static EdgeInsets editableMargin = EdgeInsets.symmetric(vertical: 8.0);
 
   static String incrementPickerButtonName = "Save";
