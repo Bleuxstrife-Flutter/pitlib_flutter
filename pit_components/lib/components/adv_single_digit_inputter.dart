@@ -231,7 +231,7 @@ class AdvSingleDigitInputterEditingValue {
 
   AdvSingleDigitInputterEditingValue copyWith({String text, String label, String error}) {
     return new AdvSingleDigitInputterEditingValue(
-        text: text ?? this.text, label: label ?? this.label, error: error ?? this.error);
+        text: text, label: label, error: error);
   }
 
   AdvSingleDigitInputterEditingValue.fromValue(AdvSingleDigitInputterEditingValue copy)
