@@ -353,19 +353,19 @@ class AdvTextFieldEditingValue {
       Widget suffixIcon,
       TextSelection selection}) {
     return new AdvTextFieldEditingValue(
-        text: text ?? this.text,
-        hint: hint ?? this.hint,
-        label: label ?? this.label,
-        error: error ?? this.error,
-        maxLength: maxLength ?? this.maxLength,
-        maxLengthEnforced: maxLengthEnforced ?? this.maxLengthEnforced,
-        maxLines: maxLines ?? this.maxLines,
-        enable: enable ?? this.enable,
-        alignment: alignment ?? this.alignment,
-        obscureText: obscureText ?? this.obscureText,
+        text: text,
+        hint: hint,
+        label: label,
+        error: error,
+        maxLength: maxLength,
+        maxLengthEnforced: maxLengthEnforced,
+        maxLines: maxLines,
+        enable: enable,
+        alignment: alignment,
+        obscureText: obscureText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        selection: selection ?? this.selection);
+        selection: selection);
   }
 
   AdvTextFieldEditingValue.fromValue(AdvTextFieldEditingValue copy)

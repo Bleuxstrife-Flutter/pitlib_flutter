@@ -737,10 +737,10 @@ class AdvDropDownEditingValue {
       TextAlign alignment,
       Map<String, dynamic> items}) {
     return new AdvDropDownEditingValue(
-        text: text ?? this.text,
-        hint: hint ?? this.hint,
-        alignment: alignment ?? this.alignment,
-        items: items ?? Map());
+        text: text,
+        hint: hint,
+        alignment: alignment,
+        items: items);
   }
 
   AdvDropDownEditingValue.fromValue(AdvDropDownEditingValue copy)

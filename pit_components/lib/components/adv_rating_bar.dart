@@ -114,7 +114,7 @@ class AdvRatingBarValue {
   static const AdvRatingBarValue empty = const AdvRatingBarValue();
 
   AdvRatingBarValue copyWith({double rating}) {
-    return new AdvRatingBarValue(rating: rating ?? this.rating);
+    return new AdvRatingBarValue(rating: rating);
   }
 
   AdvRatingBarValue.fromValue(AdvRatingBarValue copy)

@@ -219,15 +219,15 @@ class AdvDatePickerEditingValue {
       String error,
       bool enable}) {
     return new AdvDatePickerEditingValue(
-        initialValue: initialValue ?? this.initialValue,
-        dates: dates ?? this.dates,
-        markedDates: markedDates ?? this.markedDates,
-        minDate: minDate ?? this.minDate,
-        maxDate: maxDate ?? this.maxDate,
-        hint: hint ?? this.hint,
-        label: label ?? this.label,
-        error: error ?? this.error,
-        enable: enable ?? this.enable);
+        initialValue: initialValue,
+        dates: dates,
+        markedDates: markedDates,
+        minDate: minDate,
+        maxDate: maxDate,
+        hint: hint,
+        label: label,
+        error: error,
+        enable: enable);
   }
 
   AdvDatePickerEditingValue.fromValue(AdvDatePickerEditingValue copy)

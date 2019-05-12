@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -19,6 +18,7 @@ import 'package:pit_components/components/adv_range_slider.dart';
 import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/components/adv_scrollable_bottom_sheet.dart';
 import 'package:pit_components/components/adv_single_digit_inputter.dart';
+import 'package:pit_components/components/adv_state.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/adv_text_field.dart';
 import 'package:pit_components/components/adv_text_field_plain.dart';
@@ -86,9 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return AdvRow(divider: RowDivider(12.0), children: [
       icon,
       Text(value,
-          style: ts.fw700.merge(ts.fs12).copyWith(
-              color:
-                  _radioButtonValue == value ? Colors.black87 : Colors.black38))
+          style: ts.fw700
+              .merge(ts.fs12)
+              .copyWith(color: _radioButtonValue == value ? Colors.black87 : Colors.black38))
     ]);
   }
 
@@ -99,11 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AdvTextFieldController specialController = AdvTextFieldController(
-        label: "With Button", hint: "Dengan Tombol", error: "asdasdasd"
-        /* maxLines: 1 ,
+    AdvTextFieldController specialController =
+        AdvTextFieldController(label: "With Button", hint: "Dengan Tombol", error: "asdasdasd"
+            /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
-        );
+            );
     AdvTextFieldController controller = AdvTextFieldController(
         label: "Just",
         alignment: TextAlign.center,
@@ -156,10 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     AdvGroupCheckController groupCheckController = AdvGroupCheckController(
         checkedValue: "",
-        itemList: [
-          GroupCheckItem('Image', 'Image'),
-          GroupCheckItem('Document', 'Document')
-        ]);
+        itemList: [GroupCheckItem('Image', 'Image'), GroupCheckItem('Document', 'Document')]);
     controller.error = "asdasd";
     return Scaffold(
       appBar: AppBar(
@@ -175,27 +172,23 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               AnimatedCrossFade(
                 duration: const Duration(seconds: 1),
-                firstChild: const FlutterLogo(
-                    style: FlutterLogoStyle.horizontal, size: 100.0),
-                secondChild: const FlutterLogo(
-                    style: FlutterLogoStyle.stacked, size: 100.0),
-                crossFadeState: _first
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
+                firstChild: const FlutterLogo(style: FlutterLogoStyle.horizontal, size: 100.0),
+                secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
+                crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
               AdvTextField(
 //                controller: controller,
-              ),
+                  ),
 //              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
                 controller: controller,
 //                numberAcknowledgeZero: true,
-keyboardType: TextInputType.number,
+                keyboardType: TextInputType.number,
 //                prefixIcon:
 //                Container(child: Icon(Icons.place), color: Colors.green),
 //                suffixIcon:
 //                Container(child: Icon(Icons.fast_forward), color: Colors.green),
-                  ),
+              ),
               AdvRow(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   divider: RowDivider(8.0),
@@ -220,13 +213,8 @@ keyboardType: TextInputType.number,
                             label: "Just TextField MaxLines 1",
                             hint: "test",
                             initialValue: _date ?? DateTime.now(),
-                            markedDates: [
-                              MarkedDate(DateTime.now(), "lalala")
-                            ],
-                            dates: [
-                              _date ?? DateTime.now(),
-                              _date ?? DateTime.now()
-                            ]),
+                            markedDates: [MarkedDate(DateTime.now(), "lalala")],
+                            dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]),
                       ),
                     ),
                     Expanded(
@@ -299,11 +287,8 @@ keyboardType: TextInputType.number,
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(child: AdvButton("Normal", enable: false)),
-                Expanded(
-                    child:
-                        AdvButton("Outlined", onlyBorder: true, enable: false)),
-                Expanded(
-                    child: AdvButton("Reverse", reverse: true, enable: false))
+                Expanded(child: AdvButton("Outlined", onlyBorder: true, enable: false)),
+                Expanded(child: AdvButton("Reverse", reverse: true, enable: false))
               ]),
               AdvButton(
                 "Go to List View with Bottom Button",
@@ -315,8 +300,7 @@ keyboardType: TextInputType.number,
                     context,
                     MaterialPageRoute(
                         builder: (context) => AnotherPage(),
-                        settings:
-                            RouteSettings(name: widget.runtimeType.toString())),
+                        settings: RouteSettings(name: widget.runtimeType.toString())),
                   );
                 },
               ),
@@ -331,27 +315,23 @@ keyboardType: TextInputType.number,
                         context,
                         MaterialPageRoute(
                             builder: (context) => InfinityListDemo(),
-                            settings: RouteSettings(
-                                name: widget.runtimeType.toString())),
+                            settings: RouteSettings(name: widget.runtimeType.toString())),
                       );
                     },
                   ),
                 ),
                 Expanded(
                     child: AdvButtonWithIcon(
-                        "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
-                        onPressed: () {
+                        "", Icon(Icons.airline_seat_flat_angled), Axis.vertical, onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PersistentBottomSheetDemo(),
-                        settings:
-                            RouteSettings(name: widget.runtimeType.toString())),
+                        settings: RouteSettings(name: widget.runtimeType.toString())),
                   );
                 }, onlyBorder: true)),
                 Expanded(
-                    child: AdvButtonWithIcon(
-                        "", Icon(Icons.headset), Axis.vertical, onPressed: () {
+                    child: AdvButtonWithIcon("", Icon(Icons.headset), Axis.vertical, onPressed: () {
                   Utils.pickDate(
                     context,
                     selectionType: SelectionType.range,
@@ -375,17 +355,14 @@ keyboardType: TextInputType.number,
                         "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
                         enable: false, onlyBorder: true)),
                 Expanded(
-                    child: AdvButtonWithIcon(
-                        "", Icon(Icons.headset), Axis.vertical,
+                    child: AdvButtonWithIcon("", Icon(Icons.headset), Axis.vertical,
                         enable: false, reverse: true)),
               ]),
 //              Container(child: AdvText(
 //                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
 ////                maxLines: 5,
 //              ), height: 1250.0, color: Colors.green),
-              Visibility(
-                  visible: _date != null,
-                  child: AdvText("You picked date => $_date")),
+              Visibility(visible: _date != null, child: AdvText("You picked date => $_date")),
               AdvDatePicker(
                 selectionType: SelectionType.single,
                 onChanged: (List value) {
@@ -400,7 +377,6 @@ keyboardType: TextInputType.number,
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
                 controller: AdvDatePickerController(
-
                     minDate: DateTime(2000, 1, 1),
                     maxDate: DateTime(2001, 1, 1),
 //                    enable: false,
@@ -412,11 +388,7 @@ keyboardType: TextInputType.number,
               ),
               AdvDropDown(
                 onChanged: (String value) {},
-                items: {
-                  "data 1": "display 1",
-                  "data 2": "display 2",
-                  "data 3": "display 3"
-                },
+                items: {"data 1": "display 1", "data 2": "display 2", "data 3": "display 3"},
               ),
               AdvSingleDigitInputter(
                 text: "12345",
@@ -547,7 +519,34 @@ keyboardType: TextInputType.number,
   }
 }
 
-class AnotherPage extends StatelessWidget {
+class AnotherPage extends StatefulWidget {
+  @override
+  _AnotherPageState createState() => _AnotherPageState();
+}
+
+class _AnotherPageState extends AdvState<AnotherPage> {
+  @override
+  Widget advBuild(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Another Page"),
+      ),
+      body: Column(children: [
+        FlatButton(
+          child: Text("coba"),
+          color: Colors.green,
+          onPressed: () {
+            process(() async {
+              await Future.delayed(Duration(seconds: 3));
+            });
+          },
+        )
+      ]),
+    );
+  }
+}
+
+class An2otherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -571,17 +570,12 @@ class AnotherPage extends StatelessWidget {
               child: InkWell(
                 onTap: () {},
                 child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: AdvRow(
-                        divider: RowDivider(4.0),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.filter_list,
-                              size: 16.0, color: Colors.purple),
-                          Text("Filter",
-                              style: ts.fs12.copyWith(color: Colors.purple))
-                        ])),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child:
+                        AdvRow(divider: RowDivider(4.0), mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.filter_list, size: 16.0, color: Colors.purple),
+                      Text("Filter", style: ts.fs12.copyWith(color: Colors.purple))
+                    ])),
               ),
               elevation: 4.0),
           margin: EdgeInsets.only(bottom: 20.0),
@@ -595,8 +589,7 @@ class PersistentBottomSheetDemo extends StatefulWidget {
   static const String routeName = '/material/persistent-bottom-sheet';
 
   @override
-  _PersistentBottomSheetDemoState createState() =>
-      _PersistentBottomSheetDemoState();
+  _PersistentBottomSheetDemoState createState() => _PersistentBottomSheetDemoState();
 }
 
 class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
@@ -670,12 +663,10 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
                                                   'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color:
-                                                          themeData.accentColor,
+                                                      color: themeData.accentColor,
                                                       fontSize: 24.0)),
                                               Column(
-                                                  children: List.generate(100,
-                                                      (index) {
+                                                  children: List.generate(100, (index) {
                                                 return Text("Text $index");
                                               }))
                                             ]))),

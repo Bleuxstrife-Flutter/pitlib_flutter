@@ -170,8 +170,8 @@ class AdvGroupCheckEditingValue {
   AdvGroupCheckEditingValue copyWith(
       {String checkedValue, List<GroupCheckItem> itemList}) {
     return new AdvGroupCheckEditingValue(
-        checkedValue: checkedValue ?? this.checkedValue,
-        itemList: itemList ?? this.itemList);
+        checkedValue: checkedValue,
+        itemList: itemList);
   }
 
   AdvGroupCheckEditingValue.fromValue(AdvGroupCheckEditingValue copy)

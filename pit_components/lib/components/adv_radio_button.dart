@@ -160,8 +160,8 @@ class AdvRadioGroupEditingValue {
 
   AdvRadioGroupEditingValue copyWith({String checkedValue, List<RadioGroupItem> itemList}) {
     return new AdvRadioGroupEditingValue(
-        checkedValue: checkedValue ?? this.checkedValue,
-        itemList: itemList ?? this.itemList);
+        checkedValue: checkedValue,
+        itemList: itemList);
   }
 
   AdvRadioGroupEditingValue.fromValue(AdvRadioGroupEditingValue copy)

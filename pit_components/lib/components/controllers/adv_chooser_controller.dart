@@ -156,13 +156,13 @@ class AdvChooserEditingValue {
       TextAlign alignment,
       List<GroupCheckItem> items}) {
     return new AdvChooserEditingValue(
-        text: text ?? this.text,
-        hint: hint ?? this.hint,
-        label: label ?? this.label,
-        error: error ?? this.error,
-        enable: enable ?? this.enable,
-        alignment: alignment ?? this.alignment,
-        items: items ?? this.items);
+        text: text,
+        hint: hint,
+        label: label,
+        error: error,
+        enable: enable,
+        alignment: alignment,
+        items: items);
   }
 
   AdvChooserEditingValue.fromValue(AdvChooserEditingValue copy)

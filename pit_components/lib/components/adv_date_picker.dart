@@ -36,20 +36,23 @@ class AdvDatePicker extends StatefulWidget {
   final Color hintColor;
   final Color labelColor;
   final Color errorColor;
+  final bool withSwitcher;
+  final bool withIcon;
+  final ValueChanged<bool> onToggled;
 
   AdvDatePicker(
       {DateTime initialValue,
       List<DateTime> dates,
       List<MarkedDate> markedDates,
-        DateTime minDate,
-        DateTime maxDate,
-        String label,
+      DateTime minDate,
+      DateTime maxDate,
+      String label,
       String hint,
       String error,
       bool enable,
       TextStyle textStyle,
-        EdgeInsets padding,
-        EdgeInsets margin,
+      EdgeInsets padding,
+      EdgeInsets margin,
       this.selectionType,
       DateFormat format,
       AdvDatePickerController controller,
@@ -58,6 +61,9 @@ class AdvDatePicker extends StatefulWidget {
       Color backgroundColor,
       Color borderColor,
       Color errorColor,
+      bool withSwitcher,
+      bool withIcon,
+      this.onToggled,
       @required this.onChanged})
       : assert(controller == null ||
             (initialValue == null &&
@@ -86,9 +92,12 @@ class AdvDatePicker extends StatefulWidget {
                 error: error ?? "",
                 label: label ?? "",
                 enable: enable ?? true),
-        this.measureTextSpan = TextSpan(text: "", style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
+        this.measureTextSpan =
+            TextSpan(text: "", style: textStyle ?? ts.fs16.copyWith(color: Colors.black87)),
         this.padding = padding ?? new EdgeInsets.all(0.0),
-        this.margin = margin ?? PitComponents.editableMargin;
+        this.margin = margin ?? PitComponents.editableMargin,
+        this.withSwitcher = withSwitcher ?? false,
+        this.withIcon = withIcon ?? true;
 
   @override
   State createState() => new _AdvDatePickerState();
@@ -98,9 +107,6 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    print("river of grace 0 => ${widget.controller.label}");
-    print("river of grace 1 => ${widget.controller.minDate}");
-    print("river of grace 2 => ${widget.controller.maxDate}");
     widget.controller.addListener(_update);
   }
 
@@ -126,20 +132,25 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
-    final Color _backgroundColor =
-        widget.controller.enable ? widget.backgroundColor : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+    final Color _backgroundColor = widget.controller.enable
+        ? widget.backgroundColor
+        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color
         : Color.lerp(widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
-    final Color _hintColor =
-        widget.controller.enable ? widget.hintColor : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
-    final Color _iconColor =
-        widget.controller.enable ? Colors.grey.shade700 : Color.lerp(Colors.grey.shade700, PitComponents.lerpColor, 0.6);
+    final Color _hintColor = widget.controller.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+    final Color _iconColor = widget.controller.enable
+        ? Colors.grey.shade700
+        : Color.lerp(Colors.grey.shade700, PitComponents.lerpColor, 0.6);
 
     List<Widget> children = [];
 
     TextEditingController controller = new TextEditingController(
-        text: widget.controller.initialValue == null ? "" : widget.format.format(widget.controller.initialValue));
+        text: widget.controller.initialValue == null
+            ? ""
+            : widget.format.format(widget.controller.initialValue));
 
     var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
@@ -147,7 +158,10 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
 
     double width = tp.size.width == 0
         ? maxWidth
-        : tp.size.width + _defaultWidthAddition + (_defaultInnerPadding * 2) + (widget.padding.horizontal);
+        : tp.size.width +
+            _defaultWidthAddition +
+            (_defaultInnerPadding * 2) +
+            (widget.padding.horizontal);
 
     if (widget.controller.label != null && widget.controller.label != "") {
       children.add(
@@ -161,7 +175,6 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
 
     double _iconSize = 18.0 / 16.0 * widget.measureTextSpan.style.fontSize;
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
-
     Widget mainChild = Container(
       width: width,
       padding: widget.padding,
@@ -174,50 +187,47 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
               ((8.0 - _paddingSize) * 2),
 //          minHeight: tp.size.height + _defaultHeightAddition,
         ),
-        child: new Center(
-          child: GestureDetector(
-            onTap: () {
-              _handleTap(context);
-            },
-            child: AbsorbPointer(
-              child: new Stack(
-                children: [
-                  Theme(
-                    data: new ThemeData(
-                      cursorColor: Theme.of(context).cursorColor,
-                      accentColor: _backgroundColor,
-                      hintColor: widget.borderColor,
-                      primaryColor: widget.borderColor,
-                    ),
-                    child: ModTextField(
-                      controller: controller,
-                      textAlign: TextAlign.center,
-                      style: widget.measureTextSpan.style.copyWith(color: _textColor),
-                      decoration: ModInputDecoration(
-                        suffixIcon: Container(
-                            padding: EdgeInsets.only(right: 8.0),
-                            child: Icon(Icons.calendar_today,
-                                size: _iconSize,
-                                // These colors are not defined in the Material Design spec.
-                                color: _iconColor)),
-                        filled: true,
-                        fillColor: _backgroundColor,
-                        border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                          const Radius.circular(4.0),
-                        ) /*,
+        child: GestureDetector(
+          onTap: () {
+            _handleTap(context);
+          },
+          child: AbsorbPointer(
+            child: Theme(
+              data: new ThemeData(
+                cursorColor: Theme.of(context).cursorColor,
+                accentColor: _backgroundColor,
+                hintColor: widget.borderColor,
+                primaryColor: widget.borderColor,
+              ),
+              child: ModTextField(
+                controller: controller,
+                textAlign: TextAlign.center,
+                style: widget.measureTextSpan.style.copyWith(color: _textColor),
+                decoration: ModInputDecoration(
+                  suffixIcon: widget.withIcon
+                      ? Container(
+                          margin: EdgeInsets.only(right: widget.withSwitcher ? 34.0 : 0.0),
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.calendar_today,
+                              size: _iconSize,
+                              // These colors are not defined in the Material Design spec.
+                              color: _iconColor))
+                      : null,
+                  filled: true,
+                  fillColor: _backgroundColor,
+                  border: OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                    const Radius.circular(4.0),
+                  ) /*,
                             borderSide: new BorderSide(
                               color: Colors.amber,
                               width: 1111.0,
                             )*/
-                            ),
-                        contentPadding: new EdgeInsets.all(_paddingSize),
-                        hintText: widget.controller.hint,
-                        hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
                       ),
-                    ),
-                  ),
-                ],
+                  contentPadding: new EdgeInsets.all(_paddingSize),
+                  hintText: widget.controller.hint,
+                  hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
+                ),
               ),
             ),
           ),
@@ -225,7 +235,32 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
       ),
     );
 
-    children.add(mainChild);
+    List<Widget> stackChildren = [mainChild];
+
+    if (widget.withSwitcher) {
+      stackChildren.add(Positioned(
+          child: Container(
+            alignment: Alignment.center,
+            child: Switch(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              value: widget.controller.enable,
+              onChanged: (v) {
+                setState(() {
+                  widget.controller.enable = v;
+                });
+
+                widget.onToggled(v);
+              },
+            ),
+            width: 50.0,
+            height: 20.0,
+          ),
+          right: 0.0,
+          bottom: 0.0,
+          top: 0.0));
+    }
+
+    children.add(Stack(children: stackChildren));
 
     if (widget.controller.error != null && widget.controller.error != "") {
       TextStyle style = ts.fs11.copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
