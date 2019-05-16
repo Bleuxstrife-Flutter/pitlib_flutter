@@ -14,6 +14,8 @@ import 'package:pit_components/components/extras/com_date_picker_page.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
 
+typedef String InfoMessageGenerator(int counter);
+
 class Utils {
   static String getEllipsizedText(String text, TextStyle textStyle, double maxWidth,
       {bool withDot = true, bool wholeWord = true}) {
@@ -204,7 +206,7 @@ class Utils {
       {String title = "",
       AdvIncrementController controller,
       int currentItem,
-      String infoMessage = "",
+      InfoMessageGenerator infoMessageGenerator,
       OnValueChanged callback}) async {
     int after;
 
@@ -228,24 +230,9 @@ class Utils {
                 child: SingleChildScrollView(
                   child: AdvColumn(
                     children: <Widget>[
-                      AdvColumn(
-                        divider: ColumnDivider(4.0),
-                        margin: EdgeInsets.all(16.0),
-                        children: <Widget>[
-                          Center(
-                            child: AdvIncrement(
-                              controller: controller,
-                              valueChangeListener: (before, after) {
-                                after = after;
-                              },
-                            ),
-                          ),
-                          Text(
-                            infoMessage,
-                            textAlign: TextAlign.center,
-                            style: ts.fs14.merge(ts.tcBlack54),
-                          ),
-                        ],
+                      IncrementWithText(
+                        controller: controller,
+                          infoMessageGenerator: infoMessageGenerator,
                       ),
                       Container(
                         margin: EdgeInsets.all(16.0),
@@ -253,7 +240,7 @@ class Utils {
                         child: AdvButton(
                           PitComponents.incrementPickerButtonName,
                           onPressed: () async {
-                            callback(currentItem, after);
+                            if (callback!= null)callback(currentItem, after);
                             Navigator.of(context).pop();
                           },
                         ),
@@ -267,3 +254,50 @@ class Utils {
         });
   }
 }
+
+class IncrementWithText extends StatefulWidget {
+  final AdvIncrementController controller;
+  final InfoMessageGenerator infoMessageGenerator;
+
+  IncrementWithText({this.controller, this.infoMessageGenerator});
+
+  @override
+  _IncrementWithTextState createState() => _IncrementWithTextState();
+}
+
+class _IncrementWithTextState extends State<IncrementWithText> {
+  String infoMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    infoMessage = widget.infoMessageGenerator(widget.controller.counter ?? 0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AdvColumn(
+      divider: ColumnDivider(4.0),
+      margin: EdgeInsets.all(16.0),
+      children: <Widget>[
+        Center(
+          child: AdvIncrement(
+            controller: widget.controller,
+            valueChangeListener: (before, after) {
+              after = after;
+              setState(() {
+                infoMessage = widget.infoMessageGenerator(after ?? 0);
+              });
+            },
+          ),
+        ),
+        widget.infoMessageGenerator == null ? null : Text(
+          infoMessage,
+          textAlign: TextAlign.center,
+          style: ts.fs14.merge(ts.tcBlack54),
+        ),
+      ],
+    );
+  }
+}
+

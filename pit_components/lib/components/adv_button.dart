@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pit_components/components/adv_column.dart';
+import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
 
@@ -59,21 +61,17 @@ class AdvButton extends StatelessWidget {
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
         Color.lerp(reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
-    Color disableTextColor =
-        Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
 
     ShapeBorder border = RoundedRectangleBorder(
         side: BorderSide(
-            color: enable ? backgroundColor : disableBackgroundColor,
-            width: borderWidth),
+            color: enable ? backgroundColor : disableBackgroundColor, width: borderWidth),
         borderRadius: new BorderRadius.circular(this.circular ? 5.0 : 0.0));
 
     Color _color = onlyBorder ? textColor : backgroundColor;
-    Color _disableColor =
-        onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableColor = onlyBorder ? disableTextColor : disableBackgroundColor;
     Color _textColor = !onlyBorder ? textColor : backgroundColor;
-    Color _disableTextColor =
-        !onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableTextColor = !onlyBorder ? disableTextColor : disableBackgroundColor;
 
     return ButtonTheme(
         minWidth: 0.0,
@@ -93,8 +91,7 @@ class AdvButton extends StatelessWidget {
               highlightColor: Theme.of(context).dividerColor,
               splashColor: Theme.of(context).dividerColor,
               child: new Text(this.data,
-                  style: ts.fs12.copyWith(
-                      color: enable ? _textColor : _disableTextColor)),
+                  style: ts.fs12.copyWith(color: enable ? _textColor : _disableTextColor)),
               onPressed: enable ? this.onPressed ?? _defaultCallback : null,
               shape: border,
             )));
@@ -105,15 +102,12 @@ class AdvButton extends StatelessWidget {
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
         Color.lerp(reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
-    Color disableTextColor =
-        Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
-    Color _disableColor =
-        onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableColor = onlyBorder ? disableTextColor : disableBackgroundColor;
     Color _textColor = !onlyBorder ? textColor : backgroundColor;
-    Color _disableTextColor =
-        !onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableTextColor = !onlyBorder ? disableTextColor : disableBackgroundColor;
 
     return ButtonTheme(
         minWidth: 0.0,
@@ -135,15 +129,13 @@ class AdvButton extends StatelessWidget {
               highlightColor: Theme.of(context).dividerColor,
               splashColor: Theme.of(context).dividerColor,
               child: new Text(this.data,
-                  style: ts.fs16.merge(ts.fw700.copyWith(
-                      color: enable ? _textColor : _disableTextColor))),
+                  style: ts.fs16
+                      .merge(ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
               onPressed: enable ? this.onPressed ?? _defaultCallback : null,
               shape: new RoundedRectangleBorder(
                 side: BorderSide(
-                    color: enable ? backgroundColor : disableBackgroundColor,
-                    width: borderWidth),
-                borderRadius:
-                    new BorderRadius.circular(this.circular ? 5.0 : 0.0),
+                    color: enable ? backgroundColor : disableBackgroundColor, width: borderWidth),
+                borderRadius: new BorderRadius.circular(this.circular ? 5.0 : 0.0),
               ),
             )));
   }
@@ -204,15 +196,12 @@ class AdvButtonWithIcon extends StatelessWidget {
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
         Color.lerp(reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
-    Color disableTextColor =
-        Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
-    Color _disableColor =
-        onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableColor = onlyBorder ? disableTextColor : disableBackgroundColor;
     Color _textColor = !onlyBorder ? textColor : backgroundColor;
-    Color _disableTextColor =
-        !onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableTextColor = !onlyBorder ? disableTextColor : disableBackgroundColor;
 
     return ButtonTheme(
       minWidth: 0.0,
@@ -233,48 +222,35 @@ class AdvButtonWithIcon extends StatelessWidget {
           highlightColor: Theme.of(context).dividerColor,
           splashColor: Theme.of(context).dividerColor,
           child: direction == Axis.vertical
-              ? new Column(
+              ? AdvColumn(
+                  divider: ColumnDivider(4.0),
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     image,
-                    Visibility(
-                      visible: this.data != "",
-                      child: new Container(
-                        height: 4.0,
-                      ),
-                    ),
-                    Visibility(
-                        visible: this.data != "",
-                        child: new Text(this.data,
-                            style: ts.fs12.merge(ts.fw700.copyWith(
-                                color:
-                                    enable ? _textColor : _disableTextColor))))
+                    this.data == ""
+                        ? null
+                        : Text(this.data,
+                            style: ts.fs12.merge(
+                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
                   ],
                 )
-              : new Row(
+              : AdvRow(
+                  divider: RowDivider(4.0),
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    this.data == ""
+                        ? null
+                        : Text(this.data,
+                            style: ts.fs12.merge(
+                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
                     image,
-                    Visibility(
-                      visible: this.data != "",
-                      child: new Container(
-                        width: 4.0,
-                      ),
-                    ),
-                    Visibility(
-                        visible: this.data != "",
-                        child: new Text(this.data,
-                            style: ts.fs12.merge(ts.fw700.copyWith(
-                                color:
-                                    enable ? _textColor : _disableTextColor))))
                   ],
                 ),
           onPressed: enable ? this.onPressed ?? _defaultCallback : null,
           shape: new RoundedRectangleBorder(
             side: BorderSide(
-                color: enable ? backgroundColor : disableBackgroundColor,
-                width: borderWidth),
+                color: enable ? backgroundColor : disableBackgroundColor, width: borderWidth),
             borderRadius: new BorderRadius.circular(circular ? 5.0 : 0.0),
           ),
         ),
@@ -287,15 +263,12 @@ class AdvButtonWithIcon extends StatelessWidget {
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
         Color.lerp(reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
-    Color disableTextColor =
-        Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
+    Color disableTextColor = Color.lerp(!reverse ? Colors.white : Colors.black54, lerpColor, 0.6);
 
     Color _color = onlyBorder ? textColor : backgroundColor;
-    Color _disableColor =
-        onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableColor = onlyBorder ? disableTextColor : disableBackgroundColor;
     Color _textColor = !onlyBorder ? textColor : backgroundColor;
-    Color _disableTextColor =
-        !onlyBorder ? disableTextColor : disableBackgroundColor;
+    Color _disableTextColor = !onlyBorder ? disableTextColor : disableBackgroundColor;
 
     return ButtonTheme(
       minWidth: 0.0,
@@ -316,48 +289,35 @@ class AdvButtonWithIcon extends StatelessWidget {
           highlightColor: Theme.of(context).dividerColor,
           splashColor: Theme.of(context).dividerColor,
           child: direction == Axis.vertical
-              ? new Column(
+              ? AdvColumn(
+                  divider: ColumnDivider(4.0),
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     image,
-                    Visibility(
-                      visible: this.data != "",
-                      child: new Container(
-                        height: 8.0,
-                      ),
-                    ),
-                    Visibility(
-                        visible: this.data != "",
-                        child: new Text(this.data,
-                            style: ts.fs22.merge(ts.fw700.copyWith(
-                                color:
-                                    enable ? _textColor : _disableTextColor)))),
+                    this.data == ""
+                        ? null
+                        : Text(this.data,
+                            style: ts.fs22.merge(
+                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
                   ],
                 )
-              : new Row(
+              : AdvRow(
+                  divider: RowDivider(4.0),
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     image,
-                    Visibility(
-                      visible: this.data != "",
-                      child: new Container(
-                        width: 8.0,
-                      ),
-                    ),
-                    Visibility(
-                        visible: this.data != "",
-                        child: new Text(this.data,
-                            style: ts.fs22.merge(ts.fw700.copyWith(
-                                color:
-                                    enable ? _textColor : _disableTextColor)))),
+                    this.data == ""
+                        ? null
+                        : Text(this.data,
+                            style: ts.fs22.merge(
+                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
                   ],
                 ),
           onPressed: enable ? this.onPressed ?? _defaultCallback : null,
           shape: new RoundedRectangleBorder(
             side: BorderSide(
-                color: enable ? backgroundColor : disableBackgroundColor,
-                width: borderWidth),
+                color: enable ? backgroundColor : disableBackgroundColor, width: borderWidth),
             borderRadius: new BorderRadius.circular(circular ? 5.0 : 0.0),
           ),
         ),
