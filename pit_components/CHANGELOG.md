@@ -1,3 +1,7 @@
+## 0.2.11
+
+* Add thousand number formatter, now increment has message generator instead of just message
+
 ## 0.2.10
 
 * AdvDatePicker added toogle to enable / disable, and remove every null coalescing operator on copyWith inside Controller value

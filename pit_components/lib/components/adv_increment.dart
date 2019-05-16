@@ -254,7 +254,7 @@ class _AdvIncrementState extends State<AdvIncrement>
             style: widget.measureTextSpan.style.copyWith(color: _textColor),
             onChanged: (String newValue) {
               int oldCounter = widget.controller.counter;
-              int newCounter = int.tryParse(newValue) ?? oldCounter;
+              int newCounter = newValue.isEmpty ? 0 : int.tryParse(newValue) ?? oldCounter;
 
               if (widget.controller.maxCounter != null && widget.controller.maxCounter != null) {
                 newCounter = newCounter.clamp(widget.controller.minCounter, widget.controller.maxCounter);

@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pit_components/components/adv_badge.dart';
 import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_chooser.dart';
@@ -28,6 +30,8 @@ import 'package:pit_components/components/controllers/adv_increment_controller.d
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/mods/mod_checkbox.dart';
+import 'package:pit_components/components/extras/date_formatter.dart';
+import 'package:pit_components/components/extras/number_thousand_formatter.dart';
 import 'package:pit_components/utils/utils.dart';
 
 const String loremIpsum =
@@ -75,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       hint: "Increment",
 //      format: "#,### Hari",
       alignment: TextAlign.center,
-      minCounter: 0,
+      minCounter: 1,
       counter: 1,
       /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
@@ -177,6 +181,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
               AdvTextField(
+                label: "test nih",
+                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
+                  NumberThousandFormatter(",", ".")]
 //                controller: controller,
                   ),
 //              PositionedTransition(rect: null, child: null,),
@@ -254,16 +261,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ),
-//              AdvButton(
-//                "Pick From Increment",
-//                buttonSize: ButtonSize.small,
-//                onPressed: () {
-//                  Utils.pickFromIncrement(context,
-//                      title: "Pick from Increment",
-//                      controller: incController,
-//                      infoMessage: "Sewa berakhir pada 12/12/2018 12:40:40");
-//                },
-//              ),
+              AdvButton(
+                "Pick From Increment",
+                buttonSize: ButtonSize.small,
+                onPressed: () {
+                  DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
+
+                  Utils.pickFromIncrement(context,
+                      title: "Pick from Increment",
+                      controller: incController,
+                      infoMessageGenerator: (counter) {
+                        return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
+                      });
+                },
+              ),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(
                     child: AdvTextField(
