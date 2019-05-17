@@ -302,7 +302,11 @@ class _AdvTextFieldState extends State<AdvTextField> {
                     String oldValue = _effectiveController.text;
                     //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya
                     _effectiveController.text = newText;
-                    _effectiveController.selection = _textEditingCtrl.selection;
+
+                    if (_textEditingCtrl.selection.baseOffset <= newText.length &&
+                        _textEditingCtrl.selection.extentOffset <= newText.length)
+                      _effectiveController.selection = _textEditingCtrl.selection;
+
                     _effectiveController.error = "";
 
                     _effectiveController.addListener(_update);
