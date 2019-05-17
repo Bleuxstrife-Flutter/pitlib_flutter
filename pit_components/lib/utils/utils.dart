@@ -21,7 +21,8 @@ class Utils {
       {bool withDot = true, bool wholeWord = true}) {
     if (maxWidth == null) return text;
 
-    var tp = new TextPainter(text: TextSpan(text: text, style: textStyle), textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(
+        text: TextSpan(text: text, style: textStyle), textDirection: ui.TextDirection.ltr);
     tp.layout();
 
     double wholeWidth = tp.width;
@@ -31,7 +32,8 @@ class Utils {
     int startPositionPercentage = (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
     int startPosition = (startPositionPercentage * text.length / 100).ceil().clamp(0, text.length);
 
-    tp.text = TextSpan(text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}", style: textStyle);
+    tp.text = TextSpan(
+        text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}", style: textStyle);
 
     tp.layout();
 
@@ -39,7 +41,8 @@ class Utils {
 
     if (tp.width > maxWidth) {
       for (i = startPosition; i > 0; i--) {
-        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
+        tp.text =
+            TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -47,7 +50,8 @@ class Utils {
       }
     } else if (tp.width < maxWidth) {
       for (i = startPosition; i < text.length; i++) {
-        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
+        tp.text =
+            TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -74,11 +78,14 @@ class Utils {
   static String leadingZeroInt(int value, int count) {
     String stringInt = value.toString();
 
-    return stringInt.length > count ? stringInt : "${stringRepeat("0", count - stringInt.length)}$stringInt";
+    return stringInt.length > count
+        ? stringInt
+        : "${stringRepeat("0", count - stringInt.length)}$stringInt";
   }
 
   static parseStringToTextSpan(String fullString, List<String> findString) {
-    String stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
+    String stringWithSmallestIndex =
+    findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
     int index = fullString.indexOf(stringWithSmallestIndex);
     int startCropFrom = 0;
     List<TextSpan> textSpans = [];
@@ -94,7 +101,8 @@ class Utils {
 
       if (index > fullString.length) break;
 
-      stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: index);
+      stringWithSmallestIndex =
+          findWordWithSmallestIndex(fullString, findString, startFindFrom: index);
 
       index = fullString.indexOf(stringWithSmallestIndex, index);
     }
@@ -105,7 +113,8 @@ class Utils {
     return textSpans;
   }
 
-  static findWordWithSmallestIndex(String fullString, List<String> findString, {int startFindFrom}) {
+  static findWordWithSmallestIndex(String fullString, List<String> findString,
+      {int startFindFrom}) {
     int tempSmallestIndex;
     int tempIndex;
     String wordWithSmallestIndex;
@@ -117,23 +126,26 @@ class Utils {
         i++;
         continue;
       }
-      wordWithSmallestIndex =
-          tempSmallestIndex == null ? findString[i] : tempSmallestIndex < tempIndex ? wordWithSmallestIndex : findString[i];
-      tempSmallestIndex = tempSmallestIndex == null ? tempIndex : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
+      wordWithSmallestIndex = tempSmallestIndex == null
+          ? findString[i]
+          : tempSmallestIndex < tempIndex ? wordWithSmallestIndex : findString[i];
+      tempSmallestIndex = tempSmallestIndex == null
+          ? tempIndex
+          : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
       i++;
     }
     return wordWithSmallestIndex ?? findString[0];
   }
 
   static Future<List<DateTime>> pickDate(
-    BuildContext context, {
+      BuildContext context, {
         String title,
         List<DateTime> dates,
-    List<MarkedDate> markedDates,
-    SelectionType selectionType,
-    DateTime minDate,
-    DateTime maxDate,
-  }) async {
+        List<MarkedDate> markedDates,
+        SelectionType selectionType,
+        DateTime minDate,
+        DateTime maxDate,
+      }) async {
     List<DateTime> result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -164,14 +176,18 @@ class Utils {
   }
 
   static pickFromChooser(BuildContext context,
-      {String title = "", List<GroupCheckItem> items, String currentItem = "", OnItemChanged callback}) {
+      {String title = "",
+        List<GroupCheckItem> items,
+        String currentItem = "",
+        OnItemChanged callback}) {
     assert(items != null);
 
 //    List<GroupCheckItem> itemList = items.keys.map((key) {
 //      return GroupCheckItem(key, items[key]);
 //    }).toList();
 
-    AdvGroupCheckController controller = AdvGroupCheckController(checkedValue: currentItem, itemList: items);
+    AdvGroupCheckController controller =
+    AdvGroupCheckController(checkedValue: currentItem, itemList: items);
 
     showModalBottomSheet(
         context: context,
@@ -191,24 +207,22 @@ class Utils {
               Flexible(
                   child: SingleChildScrollView(
                       child: AdvGroupCheck(
-                controller: controller,
-                callback: (itemSelected) async {
-                  Navigator.of(context).pop();
-                  callback(context, currentItem, itemSelected);
-                },
-              )))
+                        controller: controller,
+                        callback: (itemSelected) async {
+                          Navigator.of(context).pop();
+                          callback(context, currentItem, itemSelected);
+                        },
+                      )))
             ],
           );
         });
   }
 
   static pickFromIncrement(BuildContext context,
-      {String title = "",
-      AdvIncrementController controller,
-      int currentItem,
-      InfoMessageGenerator infoMessageGenerator,
-      OnValueChanged callback}) async {
-    int after;
+      {AdvIncrementController controller,
+        InfoMessageGenerator infoMessageGenerator,
+        OnValueChanged callback}) async {
+    int firstValue = controller.counter;
 
     showModalBottomSheet(
         context: context,
@@ -220,7 +234,7 @@ class Utils {
               AdvListTile(
                 padding: EdgeInsets.all(16.0).copyWith(bottom: 6.0),
                 start: Icon(Icons.close),
-                expanded: Text(title, style: ts.fs18.merge(ts.fw700)),
+                expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -232,7 +246,7 @@ class Utils {
                     children: <Widget>[
                       IncrementWithText(
                         controller: controller,
-                          infoMessageGenerator: infoMessageGenerator,
+                        infoMessageGenerator: infoMessageGenerator,
                       ),
                       Container(
                         margin: EdgeInsets.all(16.0),
@@ -240,7 +254,7 @@ class Utils {
                         child: AdvButton(
                           PitComponents.incrementPickerButtonName,
                           onPressed: () async {
-                            if (callback!= null)callback(currentItem, after);
+                            if (callback != null) callback(firstValue, controller.counter);
                             Navigator.of(context).pop();
                           },
                         ),
@@ -291,7 +305,9 @@ class _IncrementWithTextState extends State<IncrementWithText> {
             },
           ),
         ),
-        widget.infoMessageGenerator == null ? null : Text(
+        widget.infoMessageGenerator == null
+            ? null
+            : Text(
           infoMessage,
           textAlign: TextAlign.center,
           style: ts.fs14.merge(ts.tcBlack54),
@@ -300,4 +316,3 @@ class _IncrementWithTextState extends State<IncrementWithText> {
     );
   }
 }
-

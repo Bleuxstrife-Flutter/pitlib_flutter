@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
               AdvTextField(
                 label: "test nih",
                   inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
-                  NumberThousandFormatter(",", ".")]
+                  NumberThousandFormatter()]
 //                controller: controller,
                   ),
 //              PositionedTransition(rect: null, child: null,),
@@ -268,7 +268,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
 
                   Utils.pickFromIncrement(context,
-                      title: "Pick from Increment",
                       controller: incController,
                       infoMessageGenerator: (counter) {
                         return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";

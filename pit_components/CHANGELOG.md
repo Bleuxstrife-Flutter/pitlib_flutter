@@ -1,3 +1,7 @@
+## 0.2.11+1
+
+* thousand number formatter, advtextfield integration with thousand number formatter, pickFromIncrement bug fixed
+
 ## 0.2.11
 
 * Add thousand number formatter, now increment has message generator instead of just message

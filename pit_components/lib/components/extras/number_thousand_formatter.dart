@@ -3,22 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class NumberThousandFormatter extends WhitelistingTextInputFormatter {
-  final String thousandSeparator;
-  final String decimalSeparator;
+  final int digitLimit;
 
-  NumberThousandFormatter(this.thousandSeparator, this.decimalSeparator) : super(RegExp(r'(\d+)'));
+  NumberThousandFormatter({int digitLimit})
+      : this.digitLimit = digitLimit ?? 16,
+        super(RegExp(r'(\d+)'));
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     var x = super.formatEditUpdate(oldValue, newValue);
 
-    if (x.text.length > 16) {
+    if (x.text.length > this.digitLimit) {
       x = super.formatEditUpdate(oldValue, oldValue);
 
       if (x.text.isEmpty) {
         x = super.formatEditUpdate(oldValue, newValue);
 
-        x = x.copyWith(text: x.text.substring(0, 10));
+        x = x.copyWith(text: x.text.substring(0, this.digitLimit));
       }
     }
 
@@ -38,14 +39,14 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
     int totalSeparator = ((length - 1) / 3).floor();
     int x = ((length - base) / 3).floor();
 
-    base +=totalSeparator - x;
-    extent +=totalSeparator - x;
+    base += totalSeparator - x;
+    extent += totalSeparator - x;
 
     return newValue.copyWith(
         text: formattedText, selection: TextSelection(baseOffset: base, extentOffset: extent));
   }
 
-  TextSelection updateCursorPosition(String text) {
-    return TextSelection.fromPosition(TextPosition(offset: text.length));
-  }
+//  TextSelection updateCursorPosition(String text) {
+//    return TextSelection.fromPosition(TextPosition(offset: text.length));
+//  }
 }
