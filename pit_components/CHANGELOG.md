@@ -1,3 +1,7 @@
+## 0.2.11+2
+
+* advtextfield bug fixed
+
 ## 0.2.11+1
 
 * thousand number formatter, advtextfield integration with thousand number formatter, pickFromIncrement bug fixed
