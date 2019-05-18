@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Breaking change: add compatibility to Flutter 1.5.4
+
 ## 0.3.3
 
 * Now AdvButton has argument to be bold or not (both for small and large)
