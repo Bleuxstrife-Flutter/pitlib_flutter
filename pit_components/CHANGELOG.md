@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Breaking change: add compatibility to Flutter 1.5.4
+
 ## 0.2.11+2
 
 * advtextfield bug fixed
