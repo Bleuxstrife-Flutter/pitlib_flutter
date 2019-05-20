@@ -1,3 +1,7 @@
+## 0.3.0+1
+
+* Fix TextField multiline error
+
 ## 0.3.0
 
 * Breaking change: add compatibility to Flutter 1.5.4
