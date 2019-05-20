@@ -7,7 +7,6 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
-import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
@@ -296,7 +295,7 @@ class _AdvTextFieldState extends State<AdvTextField> {
                   hintColor: Colors.transparent,
                   primaryColor: Colors.transparent,
                 ),
-                child: ModTextField(
+                child: TextField(
                   focusNode: widget.focusNode,
                   controller: _textEditingCtrl,
                   onChanged: (newText) {
@@ -337,11 +336,11 @@ class _AdvTextFieldState extends State<AdvTextField> {
                   maxLengthEnforced: _effectiveController.maxLengthEnforced,
                   textAlign: _effectiveController.alignment,
                   style: widget.measureTextSpan.style.copyWith(color: _textColor),
-                  decoration: ModInputDecoration(
+                  decoration: InputDecoration(
                       contentPadding: new EdgeInsets.all(_paddingSize),
                       hintText: _effectiveController.hint,
                       hintStyle: TextStyle(color: _hintColor),
-                      maxLines: _effectiveController.maxLines),
+                      hintMaxLines: _effectiveController.maxLines),
                 ),
               ),
             ),
