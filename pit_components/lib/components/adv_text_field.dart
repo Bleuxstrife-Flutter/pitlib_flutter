@@ -7,7 +7,6 @@ import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
-import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
@@ -101,7 +100,8 @@ class AdvTextField extends StatefulWidget {
         this.backgroundColor = backgroundColor ?? PitComponents.textFieldBackgroundColor,
         this.borderColor = borderColor ?? PitComponents.textFieldBorderColor,
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
-        this.measureTextSpan = TextSpan(text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
+        this.measureTextSpan =
+        TextSpan(text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
         this.padding = padding ?? new EdgeInsets.all(0.0),
         this.margin = margin ?? PitComponents.editableMargin,
@@ -170,7 +170,8 @@ class _AdvTextFieldState extends State<AdvTextField> {
     _textEditingCtrl.text = _effectiveController.text;
 
     if (cursorPos.start > _textEditingCtrl.text.length) {
-      cursorPos = new TextSelection.fromPosition(new TextPosition(offset: _textEditingCtrl.text.length));
+      cursorPos =
+      new TextSelection.fromPosition(new TextPosition(offset: _textEditingCtrl.text.length));
     }
     _textEditingCtrl.selection = cursorPos;
     _textEditingCtrl.addListener(_updateEffectiveSelection);
@@ -206,29 +207,37 @@ class _AdvTextFieldState extends State<AdvTextField> {
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
-    final Color _backgroundColor =
-    _effectiveController.enable ? widget.backgroundColor : Color.lerp(Colors.black, Colors.white, 0.97);
+    final Color _backgroundColor = _effectiveController.enable
+        ? widget.backgroundColor
+        : Color.lerp(Colors.black, Colors.white, 0.97);
     final Color _textColor = _effectiveController.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
         : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black, Colors.white, 0.57);
-    final Color _hintColor = _effectiveController.enable ? widget.hintColor : Color.lerp(widget.hintColor, Colors.white, 0.39);
+    final Color _hintColor = _effectiveController.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, Colors.white, 0.39);
 
-    int maxLengthHeight =
-    _effectiveController == null ? 0 : _effectiveController.maxLength != null && widget.needsCounter ? 22 : 0;
+    int maxLengthHeight = _effectiveController == null
+        ? 0
+        : _effectiveController.maxLength != null && widget.needsCounter ? 22 : 0;
 
     var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
     tp.layout();
 
-    var tpMaxLineExpand =
-    new TextPainter(text: TextSpan(text: "|", style: widget.measureTextSpan.style), textDirection: ui.TextDirection.ltr);
+    var tpMaxLineExpand = new TextPainter(
+        text: TextSpan(text: "|", style: widget.measureTextSpan.style),
+        textDirection: ui.TextDirection.ltr);
 
     tpMaxLineExpand.layout(maxWidth: maxWidth);
     double maxHeightExpand = tpMaxLineExpand.height * widget.maxLineExpand;
 
     double width = tp.size.width == 0
         ? maxWidth
-        : tp.size.width + _defaultWidthAddition + (_defaultInnerPadding * 2) + (widget.padding.horizontal);
+        : tp.size.width +
+        _defaultWidthAddition +
+        (_defaultInnerPadding * 2) +
+        (widget.padding.horizontal);
 
     final List<TextInputFormatter> formaters = widget.inputFormatters ?? <TextInputFormatter>[];
 
@@ -286,18 +295,20 @@ class _AdvTextFieldState extends State<AdvTextField> {
                   hintColor: Colors.transparent,
                   primaryColor: Colors.transparent,
                 ),
-                child: ModTextField(
+                child: TextField(
                   focusNode: widget.focusNode,
                   controller: _textEditingCtrl,
                   onChanged: (newText) {
                     _effectiveController.removeListener(_update);
                     if (widget.keyboardType == TextInputType.number && newText == "") newText = "0";
 
-                    var newValue = /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number
+                    var newValue =
+                    /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number
                     ? newText.indexOf(".") > 0
                         ? (double.tryParse(newText) ?? "").toString()
                         : (int.tryParse(newText) ?? "").toString()
-                    : */newText;
+                    : */
+                    newText;
 
                     String oldValue = _effectiveController.text;
                     //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya
@@ -313,22 +324,23 @@ class _AdvTextFieldState extends State<AdvTextField> {
 
                     _effectiveController.text = newValue;
 
-                    if (widget.textChangeListener != null) widget.textChangeListener(oldValue, newValue);
+                    if (widget.textChangeListener != null)
+                      widget.textChangeListener(oldValue, newValue);
                   },
                   obscureText: _effectiveController.obscureText,
                   enabled: _effectiveController.enable,
-                  maxLines: _effectiveController.maxLines,
-                  maxLength: _effectiveController.maxLength,
+                  maxLines: widget.keyboardType == TextInputType.multiline ? null : _effectiveController.maxLines,
+                  maxLength: widget.keyboardType == TextInputType.multiline ? null : _effectiveController.maxLength,
                   keyboardType: widget.keyboardType,
                   inputFormatters: formaters,
                   maxLengthEnforced: _effectiveController.maxLengthEnforced,
                   textAlign: _effectiveController.alignment,
                   style: widget.measureTextSpan.style.copyWith(color: _textColor),
-                  decoration: ModInputDecoration(
+                  decoration: InputDecoration(
                       contentPadding: new EdgeInsets.all(_paddingSize),
                       hintText: _effectiveController.hint,
                       hintStyle: TextStyle(color: _hintColor),
-                      maxLines: _effectiveController.maxLines),
+                      hintMaxLines: _effectiveController.maxLines),
                 ),
               ),
             ),
@@ -342,7 +354,11 @@ class _AdvTextFieldState extends State<AdvTextField> {
     Widget mainChild = Container(
         width: width,
         constraints: BoxConstraints(
-          minHeight: tp.size.height + _defaultHeightAddition + maxLengthHeight - 8.0 - ((8.0 - _paddingSize) * 2),
+          minHeight: tp.size.height +
+              _defaultHeightAddition +
+              maxLengthHeight -
+              8.0 -
+              ((8.0 - _paddingSize) * 2),
         ),
         decoration: BoxDecoration(
           color: _backgroundColor,
