@@ -12,7 +12,7 @@ import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
-typedef void OnValueChanged(int oldValue, int newValue);
+typedef bool OnValueChanged(int oldValue, int newValue);
 typedef void OnIconTapped(IconType iconType);
 
 enum IconType { prefix, suffix }
@@ -212,6 +212,7 @@ class _AdvIncrementState extends State<AdvIncrement>
           type: MaterialType.transparency,
           child: InkWell(
               onTap: () {
+                widget.controller.error = "";
                 if (widget.controller.minCounter == widget.controller.counter)
                   return;
                 widget.controller.counter--;
@@ -261,6 +262,7 @@ class _AdvIncrementState extends State<AdvIncrement>
               }
 
               widget.controller.counter = newCounter;
+              widget.controller.error = "";
 
               if (oldCounter == newCounter) _update();
 
@@ -308,6 +310,7 @@ class _AdvIncrementState extends State<AdvIncrement>
           type: MaterialType.transparency,
           child: InkWell(
               onTap: () {
+                widget.controller.error = "";
                 if (widget.controller.maxCounter == widget.controller.counter)
                   return;
                 widget.controller.counter++;
