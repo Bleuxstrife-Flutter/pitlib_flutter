@@ -271,7 +271,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       controller: incController,
                       infoMessageGenerator: (counter) {
                         return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
-                      });
+                      },
+                  callback: (newV, n) {
+                    incController.error = "error aja";
+                    return false;
+                  });
                 },
               ),
               AdvRow(divider: RowDivider(8.0), children: [

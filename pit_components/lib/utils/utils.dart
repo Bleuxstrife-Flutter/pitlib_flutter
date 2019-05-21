@@ -85,7 +85,7 @@ class Utils {
 
   static parseStringToTextSpan(String fullString, List<String> findString) {
     String stringWithSmallestIndex =
-    findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
+        findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
     int index = fullString.indexOf(stringWithSmallestIndex);
     int startCropFrom = 0;
     List<TextSpan> textSpans = [];
@@ -138,14 +138,14 @@ class Utils {
   }
 
   static Future<List<DateTime>> pickDate(
-      BuildContext context, {
-        String title,
-        List<DateTime> dates,
-        List<MarkedDate> markedDates,
-        SelectionType selectionType,
-        DateTime minDate,
-        DateTime maxDate,
-      }) async {
+    BuildContext context, {
+    String title,
+    List<DateTime> dates,
+    List<MarkedDate> markedDates,
+    SelectionType selectionType,
+    DateTime minDate,
+    DateTime maxDate,
+  }) async {
     List<DateTime> result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -177,9 +177,9 @@ class Utils {
 
   static pickFromChooser(BuildContext context,
       {String title = "",
-        List<GroupCheckItem> items,
-        String currentItem = "",
-        OnItemChanged callback}) {
+      List<GroupCheckItem> items,
+      String currentItem = "",
+      OnItemChanged callback}) {
     assert(items != null);
 
 //    List<GroupCheckItem> itemList = items.keys.map((key) {
@@ -187,7 +187,7 @@ class Utils {
 //    }).toList();
 
     AdvGroupCheckController controller =
-    AdvGroupCheckController(checkedValue: currentItem, itemList: items);
+        AdvGroupCheckController(checkedValue: currentItem, itemList: items);
 
     showModalBottomSheet(
         context: context,
@@ -207,12 +207,12 @@ class Utils {
               Flexible(
                   child: SingleChildScrollView(
                       child: AdvGroupCheck(
-                        controller: controller,
-                        callback: (itemSelected) async {
-                          Navigator.of(context).pop();
-                          callback(context, currentItem, itemSelected);
-                        },
-                      )))
+                controller: controller,
+                callback: (itemSelected) async {
+                  Navigator.of(context).pop();
+                  callback(context, currentItem, itemSelected);
+                },
+              )))
             ],
           );
         });
@@ -220,51 +220,60 @@ class Utils {
 
   static pickFromIncrement(BuildContext context,
       {AdvIncrementController controller,
-        InfoMessageGenerator infoMessageGenerator,
-        OnValueChanged callback}) async {
+      InfoMessageGenerator infoMessageGenerator,
+      OnValueChanged callback}) async {
     int firstValue = controller.counter;
 
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return AdvColumn(
-            divider: ColumnDivider(10.0),
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AdvListTile(
-                padding: EdgeInsets.all(16.0).copyWith(bottom: 6.0),
-                start: Icon(Icons.close),
-                expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(height: 2.0, color: Theme.of(context).dividerColor),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: AdvColumn(
-                    children: <Widget>[
-                      IncrementWithText(
-                        controller: controller,
-                        infoMessageGenerator: infoMessageGenerator,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(16.0),
-                        width: MediaQuery.of(context).size.width,
-                        child: AdvButton(
-                          PitComponents.incrementPickerButtonName,
-                          onPressed: () async {
-                            if (callback != null) callback(firstValue, controller.counter);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      )
-                    ],
+          return GestureDetector(
+              onTap: () {},
+              child: AdvColumn(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AdvListTile(
+                    padding: EdgeInsets.all(16.0),
+                    start: Icon(Icons.close),
+                    expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
+                    onTap: () {
+//                  Navigator.pop(context);
+                    },
                   ),
-                ),
-              )
-            ],
-          );
+                  Container(
+                    height: 2.0,
+                    color: Theme.of(context).dividerColor,
+                    margin: EdgeInsets.only(bottom: 10.0),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: AdvColumn(
+                        children: <Widget>[
+                          IncrementWithText(
+                            controller: controller,
+                            infoMessageGenerator: infoMessageGenerator,
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(16.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: AdvButton(
+                              PitComponents.incrementPickerButtonName,
+                              onPressed: () async {
+//                                controller.error = "lalala";
+                                if (callback != null) {
+                                  bool valid = callback(firstValue, controller.counter) ?? true;
+
+                                  if (valid) Navigator.of(context).pop();
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ));
         });
   }
 }
@@ -308,10 +317,10 @@ class _IncrementWithTextState extends State<IncrementWithText> {
         widget.infoMessageGenerator == null
             ? null
             : Text(
-          infoMessage,
-          textAlign: TextAlign.center,
-          style: ts.fs14.merge(ts.tcBlack54),
-        ),
+                infoMessage,
+                textAlign: TextAlign.center,
+                style: ts.fs14.merge(ts.tcBlack54),
+              ),
       ],
     );
   }
