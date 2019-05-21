@@ -227,44 +227,53 @@ class Utils {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return AdvColumn(
-            divider: ColumnDivider(10.0),
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AdvListTile(
-                padding: EdgeInsets.all(16.0).copyWith(bottom: 6.0),
-                start: Icon(Icons.close),
-                expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(height: 2.0, color: Theme.of(context).dividerColor),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: AdvColumn(
-                    children: <Widget>[
-                      IncrementWithText(
-                        controller: controller,
-                        infoMessageGenerator: infoMessageGenerator,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(16.0),
-                        width: MediaQuery.of(context).size.width,
-                        child: AdvButton(
-                          PitComponents.incrementPickerButtonName,
-                          onPressed: () async {
-                            if (callback != null) callback(firstValue, controller.counter);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      )
-                    ],
+          return GestureDetector(
+              onTap: () {},
+              child: AdvColumn(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AdvListTile(
+                    padding: EdgeInsets.all(16.0),
+                    start: Icon(Icons.close),
+                    expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
+                    onTap: () {
+//                  Navigator.pop(context);
+                    },
                   ),
-                ),
-              )
-            ],
-          );
+                  Container(
+                    height: 2.0,
+                    color: Theme.of(context).dividerColor,
+                    margin: EdgeInsets.only(bottom: 10.0),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: AdvColumn(
+                        children: <Widget>[
+                          IncrementWithText(
+                            controller: controller,
+                            infoMessageGenerator: infoMessageGenerator,
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(16.0),
+                            width: MediaQuery.of(context).size.width,
+                            child: AdvButton(
+                              PitComponents.incrementPickerButtonName,
+                              onPressed: () async {
+//                                controller.error = "lalala";
+                                if (callback != null) {
+                                  bool valid = callback(firstValue, controller.counter) ?? true;
+
+                                  if (valid) Navigator.of(context).pop();
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ));
         });
   }
 }
