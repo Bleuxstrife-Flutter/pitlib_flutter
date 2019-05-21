@@ -1,10 +1,14 @@
+## 0.3.1
+
+* Rollback to Flutter 1.0.0 and increment error fixed
+
 ## 0.3.0+1
 
 * Fix TextField multiline error
 
 ## 0.3.0
 
-* Breaking change: add compatibility to Flutter 1.5.4
+* Flutter upgrade to 1.5.4 trial
 
 ## 0.2.11+2
 
