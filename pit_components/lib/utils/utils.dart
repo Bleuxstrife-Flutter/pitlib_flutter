@@ -218,13 +218,13 @@ class Utils {
         });
   }
 
-  static pickFromIncrement(BuildContext context,
+  static Future<bool> pickFromIncrement(BuildContext context,
       {AdvIncrementController controller,
       InfoMessageGenerator infoMessageGenerator,
       OnValueChanged callback}) async {
     int firstValue = controller.counter;
 
-    showModalBottomSheet(
+    var result = await showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return GestureDetector(
@@ -237,7 +237,7 @@ class Utils {
                     start: Icon(Icons.close),
                     expanded: Text(controller.label ?? "", style: ts.fs18.merge(ts.fw700)),
                     onTap: () {
-//                  Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   ),
                   Container(
@@ -263,7 +263,7 @@ class Utils {
                                 if (callback != null) {
                                   bool valid = callback(firstValue, controller.counter) ?? true;
 
-                                  if (valid) Navigator.of(context).pop();
+                                  if (valid) Navigator.of(context).pop(true);
                                 }
                               },
                             ),
@@ -275,6 +275,8 @@ class Utils {
                 ],
               ));
         });
+
+    return result ?? false;
   }
 }
 

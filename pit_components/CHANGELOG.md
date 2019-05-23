@@ -1,3 +1,7 @@
+## 0.3.1+1
+
+* Pick from Increment result added
+
 ## 0.3.1
 
 * Rollback to Flutter 1.0.0 and increment error fixed
