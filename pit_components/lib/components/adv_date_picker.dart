@@ -291,6 +291,7 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
       dates: widget.controller.dates,
       markedDates: widget.controller.markedDates,
       selectionType: widget.selectionType,
+      initialValue: widget.controller.initialValue,
       minDate: widget.controller.minDate,
       maxDate: widget.controller.maxDate,
     );

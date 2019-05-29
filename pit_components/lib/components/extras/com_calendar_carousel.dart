@@ -84,6 +84,7 @@ class CalendarCarousel extends StatefulWidget {
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
   final CalendarStyle calendarStyle;
+  final DateTime initialValue;
   final DateTime minDate;
   final DateTime maxDate;
 
@@ -105,6 +106,7 @@ class CalendarCarousel extends StatefulWidget {
     EdgeInsets headerMargin = const EdgeInsets.symmetric(vertical: 16.0),
     double childAspectRatio = 1.0,
     EdgeInsets weekDayMargin = const EdgeInsets.only(bottom: 4.0),
+    this.initialValue,
     this.minDate,
     this.maxDate,
   })  : this.pickType = pickType ?? PickType.day,
@@ -209,6 +211,7 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
                 selectionType: widget.selectionType,
                 minDate: widget.minDate,
                 maxDate: widget.maxDate,
+                initialValue: widget.initialValue,
               ),
             );
           }
@@ -261,6 +264,7 @@ class DayCalendar extends StatefulWidget {
   final List<MarkedDate> markedDates;
   final List<DateTime> selectedDateTimes;
   final Function(List<DateTime>) onDayPressed;
+  final DateTime initialValue;
   final DateTime minDate;
   final DateTime maxDate;
 
@@ -276,7 +280,7 @@ class DayCalendar extends StatefulWidget {
     this.selectedDateTimes,
     this.onDayPressed,
     this.minDate,
-    this.maxDate,
+    this.maxDate, this.initialValue,
   }) : super(key: key);
 
   @override
@@ -456,6 +460,7 @@ class DayCalendarState extends State<DayCalendar> {
             },
             controller: _pageCtrl,
             itemBuilder: (context, index) {
+//              return Text(index.toString());
               return _buildCalendar(index);
             },
           ),
@@ -716,9 +721,11 @@ class DayCalendarState extends State<DayCalendar> {
   void _setPage({int page}) {
     /// for initial set
     if (page == null) {
-      DateTime date0 = DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
-      DateTime date1 = DateTime(DateTime.now().year, DateTime.now().month, 1);
-      DateTime date2 = DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
+      DateTime _selectedDateTimes = widget.initialValue;
+
+      DateTime date0 = DateTime(_selectedDateTimes.year, _selectedDateTimes.month - 1, 1);
+      DateTime date1 = DateTime(_selectedDateTimes.year, _selectedDateTimes.month, 1);
+      DateTime date2 = DateTime(_selectedDateTimes.year, _selectedDateTimes.month + 1, 1);
 
       this.setState(() {
         _startWeekday = date1.weekday;

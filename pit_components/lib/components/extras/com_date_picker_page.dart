@@ -10,6 +10,7 @@ class ComDatePickerPage extends StatefulWidget {
   final List<DateTime> currentDate;
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
+  final DateTime initialValue;
   final DateTime minDate;
   final DateTime maxDate;
 
@@ -18,7 +19,7 @@ class ComDatePickerPage extends StatefulWidget {
       this.markedDates = const [],
         this.selectionType,
         this.minDate,
-        this.maxDate});
+        this.maxDate, this.initialValue});
 
   @override
   State createState() => new _ComDatePickerPageState();
@@ -39,6 +40,8 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
 
   @override
   Widget build(BuildContext context) {
+    print("haha : ${_currentDate}");
+    print("haha1 : ${widget.markedDates}");
     return Scaffold(
       appBar: AppBar(
         title: new Text(widget.title ?? ""),
@@ -57,6 +60,7 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
             Navigator.pop(context, _currentDate);
           },
           thisMonthDayBorderColor: Colors.grey,
+          initialValue: widget.initialValue,
           selectedDateTimes: _currentDate,
           daysHaveCircularBorder: false,
           markedDates: widget.markedDates,

@@ -21,8 +21,7 @@ class Utils {
       {bool withDot = true, bool wholeWord = true}) {
     if (maxWidth == null) return text;
 
-    var tp = new TextPainter(
-        text: TextSpan(text: text, style: textStyle), textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: TextSpan(text: text, style: textStyle), textDirection: ui.TextDirection.ltr);
     tp.layout();
 
     double wholeWidth = tp.width;
@@ -32,8 +31,7 @@ class Utils {
     int startPositionPercentage = (maxWidth / wholeWidth * 100).ceil().clamp(0, 100);
     int startPosition = (startPositionPercentage * text.length / 100).ceil().clamp(0, text.length);
 
-    tp.text = TextSpan(
-        text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}", style: textStyle);
+    tp.text = TextSpan(text: "${text.substring(0, startPosition)}${withDot ? "\u2026" : ""}", style: textStyle);
 
     tp.layout();
 
@@ -41,8 +39,7 @@ class Utils {
 
     if (tp.width > maxWidth) {
       for (i = startPosition; i > 0; i--) {
-        tp.text =
-            TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
+        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -50,8 +47,7 @@ class Utils {
       }
     } else if (tp.width < maxWidth) {
       for (i = startPosition; i < text.length; i++) {
-        tp.text =
-            TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
+        tp.text = TextSpan(text: "${text.substring(0, i)}${withDot ? "\u2026" : ""}", style: textStyle);
 
         tp.layout();
 
@@ -78,14 +74,11 @@ class Utils {
   static String leadingZeroInt(int value, int count) {
     String stringInt = value.toString();
 
-    return stringInt.length > count
-        ? stringInt
-        : "${stringRepeat("0", count - stringInt.length)}$stringInt";
+    return stringInt.length > count ? stringInt : "${stringRepeat("0", count - stringInt.length)}$stringInt";
   }
 
   static parseStringToTextSpan(String fullString, List<String> findString) {
-    String stringWithSmallestIndex =
-        findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
+    String stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: 0);
     int index = fullString.indexOf(stringWithSmallestIndex);
     int startCropFrom = 0;
     List<TextSpan> textSpans = [];
@@ -101,8 +94,7 @@ class Utils {
 
       if (index > fullString.length) break;
 
-      stringWithSmallestIndex =
-          findWordWithSmallestIndex(fullString, findString, startFindFrom: index);
+      stringWithSmallestIndex = findWordWithSmallestIndex(fullString, findString, startFindFrom: index);
 
       index = fullString.indexOf(stringWithSmallestIndex, index);
     }
@@ -113,8 +105,7 @@ class Utils {
     return textSpans;
   }
 
-  static findWordWithSmallestIndex(String fullString, List<String> findString,
-      {int startFindFrom}) {
+  static findWordWithSmallestIndex(String fullString, List<String> findString, {int startFindFrom}) {
     int tempSmallestIndex;
     int tempIndex;
     String wordWithSmallestIndex;
@@ -129,9 +120,8 @@ class Utils {
       wordWithSmallestIndex = tempSmallestIndex == null
           ? findString[i]
           : tempSmallestIndex < tempIndex ? wordWithSmallestIndex : findString[i];
-      tempSmallestIndex = tempSmallestIndex == null
-          ? tempIndex
-          : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
+      tempSmallestIndex =
+          tempSmallestIndex == null ? tempIndex : tempSmallestIndex < tempIndex ? tempSmallestIndex : tempIndex;
       i++;
     }
     return wordWithSmallestIndex ?? findString[0];
@@ -143,6 +133,7 @@ class Utils {
     List<DateTime> dates,
     List<MarkedDate> markedDates,
     SelectionType selectionType,
+    DateTime initialValue,
     DateTime minDate,
     DateTime maxDate,
   }) async {
@@ -153,6 +144,7 @@ class Utils {
           return ComDatePickerPage(
             title: title,
             currentDate: dates ?? const [],
+            initialValue: initialValue ?? DateTime.now(),
             markedDates: markedDates ?? const [],
             selectionType: selectionType ?? SelectionType.single,
             minDate: minDate,
@@ -176,18 +168,14 @@ class Utils {
   }
 
   static pickFromChooser(BuildContext context,
-      {String title = "",
-      List<GroupCheckItem> items,
-      String currentItem = "",
-      OnItemChanged callback}) {
+      {String title = "", List<GroupCheckItem> items, String currentItem = "", OnItemChanged callback}) {
     assert(items != null);
 
 //    List<GroupCheckItem> itemList = items.keys.map((key) {
 //      return GroupCheckItem(key, items[key]);
 //    }).toList();
 
-    AdvGroupCheckController controller =
-        AdvGroupCheckController(checkedValue: currentItem, itemList: items);
+    AdvGroupCheckController controller = AdvGroupCheckController(checkedValue: currentItem, itemList: items);
 
     showModalBottomSheet(
         context: context,
@@ -219,9 +207,7 @@ class Utils {
   }
 
   static pickFromIncrement(BuildContext context,
-      {AdvIncrementController controller,
-      InfoMessageGenerator infoMessageGenerator,
-      OnValueChanged callback}) async {
+      {AdvIncrementController controller, InfoMessageGenerator infoMessageGenerator, OnValueChanged callback}) async {
     int firstValue = controller.counter;
 
     showModalBottomSheet(
