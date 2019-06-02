@@ -48,13 +48,9 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
     base += totalSeparator - x;
     extent += totalSeparator - x;
 
-    return TextEditingValue(
-      text: formattedText,
-      selection: newValue.selection.copyWith(baseOffset: base, extentOffset: extent),
-      composing: Platform.isIOS
-          ? (formattedText ?? "").isEmpty ? TextRange.empty : TextRange(start: 0, end: 0)
-          : TextRange.empty,
-    );
+    return TextEditingValue(text: formattedText);
+//    return newValue.copyWith(
+//        text: formattedText/*, selection: TextSelection(baseOffset: base, extentOffset: extent)*/);
   }
 
 //  TextSelection updateCursorPosition(String text) {
