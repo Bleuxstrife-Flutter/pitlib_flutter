@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Flutter upgrade to 1.5.4 second trial
+
 ## 0.3.1+1
 
 * Pick from Increment result added

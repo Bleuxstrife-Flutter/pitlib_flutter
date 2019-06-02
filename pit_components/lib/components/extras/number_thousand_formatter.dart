@@ -11,6 +11,9 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if(oldValue.text == newValue.text){
+      return newValue;
+    }
     var x = super.formatEditUpdate(oldValue, newValue);
 
     if (x.text.length > this.digitLimit) {
@@ -42,8 +45,9 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
     base += totalSeparator - x;
     extent += totalSeparator - x;
 
-    return newValue.copyWith(
-        text: formattedText, selection: TextSelection(baseOffset: base, extentOffset: extent));
+    return TextEditingValue(text: formattedText);
+//    return newValue.copyWith(
+//        text: formattedText/*, selection: TextSelection(baseOffset: base, extentOffset: extent)*/);
   }
 
 //  TextSelection updateCursorPosition(String text) {

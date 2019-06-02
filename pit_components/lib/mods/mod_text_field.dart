@@ -587,7 +587,7 @@ class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClie
         cursorColor: widget.cursorColor ?? Theme.of(context).cursorColor,
         scrollPadding: widget.scrollPadding,
         keyboardAppearance: keyboardAppearance,
-//        backgroundCursorColor: CupertinoColors.inactiveGray,
+        backgroundCursorColor: CupertinoColors.inactiveGray,
       ),
     ));
 
