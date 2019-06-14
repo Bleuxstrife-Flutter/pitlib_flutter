@@ -1,6 +1,11 @@
 name: pit_components
+<<<<<<< HEAD
 description: Our customized material components. (Padimas Inovasi Teknologi)\
 version: 0.3.3
+=======
+description: Our customized material components. (Padimas Inovasi Teknologi)
+version: 0.4.0
+>>>>>>> number thousand formatter done
 author: Richardo <richardothayeb@gmail.com>
 homepage: https://nemob.id
 

@@ -242,13 +242,13 @@ class _AdvTextFieldState extends State<AdvTextField> {
 
     final List<TextInputFormatter> formaters = widget.inputFormatters ?? <TextInputFormatter>[];
 
-    if (widget.keyboardType == TextInputType.number) {
-      if (_effectiveController.maxLength == null) {
-        formaters.add(LengthLimitingTextInputFormatter(18));
-      } else {
-        if (_effectiveController.maxLength > 18) _effectiveController.maxLength = 18;
-      }
-    }
+//    if (widget.keyboardType == TextInputType.number) {
+//      if (_effectiveController.maxLength == null) {
+//        formaters.add(LengthLimitingTextInputFormatter(18));
+//      } else {
+//        if (_effectiveController.maxLength > 18) _effectiveController.maxLength = 18;
+//      }
+//    }
 
     if (_effectiveController.label != null && _effectiveController.label != "") {
       children.add(
