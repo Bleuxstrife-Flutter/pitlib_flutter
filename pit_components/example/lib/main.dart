@@ -180,10 +180,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
                 crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
-              AdvTextField(
-                label: "test nih",
-                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
-                  NumberThousandFormatter()]
+              AdvTextField(label: "test nih", keyboardType: TextInputType.number, inputFormatters: [
+//                WhitelistingTextInputFormatter.digitsOnly,
+                NumberThousandFormatter(),
+              ]
 //                controller: controller,
                   ),
 //              PositionedTransition(rect: null, child: null,),
@@ -267,11 +267,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
 
-                  Utils.pickFromIncrement(context,
-                      controller: incController,
+                  Utils.pickFromIncrement(context, controller: incController,
                       infoMessageGenerator: (counter) {
-                        return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
-                      });
+                    return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
+                  });
                 },
               ),
               AdvRow(divider: RowDivider(8.0), children: [
