@@ -68,10 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   double _lowerValue = 0.0;
   double _upperValue = 100.0;
+  AdvDatePickerController rangeStartDateCtrl, rangeEndDateCtrl, singleDateCtrl, multipleDateCtrl;
+
 
   @override
   void initState() {
     super.initState();
+    DateTime _now = DateTime.now();
     possibleValue.add("Possible Value 1");
     possibleValue.add("Possible Value 2");
     incController = AdvIncrementController(
@@ -83,6 +86,38 @@ class _MyHomePageState extends State<MyHomePage> {
       counter: 1,
       /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
+    );
+
+    singleDateCtrl = AdvDatePickerController(
+        initialValue: _now.add(Duration(days: 1)),
+        dates: [_now.add(Duration(days: 1))],
+        minDate: _now,
+        maxDate: DateTime(_now.year + 1, _now.month, _now.day),
+        label: "Single Start Date"
+    );
+
+    rangeStartDateCtrl = AdvDatePickerController(
+        initialValue: _now.add(Duration(days: 7)),
+        label: "Range Start Date",
+        minDate: _now,
+        maxDate: DateTime(_now.year + 1, _now.month, _now.day),
+        dates: [_now.add(Duration(days: 7)), _now.add(Duration(days: 7))]
+    );
+
+    rangeEndDateCtrl = AdvDatePickerController(
+        initialValue: _now.add(Duration(days: 7)),
+        label: "Range End Date",
+        minDate: _now,
+        maxDate: DateTime(_now.year + 1, _now.month, _now.day),
+        dates: [_now.add(Duration(days: 7)), _now.add(Duration(days: 7))]
+    );
+
+    multipleDateCtrl = AdvDatePickerController(
+        initialValue: _now.add(Duration(days: 2)),
+        label: "Multiple Date",
+        minDate: _now,
+        maxDate: DateTime(_now.year + 1, _now.month, _now.day),
+        dates: [_now.add(Duration(days: 2))]
     );
   }
 
@@ -399,6 +434,48 @@ class _MyHomePageState extends State<MyHomePage> {
                     initialValue: _date ?? DateTime.now(),
                     markedDates: [MarkedDate(DateTime.now(), "lalala")],
                     dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]),
+              ),
+              AdvDatePicker(
+                selectionType: SelectionType.single,
+                controller: singleDateCtrl,
+                onChanged: (selectedDate){
+                  if (selectedDate != null) {
+                    singleDateCtrl.dates = selectedDate;
+                    singleDateCtrl.initialValue = selectedDate[0];
+                  }
+                },
+              ),
+              AdvDatePicker(
+                selectionType: SelectionType.range,
+                controller: rangeStartDateCtrl,
+                onChanged: (List<DateTime> dateRange){
+                  if (dateRange != null) {
+                    rangeEndDateCtrl.dates = dateRange;
+                    rangeStartDateCtrl.initialValue = dateRange[0];
+                    rangeEndDateCtrl.initialValue = dateRange[dateRange.length - 1];
+                  }
+                },
+              ),
+              AdvDatePicker(
+                selectionType: SelectionType.range,
+                controller: rangeEndDateCtrl,
+                onChanged: (List<DateTime> dateRange){
+                  if (dateRange != null) {
+                    rangeStartDateCtrl.dates = dateRange;
+                    rangeStartDateCtrl.initialValue = dateRange[0];
+                    rangeEndDateCtrl.initialValue = dateRange[dateRange.length - 1];
+                  }
+                },
+              ),
+              AdvDatePicker(
+                selectionType: SelectionType.multi,
+                controller: multipleDateCtrl,
+                onChanged: (dateMultiple){
+                  if(dateMultiple!=null){
+                    multipleDateCtrl.dates = dateMultiple;
+                    multipleDateCtrl.initialValue = dateMultiple[0];
+                  }
+                }
               ),
               AdvDropDown(
                 onChanged: (String value) {},

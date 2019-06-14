@@ -81,11 +81,13 @@ class CalendarCarousel extends StatefulWidget {
   final PickType pickType;
   final List<DateTime> selectedDateTimes;
   final Function(List<DateTime>) onDayPressed;
+  final Function() onTitleDescChanged;
   final List<MarkedDate> markedDates;
   final SelectionType selectionType;
   final CalendarStyle calendarStyle;
   final DateTime minDate;
   final DateTime maxDate;
+  final DateTime initialValue;
 
   CalendarCarousel({
     PickType pickType,
@@ -99,16 +101,19 @@ class CalendarCarousel extends StatefulWidget {
     this.selectedDateTimes,
     bool daysHaveCircularBorder,
     this.onDayPressed,
+    this.onTitleDescChanged,
     Color iconColor = Colors.blueAccent,
     List<MarkedDate> markedDates = const [],
     this.selectionType = SelectionType.single,
     EdgeInsets headerMargin = const EdgeInsets.symmetric(vertical: 16.0),
     double childAspectRatio = 1.0,
     EdgeInsets weekDayMargin = const EdgeInsets.only(bottom: 4.0),
+    DateTime initialValue,
     this.minDate,
     this.maxDate,
   })  : this.pickType = pickType ?? PickType.day,
         this.markedDates = markedDates ?? const [],
+        this.initialValue = initialValue ?? DateTime.now(),
         this.calendarStyle = CalendarStyle(
           weekDays: weekDays,
           viewportFraction: viewportFraction,
@@ -133,12 +138,14 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
   GlobalKey<YearCalendarState> _yearKey = GlobalKey<YearCalendarState>();
   AnimationController _dayMonthAnim;
   AnimationController _monthYearAnim;
+  int totalMultiDays;
 
   @override
   void initState() {
     super.initState();
     _dayMonthAnim = AnimationController(duration: Duration(milliseconds: _kAnimationDuration), vsync: this);
     _monthYearAnim = AnimationController(duration: Duration(milliseconds: _kAnimationDuration), vsync: this, value: 1.0);
+    totalMultiDays = widget.selectedDateTimes.length;
   }
 
   @override
@@ -170,6 +177,7 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
               selectionType: widget.selectionType,
               minDate: widget.minDate,
               maxDate: widget.maxDate,
+              initialValue: widget.initialValue,
             ),
           ];
 
@@ -190,6 +198,7 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
                 selectionType: widget.selectionType,
                 minDate: widget.minDate,
                 maxDate: widget.maxDate,
+                initialValue: widget.initialValue,
               ),
             );
           }
@@ -209,6 +218,13 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
                 selectionType: widget.selectionType,
                 minDate: widget.minDate,
                 maxDate: widget.maxDate,
+                initialValue: widget.initialValue,
+                onTitleDescChanged: widget.onTitleDescChanged,
+                onTotalDaysChanged: (totalDays){
+
+                  this.setState(()=>totalMultiDays = totalDays );
+
+                },
               ),
             );
           }
@@ -228,7 +244,7 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
                   child: Container(
                       margin: EdgeInsets.symmetric(vertical: 8.0),
                       child: AdvButton(
-                        "Submit",
+                        "Submit ($totalMultiDays)",
                         width: double.infinity,
                         buttonSize: ButtonSize.large,
                         onPressed: () {
@@ -263,6 +279,9 @@ class DayCalendar extends StatefulWidget {
   final Function(List<DateTime>) onDayPressed;
   final DateTime minDate;
   final DateTime maxDate;
+  final DateTime initialValue;
+  final Function() onTitleDescChanged;
+  final Function(int) onTotalDaysChanged;
 
   DayCalendar({
     this.mainContext,
@@ -277,6 +296,9 @@ class DayCalendar extends StatefulWidget {
     this.onDayPressed,
     this.minDate,
     this.maxDate,
+    this.initialValue,
+    this.onTitleDescChanged,
+    this.onTotalDaysChanged
   }) : super(key: key);
 
   @override
@@ -681,6 +703,7 @@ class DayCalendarState extends State<DayCalendar> {
       } else {
         _selectedDateTimes.remove(currentDate);
       }
+      if (widget.onTotalDaysChanged!=null) widget.onTotalDaysChanged(_selectedDateTimes.length);
     } else if (widget.selectionType == SelectionType.range) {
       if (!_selectRangeIsComplete) {
         var dateDiff = _selectedDateTimes[0].difference(currentDate).inDays;
@@ -694,7 +717,6 @@ class DayCalendarState extends State<DayCalendar> {
           loopDate = _selectedDateTimes[0];
           endDate = currentDate;
         }
-
         _selectedDateTimes.clear();
         _selectedDateTimes.add(loopDate);
         _selectedDateTimes.add(endDate);
@@ -703,6 +725,7 @@ class DayCalendarState extends State<DayCalendar> {
       } else {
         _selectedDateTimes.clear();
         _selectedDateTimes.add(currentDate);
+        if(widget.onTitleDescChanged!=null) widget.onTitleDescChanged();
       }
 
       _selectRangeIsComplete = !_selectRangeIsComplete;
@@ -716,9 +739,9 @@ class DayCalendarState extends State<DayCalendar> {
   void _setPage({int page}) {
     /// for initial set
     if (page == null) {
-      DateTime date0 = DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
-      DateTime date1 = DateTime(DateTime.now().year, DateTime.now().month, 1);
-      DateTime date2 = DateTime(DateTime.now().year, DateTime.now().month + 1, 1);
+      DateTime date0 = DateTime(widget.initialValue.year, widget.initialValue.month - 1, 1);
+      DateTime date1 = DateTime(widget.initialValue.year, widget.initialValue.month, 1);
+      DateTime date2 = DateTime(widget.initialValue.year, widget.initialValue.month + 1, 1);
 
       this.setState(() {
         _startWeekday = date1.weekday;
@@ -799,6 +822,7 @@ class MonthCalendar extends StatefulWidget {
   final Function(List<DateTime>) onDayPressed;
   final DateTime minDate;
   final DateTime maxDate;
+  final DateTime initialValue;
 
   MonthCalendar({
     this.mainContext,
@@ -815,6 +839,7 @@ class MonthCalendar extends StatefulWidget {
     this.onDayPressed,
     this.minDate,
     this.maxDate,
+    this.initialValue
   }) : super(key: key);
 
   @override
@@ -1261,9 +1286,9 @@ class MonthCalendarState extends State<MonthCalendar> with TickerProviderStateMi
   void _setPage({int page}) {
     /// for initial set
     if (page == null) {
-      DateTime date0 = DateTime(DateTime.now().year - 1);
-      DateTime date1 = DateTime(DateTime.now().year);
-      DateTime date2 = DateTime(DateTime.now().year + 1);
+      DateTime date0 = DateTime(widget.initialValue.year - 1);
+      DateTime date1 = DateTime(widget.initialValue.year);
+      DateTime date2 = DateTime(widget.initialValue.year + 1);
 
       this.setState(() {
         this._pageDates = [
@@ -1356,6 +1381,7 @@ class YearCalendar extends StatefulWidget {
   final Function(List<DateTime>) onDayPressed;
   final DateTime minDate;
   final DateTime maxDate;
+  final DateTime initialValue;
 
   YearCalendar({
     this.mainContext,
@@ -1370,6 +1396,7 @@ class YearCalendar extends StatefulWidget {
     this.onDayPressed,
     this.minDate,
     this.maxDate,
+    this.initialValue
   }) : super(key: key);
 
   @override
@@ -1709,7 +1736,7 @@ class YearCalendarState extends State<YearCalendar> with SingleTickerProviderSta
   void _setPage({int page}) {
     /// for initial set
     if (page == null) {
-      int year = (DateTime.now().year / 12).floor();
+      int year = (widget.initialValue.year / 12).floor();
 
       DateTime date0 = DateTime((year - 1) * 12);
       DateTime date1 = DateTime(year * 12);

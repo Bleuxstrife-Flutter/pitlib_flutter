@@ -139,6 +139,7 @@ class Utils {
 
   static Future<List<DateTime>> pickDate(
     BuildContext context, {
+    DateTime initialValue,
     String title,
     List<DateTime> dates,
     List<MarkedDate> markedDates,
@@ -157,6 +158,7 @@ class Utils {
             selectionType: selectionType ?? SelectionType.single,
             minDate: minDate,
             maxDate: maxDate,
+            initialValue: initialValue,
           );
         },
         transitionsBuilder: (context, animation1, animation2, child) {

@@ -286,16 +286,18 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
     if (!widget.controller.enable) return;
 
     List<DateTime> result = await Utils.pickDate(
-      context,
-      title: widget.controller.label,
-      dates: widget.controller.dates,
-      markedDates: widget.controller.markedDates,
-      selectionType: widget.selectionType,
-      minDate: widget.controller.minDate,
-      maxDate: widget.controller.maxDate,
+        context,
+        title: widget.controller.label,
+        dates: widget.controller.dates,
+        markedDates: widget.controller.markedDates,
+        selectionType: widget.selectionType,
+        minDate: widget.controller.minDate,
+        maxDate: widget.controller.maxDate,
+        initialValue: widget.controller.initialValue
     );
 
     if (widget.onChanged != null) widget.onChanged(result);
-    widget.controller.dates = result;
+    if (result != null) widget.controller.dates = result;
+
   }
 }

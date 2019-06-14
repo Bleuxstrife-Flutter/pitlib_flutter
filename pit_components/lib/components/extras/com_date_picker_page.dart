@@ -5,6 +5,7 @@ import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/extras/com_calendar_carousel.dart';
 import 'package:pit_components/pit_components.dart';
 
+
 class ComDatePickerPage extends StatefulWidget {
   final String title;
   final List<DateTime> currentDate;
@@ -12,12 +13,15 @@ class ComDatePickerPage extends StatefulWidget {
   final SelectionType selectionType;
   final DateTime minDate;
   final DateTime maxDate;
+  final DateTime initialValue;
+  String titleDesc;
 
   ComDatePickerPage(
       {this.title, this.currentDate = const [],
       this.markedDates = const [],
         this.selectionType,
         this.minDate,
+        this.initialValue,
         this.maxDate});
 
   @override
@@ -33,6 +37,7 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
   @override
   void initState() {
     super.initState();
+    widget.titleDesc = "Pilih Tanggal Awal";
     _selectionType = widget.selectionType ?? SelectionType.single;
     _currentDate = widget.currentDate ?? [DateTime.now()];
   }
@@ -41,8 +46,17 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: new Text(widget.title ?? ""),
+        centerTitle: false,
         elevation: 1.0,
+        title: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.title ?? ""),
+              (widget.selectionType == SelectionType.range) ? Text(widget.titleDesc, style: TextStyle(fontSize: 11.0))
+                  : Container()
+            ]),
         backgroundColor: PitComponents.datePickerToolbarColor,
       ),
       body: Container(
@@ -56,12 +70,17 @@ class _ComDatePickerPageState extends State<ComDatePickerPage>
             this.setState(() => _currentDate = dates);
             Navigator.pop(context, _currentDate);
           },
+          onTitleDescChanged: () async {
+
+            this.setState(()=> widget.titleDesc = "Pilih Tanggal Akhir");
+          },
           thisMonthDayBorderColor: Colors.grey,
           selectedDateTimes: _currentDate,
           daysHaveCircularBorder: false,
           markedDates: widget.markedDates,
           minDate: widget.minDate,
           maxDate: widget.maxDate,
+          initialValue: widget.initialValue,
         ),
       ),
     );
