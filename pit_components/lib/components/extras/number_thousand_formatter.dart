@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -11,9 +13,10 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if(oldValue.text == newValue.text){
+    if (oldValue.text == newValue.text) {
       return newValue;
     }
+
     var x = super.formatEditUpdate(oldValue, newValue);
 
     if (x.text.length > this.digitLimit) {
@@ -45,9 +48,13 @@ class NumberThousandFormatter extends WhitelistingTextInputFormatter {
     base += totalSeparator - x;
     extent += totalSeparator - x;
 
-    return TextEditingValue(text: formattedText);
-//    return newValue.copyWith(
-//        text: formattedText/*, selection: TextSelection(baseOffset: base, extentOffset: extent)*/);
+    return TextEditingValue(
+      text: formattedText,
+      selection: newValue.selection.copyWith(baseOffset: base, extentOffset: extent),
+      composing: Platform.isIOS
+          ? (formattedText ?? "").isEmpty ? TextRange.empty : TextRange(start: 0, end: 0)
+          : TextRange.empty,
+    );
   }
 
 //  TextSelection updateCursorPosition(String text) {
