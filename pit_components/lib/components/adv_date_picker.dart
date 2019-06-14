@@ -296,6 +296,6 @@ class _AdvDatePickerState extends State<AdvDatePicker> with SingleTickerProvider
     );
 
     if (widget.onChanged != null) widget.onChanged(result);
-    widget.controller.dates = result;
+    if (result != null && result.length > 0) widget.controller.dates = result;
   }
 }

@@ -84,6 +84,13 @@ class _MyHomePageState extends State<MyHomePage> {
       /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
     );
+    cc = AdvDatePickerController(
+//                    enable: false,
+        label: "Just TextField MaxLines 1",
+        hint: "test",
+        initialValue: _date,
+        markedDates: [MarkedDate(DateTime.now(), "lalala")],
+        dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]);
   }
 
   Widget _buildRadioButton(Widget icon, String value) {
@@ -100,6 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _lalala = false;
 
   bool _first = true;
+
+  AdvDatePickerController cc;
 
   @override
   Widget build(BuildContext context) {
@@ -215,13 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //                  MarkedDate(DateTime(2018, 11, 20),
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
-                        controller: AdvDatePickerController(
-//                    enable: false,
-                            label: "Just TextField MaxLines 1",
-                            hint: "test",
-                            initialValue: _date ?? DateTime.now(),
-                            markedDates: [MarkedDate(DateTime.now(), "lalala")],
-                            dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]),
+                        controller: cc,
                       ),
                     ),
                     Expanded(
