@@ -291,7 +291,7 @@ class _AdvTextFieldState extends State<AdvTextField> {
                   controller: _textEditingCtrl,
                   onChanged: (newText) {
                     _effectiveController.removeListener(_update);
-                    if (widget.keyboardType == TextInputType.number && newText == "") newText = "0";
+//                    if (widget.keyboardType == TextInputType.number && newText == "") newText = "0";
 
                     var newValue = /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number
                     ? newText.indexOf(".") > 0

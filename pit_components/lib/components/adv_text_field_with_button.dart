@@ -294,16 +294,16 @@ class _AdvTextFieldWithButtonState extends State<AdvTextFieldWithButton>
             controller: _textEditingCtrl,
             onChanged: (newText) {
               _effectiveController.removeListener(_update);
-              if (widget.keyboardType == TextInputType.number && newText == "")
-                newText = "";
-              var newValue = widget.keyboardType == TextInputType.number &&
+//              if (widget.keyboardType == TextInputType.number && newText == "")
+//                newText = "";
+              var newValue = /*widget.keyboardType == TextInputType.number &&
                       newText != ""
                   ? newText.indexOf(".") > 0
                       ? (double.tryParse(newText) ?? _effectiveController.text)
                           .toString()
                       : (int.tryParse(newText) ?? _effectiveController.text)
                           .toString()
-                  : newText;
+                  :*/ newText;
 
               String oldValue = _effectiveController.text;
               //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya

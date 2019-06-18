@@ -1,3 +1,9 @@
+## 0.3.3
+
+* Now AdvButton has argument to be bold or not (both for small and large)
+* AdvTextField will no longer convert empty space to zero if the keyboard is number
+    * This case raise when i use number keyboard for Credit Card Number Input
+
 ## 0.3.2+1
 
 * minor bug fixed
