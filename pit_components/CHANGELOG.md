@@ -1,6 +1,10 @@
-## 0.4.0
+## 0.3.2+1
 
-* Flutter upgrade to 1.5.4 second trial
+* minor bug fixed
+
+## 0.3.2
+
+* AdvDatePicker selection range now is fixed to be more convenient to use
 
 ## 0.3.1+1
 
