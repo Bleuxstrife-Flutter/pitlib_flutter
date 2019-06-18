@@ -145,6 +145,7 @@ class _CalendarCarouselState extends State<CalendarCarousel> with TickerProvider
   @override
   void initState() {
     super.initState();
+    _dateCount = widget.selectedDateTimes.length;
     _dayMonthAnim =
         AnimationController(duration: Duration(milliseconds: _kAnimationDuration), vsync: this);
     _monthYearAnim = AnimationController(

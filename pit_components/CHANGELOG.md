@@ -1,3 +1,27 @@
+## 0.3.2+1
+
+* minor bug fixed
+
+## 0.3.2
+
+* AdvDatePicker selection range now is fixed to be more convenient to use
+
+## 0.3.1+1
+
+* Pick from Increment result added
+
+## 0.3.1
+
+* Rollback to Flutter 1.0.0 and increment error fixed
+
+## 0.3.0+1
+
+* Fix TextField multiline error
+
+## 0.3.0
+
+* Flutter upgrade to 1.5.4 trial
+
 ## 0.2.11+2
 
 * advtextfield bug fixed
