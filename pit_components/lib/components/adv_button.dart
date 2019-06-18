@@ -16,6 +16,7 @@ class AdvButton extends StatelessWidget {
   final ButtonSize buttonSize;
   final bool onlyBorder;
   final bool reverse;
+  final bool bold;
   final Color backgroundColor;
   final Color textColor;
   final double width;
@@ -26,6 +27,7 @@ class AdvButton extends StatelessWidget {
       bool enable = true,
       bool onlyBorder = false,
       bool reverse = false,
+      this.bold,
       this.onPressed,
       this.buttonSize = ButtonSize.large,
       Color backgroundColor,
@@ -57,6 +59,7 @@ class AdvButton extends StatelessWidget {
   _defaultCallback() {}
 
   Widget _buildTinyButton(BuildContext context) {
+    bool _bold = this.bold ?? false;
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
@@ -91,13 +94,16 @@ class AdvButton extends StatelessWidget {
               highlightColor: Theme.of(context).dividerColor,
               splashColor: Theme.of(context).dividerColor,
               child: new Text(this.data,
-                  style: ts.fs12.copyWith(color: enable ? _textColor : _disableTextColor)),
+                  style: ts.fs12
+                      .merge(_bold ? ts.fw600 : ts.fw)
+                      .copyWith(color: enable ? _textColor : _disableTextColor)),
               onPressed: enable ? this.onPressed ?? _defaultCallback : null,
               shape: border,
             )));
   }
 
   Widget _buildLargeButton(BuildContext context) {
+    bool _bold = this.bold ?? true;
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
@@ -130,7 +136,8 @@ class AdvButton extends StatelessWidget {
               splashColor: Theme.of(context).dividerColor,
               child: new Text(this.data,
                   style: ts.fs16
-                      .merge(ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
+                      .merge(_bold ? ts.fw700 : ts.fw)
+                      .copyWith(color: enable ? _textColor : _disableTextColor)),
               onPressed: enable ? this.onPressed ?? _defaultCallback : null,
               shape: new RoundedRectangleBorder(
                 side: BorderSide(
@@ -151,6 +158,7 @@ class AdvButtonWithIcon extends StatelessWidget {
   final ButtonSize buttonSize;
   final bool onlyBorder;
   final bool reverse;
+  final bool bold;
   final Color backgroundColor;
   final Color textColor;
   final double width;
@@ -161,6 +169,7 @@ class AdvButtonWithIcon extends StatelessWidget {
       bool enable = true,
       bool onlyBorder = false,
       bool reverse = false,
+      this.bold,
       this.onPressed,
       this.buttonSize = ButtonSize.large,
       Color backgroundColor,
@@ -192,6 +201,7 @@ class AdvButtonWithIcon extends StatelessWidget {
   _defaultCallback() {}
 
   Widget _buildSmallButton(BuildContext context) {
+    bool _bold = this.bold ?? false;
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
@@ -230,8 +240,9 @@ class AdvButtonWithIcon extends StatelessWidget {
                     this.data == ""
                         ? null
                         : Text(this.data,
-                            style: ts.fs12.merge(
-                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
+                            style: ts.fs12
+                                .merge(_bold ? ts.fw600 : ts.fw)
+                                .copyWith(color: enable ? _textColor : _disableTextColor)),
                   ],
                 )
               : AdvRow(
@@ -242,8 +253,9 @@ class AdvButtonWithIcon extends StatelessWidget {
                     this.data == ""
                         ? null
                         : Text(this.data,
-                            style: ts.fs12.merge(
-                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
+                            style: ts.fs12
+                                .merge(_bold ? ts.fw600 : ts.fw)
+                                .copyWith(color: enable ? _textColor : _disableTextColor)),
                     image,
                   ],
                 ),
@@ -259,6 +271,7 @@ class AdvButtonWithIcon extends StatelessWidget {
   }
 
   Widget _buildLargeButton(BuildContext context) {
+    bool _bold = this.bold ?? true;
     double borderWidth = onlyBorder ? 1.0 : 0.0;
     double borderWidthAdditional = !onlyBorder ? 0.0 : 0.0;
     Color disableBackgroundColor =
@@ -297,8 +310,9 @@ class AdvButtonWithIcon extends StatelessWidget {
                     this.data == ""
                         ? null
                         : Text(this.data,
-                            style: ts.fs22.merge(
-                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
+                            style: ts.fs22
+                                .merge(_bold ? ts.fw700 : ts.fw)
+                                .copyWith(color: enable ? _textColor : _disableTextColor)),
                   ],
                 )
               : AdvRow(
@@ -310,8 +324,9 @@ class AdvButtonWithIcon extends StatelessWidget {
                     this.data == ""
                         ? null
                         : Text(this.data,
-                            style: ts.fs22.merge(
-                                ts.fw700.copyWith(color: enable ? _textColor : _disableTextColor))),
+                            style: ts.fs22
+                                .merge(_bold ? ts.fw700 : ts.fw)
+                                .copyWith(color: enable ? _textColor : _disableTextColor)),
                   ],
                 ),
           onPressed: enable ? this.onPressed ?? _defaultCallback : null,
