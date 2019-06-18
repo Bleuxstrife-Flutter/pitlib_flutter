@@ -272,12 +272,12 @@ class _AdvTextFieldPlainState extends State<AdvTextFieldPlain> with SingleTicker
             controller: _textEditingCtrl,
             onChanged: (newText) {
               _effectiveController.removeListener(_update);
-              if (widget.keyboardType == TextInputType.number && newText == "") newText = "";
-              var newValue = !widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number && newText != ""
+//              if (widget.keyboardType == TextInputType.number && newText == "") newText = "";
+              var newValue = /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number && newText != ""
                   ? newText.indexOf(".") > 0
                       ? (double.tryParse(newText) ?? "").toString()
                       : (int.tryParse(newText) ?? "").toString()
-                  : newText;
+                  :*/ newText;
 
               String oldValue = _effectiveController.text;
               //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya

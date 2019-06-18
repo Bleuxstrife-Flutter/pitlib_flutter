@@ -191,8 +191,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               AdvTextField(
                 label: "test nih",
-                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
-                  NumberThousandFormatter()]
+                keyboardType: TextInputType.number,
+//                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
+//                  NumberThousandFormatter()]
 //                controller: controller,
                   ),
 //              PositionedTransition(rect: null, child: null,),
@@ -267,6 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
               AdvButton(
                 "Pick From Increment",
                 buttonSize: ButtonSize.small,
+                bold: false,
                 onPressed: () {
                   DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
 
