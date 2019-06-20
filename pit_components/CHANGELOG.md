@@ -1,3 +1,7 @@
+## 0.4.0+1
+
+* Applying all 1.0.0 changes to 1.5.4
+
 ## 0.4.0
 
 * Flutter upgrade to 1.5.4 second trial
