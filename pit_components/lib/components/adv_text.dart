@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:pit_components/utils/utils.dart';
 
@@ -15,25 +17,60 @@ class AdvText extends StatelessWidget {
   final String semanticsLabel;
 
   AdvText(
-    this.data, {
-    this.key,
-    this.style,
-    this.textAlign,
-    this.textDirection,
-    this.locale,
-    this.softWrap,
-    this.overflow,
-    this.textScaleFactor,
-    this.maxLines,
-    this.semanticsLabel,
-  });
+      this.data, {
+        this.key,
+        this.style,
+        this.textAlign,
+        this.textDirection,
+        this.locale,
+        this.softWrap,
+        this.overflow,
+        this.textScaleFactor,
+        this.maxLines,
+        this.semanticsLabel,
+      });
 
   @override
   Widget build(BuildContext context) {
     return new LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double maxWidth = constraints.maxWidth;
-        String _data = Utils.getEllipsizedText(this.data, this.style, maxWidth);
+        double maxHeight = constraints.maxHeight;
+        String _text = this.data;
+        String _data = "";
+        int _maxLines = maxLines;
+        if (_maxLines == null) {
+          if (maxHeight == double.infinity) {
+            _data = this.data;
+          } else {
+            var tpMeasureHeight = new TextPainter(
+                text: TextSpan(text: "|", style: this.style),
+                textDirection: ui.TextDirection.ltr);
+            tpMeasureHeight.layout();
+
+            _maxLines = (maxHeight / tpMeasureHeight.height).floor();
+
+            _data = _getEllipsizedText(_maxLines, maxWidth, _text);
+          }
+        } else {
+          _data = _getEllipsizedText(_maxLines, maxWidth, _text);
+        }
+
+        var tp = new TextPainter(
+            text: TextSpan(text: _data, style: this.style),
+            textDirection: ui.TextDirection.ltr);
+
+        tp.layout(maxWidth: maxWidth);
+
+        if (tp.height > maxHeight) {
+          var tpRemeasureHeight = new TextPainter(
+              text: TextSpan(text: "|", style: this.style),
+              textDirection: ui.TextDirection.ltr);
+          tpRemeasureHeight.layout();
+
+          _maxLines = (maxHeight / tpRemeasureHeight.height).floor();
+          _data = _getEllipsizedText(_maxLines, maxWidth, _text);
+        }
 
         return Text(
           _data,
@@ -50,5 +87,46 @@ class AdvText extends StatelessWidget {
         );
       },
     );
+  }
+
+  _getEllipsizedText(int maxLines, double maxWidth, String text) {
+    String _data = "";
+    while (maxLines > 0) {
+      if (maxLines == 1) {
+        String croppedText =
+        Utils.getEllipsizedText(text, this.style, maxWidth);
+
+        int indexOf = croppedText.indexOf("\n");
+
+        if (indexOf > 0)
+          croppedText = "${croppedText.substring(0, indexOf)}\u2026";
+
+        _data += "$croppedText";
+
+        text = text.substring(croppedText.length);
+      } else {
+        String croppedText =
+        Utils.getEllipsizedText(text, this.style, maxWidth, withDot: false);
+
+        int enterOccurance = 0;
+
+        int indexOf = croppedText.indexOf("\n");
+
+        while (indexOf > 0) {
+          enterOccurance ++;
+          indexOf = croppedText.indexOf("\n", indexOf + 1);
+        }
+        maxLines-= enterOccurance;
+
+        _data += "$croppedText";
+        text = text.substring(croppedText.length);
+        if (text.length > 0) {
+          _data += "\n";
+        }
+      }
+      maxLines--;
+    }
+
+    return _data;
   }
 }

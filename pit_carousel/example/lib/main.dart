@@ -46,7 +46,8 @@ class _PitCarouselDemoState extends State<PitCarouselDemo> {
         ),
         body: AdvCarousel(
           children: _pages,
-          dotAlignment: Alignment.topLeft,
+          dotAlignment: Alignment.bottomLeft,
+          dotPosition: Position(bottom: 120.0),
           height: double.infinity,
           animationCurve: Curves.easeIn,
           animationDuration: Duration(milliseconds: 300),

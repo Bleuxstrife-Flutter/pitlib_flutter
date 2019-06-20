@@ -4,8 +4,7 @@ import MidtransCoreKit
 
 struct Midtrans{
     static var clientKey: String{
-        //        return "VT-client-ZgRC-r-WntD2epbI"; //production
-        return "VT-client-j_y7RRFZJETHsqMe"; //debug
+        return "";
     }
     static var merchantServerUrl: String{
         //        return "https://api.veritrans.co.id/v2/transactions"; //production

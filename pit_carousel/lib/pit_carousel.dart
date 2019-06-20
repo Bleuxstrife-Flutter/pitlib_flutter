@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+class Position {
+  final double top;
+  final double bottom;
+  final double left;
+  final double right;
+
+  const Position(
+      {double top = 8.0,
+        double bottom = 8.0,
+        double left = 8.0,
+        double right = 8.0})
+      : this.top = top,
+        this.bottom = bottom,
+        this.left = left,
+        this.right = right;
+}
+
 class AdvCarousel extends StatefulWidget {
   final AdvCarouselController carouselController;
   final List<Widget> children;
@@ -24,6 +41,8 @@ class AdvCarousel extends StatefulWidget {
   final bool repeat;
 
   final Alignment dotAlignment;
+  final Position dotPosition;
+  final Widget placeholder;
 
   AdvCarousel({
     double height,
@@ -36,6 +55,8 @@ class AdvCarousel extends StatefulWidget {
     bool autoPlay = true,
     bool repeat = true,
     this.dotAlignment = Alignment.bottomCenter,
+    this.dotPosition = const Position(),
+    Widget placeholder,
   })  : assert(height == null || height > 0),
         assert(children == null || carouselController == null),
         assert(animationCurve != null),
@@ -46,7 +67,8 @@ class AdvCarousel extends StatefulWidget {
         this.height = height ?? 210.0,
         this.margin = margin ?? new EdgeInsets.all(0.0),
         this.autoPlay = autoPlay ?? true,
-        this.repeat = repeat ?? true;
+        this.repeat = repeat ?? true,
+        this.placeholder = placeholder ?? Container();
 
   @override
   State createState() => new _AdvCarouselState();
@@ -55,8 +77,6 @@ class AdvCarousel extends StatefulWidget {
 class _AdvCarouselState extends State<AdvCarousel>
     with SingleTickerProviderStateMixin {
   PageController _pageController = new PageController();
-  AdvCarouselController _initialCarouselController;
-  AdvCarouselController _carouselController;
 
   Timer _timer;
 
@@ -67,7 +87,7 @@ class _AdvCarouselState extends State<AdvCarousel>
 
   ///Actual index of the displaying Widget
   int get actualIndex =>
-      _pageController.positions.isEmpty ? 0 : _pageController.page.round();
+      !_pageController.hasClients ? 0 : _pageController.page.round();
 
   ///Returns the calculated value of the next index.
   int get nextIndex {
@@ -85,36 +105,11 @@ class _AdvCarouselState extends State<AdvCarousel>
   @override
   void initState() {
     super.initState();
-
-    _carouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
     widget.carouselController.addListener(_updateFromWidget);
   }
 
   _updateFromWidget() {
-    if (widget.carouselController.widgets != _initialCarouselController.widgets)
-      _carouselController.widgets = widget.carouselController.widgets;
-
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
     setState(() {});
-  }
-
-  @override
-  void didUpdateWidget(AdvCarousel oldWidget) {
-    _initialCarouselController =
-        AdvCarouselController.fromValue(widget.carouselController.value);
-
-    if (widget.carouselController != oldWidget.carouselController) {
-      widget.carouselController.value =
-          AdvCarouselEditingValue.fromValue(oldWidget.carouselController.value);
-      oldWidget.carouselController.removeListener(_updateFromWidget);
-      widget.carouselController.addListener(_updateFromWidget);
-    }
-
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -125,12 +120,11 @@ class _AdvCarouselState extends State<AdvCarousel>
   }
 
   Widget createCarouselPlaceHolder() {
-    return new AspectRatio(
-        aspectRatio: 16 / 9,
-        child: new Container(
-            height: widget.height,
-            color: Colors.amber,
-            child: Text("Loading...")));
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      return Container(
+          width: constraints.maxWidth,
+          height: widget.height, child: widget.placeholder);
+    },);
   }
 
   @override
@@ -152,15 +146,15 @@ class _AdvCarouselState extends State<AdvCarousel>
             physics: new AlwaysScrollableScrollPhysics(),
             children: widget.carouselController.widgets
                 .map((widget) => new Container(
-                      child: widget,
-                    ))
+              child: widget,
+            ))
                 .toList(),
           ),
           new Positioned(
-              top: 8.0,
-              bottom: 8.0,
-              left: 8.0,
-              right: 8.0,
+              top: widget.dotPosition.top,
+              bottom: widget.dotPosition.bottom,
+              left: widget.dotPosition.left,
+              right: widget.dotPosition.right,
               child: Container(
                 alignment: widget.dotAlignment,
                 child: new Row(
@@ -174,12 +168,12 @@ class _AdvCarouselState extends State<AdvCarousel>
 
   Widget _buildDot(int index) {
     double currentPage =
-        _pageController.positions.isEmpty ? 0.0 : _pageController.page ?? 0.0;
+    !_pageController.hasClients ? 0.0 : _pageController.page ?? 0.0;
     double zoom = (currentPage).floor() == index
         ? ((1.0 - (currentPage - index)) * (dotIncreaseSize - 1)) + 1
         : (currentPage + 1).floor() == index
-            ? ((currentPage + 1.0 - index) * (dotIncreaseSize - 1)) + 1
-            : 1.0;
+        ? ((currentPage + 1.0 - index) * (dotIncreaseSize - 1)) + 1
+        : 1.0;
 
     return new Container(
       width: dotSpacing,
@@ -216,7 +210,7 @@ class _AdvCarouselState extends State<AdvCarousel>
     //Every widget.displayDuration (time) the tabbar controller will animate to the next index.
     _timer = new Timer.periodic(
       widget.displayDuration,
-      (_) {
+          (_) {
         if (!widget.repeat) {
           if (this.nextIndex == 0) _timer.cancel();
 
@@ -244,8 +238,8 @@ class AdvCarouselController extends ValueNotifier<AdvCarouselEditingValue> {
 
   AdvCarouselController({List<Widget> widgets})
       : super(widgets == null
-            ? AdvCarouselEditingValue.empty
-            : new AdvCarouselEditingValue(widgets: widgets));
+      ? AdvCarouselEditingValue.empty
+      : new AdvCarouselEditingValue(widgets: widgets));
 
   AdvCarouselController.fromValue(AdvCarouselEditingValue value)
       : super(value ?? AdvCarouselEditingValue.empty);

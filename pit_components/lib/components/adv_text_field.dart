@@ -12,12 +12,15 @@ import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
 typedef void OnTextChanged(String oldValue, String newValue);
-typedef void OnIconTapped();
+typedef void OnIconTapped(IconType iconType);
+
+enum IconType { prefix, suffix }
 
 class AdvTextField extends StatefulWidget {
   final AdvTextFieldController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final OnTextChanged textChangeListener;
   final FormFieldValidator<String> validator;
   final bool autoValidate;
@@ -30,106 +33,155 @@ class AdvTextField extends StatefulWidget {
   final Color backgroundColor;
   final Color borderColor;
   final Color errorColor;
+  final Widget prefixIcon;
   final Widget suffixIcon;
-  final OnIconTapped tapped;
+  final OnIconTapped onIconTapped;
   final bool needsCounter;
+  final String text;
+  final String hint;
+  final String label;
+  final String error;
+  final int maxLength;
+  final int maxLines;
+  final bool maxLengthEnforced;
+  final bool enable;
+  final TextAlign alignment;
+  final bool obscureText;
+  final bool numberAcknowledgeZero;
 
   AdvTextField(
-      {String text,
-      String hint,
-      String label,
-      String error,
-      int maxLength,
-      int maxLines,
-      bool maxLengthEnforced,
-      this.needsCounter = false,
-      bool enable,
-      TextAlign alignment,
-      bool obscureText,
-      String measureText,
-      TextSpan measureTextSpan,
-      EdgeInsetsGeometry padding,
-      this.textChangeListener,
-      this.validator,
-      this.autoValidate = false,
-      List<TextInputFormatter> inputFormatters,
-      this.keyboardType = TextInputType.text,
-      AdvTextFieldController controller,
-      int maxLineExpand,
-      this.focusNode,
-      Color hintColor,
-      Color labelColor,
-      Color backgroundColor,
-      Color borderColor,
-      Color errorColor,
-      this.suffixIcon,
-      this.tapped})
-      : assert(measureText == null || measureTextSpan == null),
-        assert(controller == null ||
-            (text == null &&
-                hint == null &&
-                label == null &&
-                error == null &&
-                maxLength == null &&
-                maxLines == null &&
-                maxLengthEnforced == null &&
-                enable == null &&
-                alignment == null &&
-                obscureText == null &&
-                suffixIcon == null)),
+      {this.text,
+        this.hint,
+        this.label,
+        this.error,
+        this.maxLength,
+        int maxLines,
+        this.maxLengthEnforced,
+        this.needsCounter = false,
+        this.enable,
+        this.alignment,
+        this.obscureText,
+        String measureText,
+        TextStyle textStyle,
+        EdgeInsetsGeometry padding,
+        EdgeInsetsGeometry margin,
+        this.textChangeListener,
+        this.validator,
+        this.autoValidate = false,
+        List<TextInputFormatter> inputFormatters,
+        this.keyboardType = TextInputType.text,
+        this.controller,
+        int maxLineExpand,
+        this.focusNode,
+        Color hintColor,
+        Color labelColor,
+        Color backgroundColor,
+        Color borderColor,
+        Color errorColor,
+        this.prefixIcon,
+        this.suffixIcon,
+        this.onIconTapped,
+        bool numberAcknowledgeZero})
+      : assert(controller == null ||
+      (text == null &&
+          hint == null &&
+          label == null &&
+          error == null &&
+          maxLength == null &&
+          maxLines == null &&
+          maxLengthEnforced == null &&
+          enable == null &&
+          alignment == null &&
+          obscureText == null &&
+          prefixIcon == null &&
+          suffixIcon == null)),
+        this.maxLines = maxLines ?? 1,
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
-        this.backgroundColor =
-            backgroundColor ?? PitComponents.textFieldBackgroundColor,
+        this.backgroundColor = backgroundColor ?? PitComponents.textFieldBackgroundColor,
         this.borderColor = borderColor ?? PitComponents.textFieldBorderColor,
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
-        this.controller = controller ??
-            new AdvTextFieldController(
-                text: text ?? "",
-                hint: hint ?? "",
-                label: label ?? "",
-                error: error ?? "",
-                maxLength: maxLength,
-                maxLines: maxLines ?? 1,
-                maxLengthEnforced: maxLengthEnforced ?? false,
-                enable: enable ?? true,
-                alignment: alignment ?? TextAlign.left,
-                obscureText: obscureText ?? false,
-                suffixIcon: suffixIcon),
-        this.measureTextSpan = measureTextSpan ??
-            new TextSpan(text: measureText, style: ts.fs16.merge(ts.tcBlack)),
+        this.measureTextSpan = TextSpan(text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.inputFormatters = inputFormatters ?? [],
         this.padding = padding ?? new EdgeInsets.all(0.0),
-        this.maxLineExpand = maxLineExpand ?? 4;
+        this.margin = margin ?? PitComponents.editableMargin,
+        this.maxLineExpand = maxLineExpand ?? 4,
+        this.numberAcknowledgeZero = numberAcknowledgeZero ?? false;
 
   @override
   State createState() => new _AdvTextFieldState();
 }
 
-class _AdvTextFieldState extends State<AdvTextField>
-    with SingleTickerProviderStateMixin {
-  TextEditingController _textEdittingCtrl = new TextEditingController();
+class _AdvTextFieldState extends State<AdvTextField> {
+  TextEditingController _textEditingCtrl = new TextEditingController();
   int initialMaxLines;
+
+  AdvTextFieldController get _effectiveController => widget.controller ?? _ctrl;
+
+  AdvTextFieldController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_update);
-    initialMaxLines = widget.controller.maxLines;
-    _textEdittingCtrl.text = widget.controller.text ?? "";
+
+    _ctrl = widget.controller == null
+        ? AdvTextFieldController(
+        text: widget.text ?? "",
+        hint: widget.hint ?? "",
+        label: widget.label ?? "",
+        error: widget.error ?? "",
+        maxLength: widget.maxLength,
+        maxLines: widget.maxLines,
+        maxLengthEnforced: widget.maxLengthEnforced ?? false,
+        enable: widget.enable ?? true,
+        alignment: widget.alignment ?? TextAlign.left,
+        obscureText: widget.obscureText ?? false,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon)
+        : null;
+
+    _effectiveController.addListener(_update);
+    initialMaxLines = _effectiveController.maxLines;
+    _textEditingCtrl.text = _effectiveController.text ?? "";
+    _textEditingCtrl.addListener(_updateEffectiveSelection);
+  }
+
+  _updateEffectiveSelection() {
+    if (_textEditingCtrl.selection != _effectiveController.selection &&
+        _textEditingCtrl.selection.start <= (_effectiveController.text?.length ?? 0) &&
+        _textEditingCtrl.selection.end <= (_effectiveController.text?.length ?? 0)) {
+      _effectiveController.removeListener(_update);
+      _effectiveController.selection = _textEditingCtrl.selection;
+      _effectiveController.addListener(_update);
+    }
   }
 
   _update() {
-    setState(() {
-      var cursorPos = _textEdittingCtrl.selection;
-      _textEdittingCtrl.text = widget.controller.text;
+    if (this.mounted) {
+      setState(() {
+        _updateTextController();
+      });
+    }
+  }
 
-      if (cursorPos.start > _textEdittingCtrl.text.length) {
-        cursorPos = new TextSelection.fromPosition(
-            new TextPosition(offset: _textEdittingCtrl.text.length));
-      }
-      _textEdittingCtrl.selection = cursorPos;
-    });
+  _updateTextController() {
+    var cursorPos = _effectiveController.selection;
+    _textEditingCtrl.removeListener(_updateEffectiveSelection);
+    _textEditingCtrl.text = _effectiveController.text;
+
+    if (cursorPos.start > _textEditingCtrl.text.length) {
+      cursorPos = new TextSelection.fromPosition(new TextPosition(offset: _textEditingCtrl.text.length));
+    }
+    _textEditingCtrl.selection = cursorPos;
+    _textEditingCtrl.addListener(_updateEffectiveSelection);
+  }
+
+  @override
+  void didUpdateWidget(AdvTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _updateEffectiveSelection();
+    _updateTextController();
   }
 
   @override
@@ -139,6 +191,7 @@ class _AdvTextFieldState extends State<AdvTextField>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),
@@ -153,170 +206,163 @@ class _AdvTextFieldState extends State<AdvTextField>
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
-    final Color _backgroundColor = widget.controller.enable
-        ? widget.backgroundColor
-        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
-    final Color _textColor = widget.controller.enable
-        ? widget.measureTextSpan.style.color
-        : Color.lerp(
-            widget.measureTextSpan.style.color, PitComponents.lerpColor, 0.6);
-    final Color _hintColor = widget.controller.enable
-        ? widget.hintColor
-        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+    final Color _backgroundColor =
+    _effectiveController.enable ? widget.backgroundColor : Color.lerp(Colors.black, Colors.white, 0.97);
+    final Color _textColor = _effectiveController.enable
+        ? widget.measureTextSpan.style.color ?? Colors.black
+        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black, Colors.white, 0.57);
+    final Color _hintColor = _effectiveController.enable ? widget.hintColor : Color.lerp(widget.hintColor, Colors.white, 0.39);
 
-    int maxLengthHeight = widget.controller == null
-        ? 0
-        : widget.controller.maxLength != null && widget.needsCounter ? 22 : 0;
+    int maxLengthHeight =
+    _effectiveController == null ? 0 : _effectiveController.maxLength != null && widget.needsCounter ? 22 : 0;
 
-    var tp = new TextPainter(
-        text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
     tp.layout();
 
+    var tpMaxLineExpand =
+    new TextPainter(text: TextSpan(text: "|", style: widget.measureTextSpan.style), textDirection: ui.TextDirection.ltr);
+
+    tpMaxLineExpand.layout(maxWidth: maxWidth);
+    double maxHeightExpand = tpMaxLineExpand.height * widget.maxLineExpand;
+
     double width = tp.size.width == 0
         ? maxWidth
-        : tp.size.width +
-            _defaultWidthAddition +
-            (_defaultInnerPadding * 2) +
-            (widget.padding.horizontal);
+        : tp.size.width + _defaultWidthAddition + (_defaultInnerPadding * 2) + (widget.padding.horizontal);
 
-    final List<TextInputFormatter> formatters =
-        widget.inputFormatters ?? <TextInputFormatter>[];
+    final List<TextInputFormatter> formaters = widget.inputFormatters ?? <TextInputFormatter>[];
 
     if (widget.keyboardType == TextInputType.number) {
-      if (widget.controller.maxLength == null) {
-        formatters.add(LengthLimitingTextInputFormatter(18));
+      if (_effectiveController.maxLength == null) {
+        formaters.add(LengthLimitingTextInputFormatter(18));
       } else {
-        if (widget.controller.maxLength > 18) widget.controller.maxLength = 18;
+        if (_effectiveController.maxLength > 18) _effectiveController.maxLength = 18;
       }
     }
 
-    if (widget.controller.label != null && widget.controller.label != "") {
+    if (_effectiveController.label != null && _effectiveController.label != "") {
       children.add(
-        AdvText(
-          widget.controller.label,
-          style: ts.fs11.merge(TextStyle(color: widget.labelColor)),
-          maxLines: 1,
+        Container(
+          child: AdvText(
+            _effectiveController.label,
+            style: ts.fs11.merge(TextStyle(color: widget.labelColor)),
+            maxLines: 1,
+          ),
+          width: width,
         ),
       );
     }
 
-    Widget mainChild = Container(
-      width: width,
-      padding: widget.padding,
-      child: new ConstrainedBox(
-        constraints: new BoxConstraints(
-          minHeight: tp.size.height +
-              _defaultHeightAddition +
-              /*(widget.padding.vertical) +*/ //I have to comment this out because when you just specify bottom padding, it produce strange result
-              maxLengthHeight,
-        ),
-        child: new Theme(
-          data: new ThemeData(
-            cursorColor: Theme.of(context).cursorColor,
-            accentColor: _backgroundColor,
-            hintColor: widget.borderColor,
-            primaryColor: widget.borderColor,
-          ),
-          child: ModTextField(
-            focusNode: widget.focusNode,
-            controller: _textEdittingCtrl,
-            onChanged: (newText) {
-              bool valueShouldChange = false;
+    double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
 
-              widget.controller.removeListener(_update);
-              if (widget.keyboardType == TextInputType.number && newText == "")
-                newText = "0";
+    List<Widget> rowChildren = [];
 
-              var newValue = widget.keyboardType == TextInputType.number
-                  ? newText.indexOf(".") > 0
-                      ? (double.tryParse(newText) ?? widget.controller.text)
-                          .toString()
-                      : (int.tryParse(newText) ?? widget.controller.text)
-                          .toString()
-                  : newText;
-
-              valueShouldChange = widget.keyboardType == TextInputType.number &&
-                  newText.indexOf(".") > 0;
-
-              int startIndex = newValue.indexOf("\n");
-              int newLineCount = 0;
-
-              while (startIndex != -1) {
-                newLineCount++;
-                startIndex = newValue.indexOf("\n", startIndex + 1);
-              }
-
-              if (initialMaxLines == 1) {
-                if (newLineCount > widget.maxLineExpand - 1) {
-                  widget.controller.maxLines = widget.maxLineExpand;
-                  valueShouldChange = true;
-                } else {
-                  widget.controller.maxLines = newLineCount + 1;
-                  valueShouldChange = true;
-                }
-              }
-
-              String oldValue = widget.controller.text;
-              widget.controller.text = newValue;
-              widget.controller.error = "";
-
-              widget.controller.addListener(_update);
-              if (valueShouldChange) {
-                newValue = "(setstate) $newValue";
-                if (this.mounted) {
-                  setState(() {
-                    if (widget.textChangeListener != null)
-                      widget.textChangeListener(oldValue, newValue);
-                  });
-                }
-              } else {
-                if (widget.textChangeListener != null)
-                  widget.textChangeListener(oldValue, newValue);
-              }
-            },
-            obscureText: widget.controller.obscureText,
-            enabled: widget.controller.enable,
-            maxLines: widget.controller.maxLines,
-            maxLength: widget.controller.maxLength,
-            keyboardType: widget.keyboardType,
-            inputFormatters: formatters,
-            maxLengthEnforced: widget.controller.maxLengthEnforced,
-            textAlign: widget.controller.alignment,
-            style: widget.measureTextSpan.style.copyWith(color: _textColor),
-            decoration: ModInputDecoration(
-                suffixIcon: widget.controller.suffixIcon != null
-                    ? InkWell(
-                        onTap: widget.tapped,
-                        child: Container(child: widget.controller.suffixIcon))
-                    : null,
-                filled: true,
-                fillColor: _backgroundColor,
-                border: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(4.0),
-                  ),
-                ),
-                contentPadding: new EdgeInsets.only(
-                    left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
-                hintText: widget.controller.hint,
-                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
-                maxLines: widget.controller.maxLines),
-          ),
-        ),
-      ),
+    Widget prefixRowChild = InkWell(
+      onTap: () {
+        widget.onIconTapped(IconType.prefix);
+      },
+      child: _effectiveController.prefixIcon,
     );
+
+    Widget suffixRowChild = InkWell(
+      onTap: () {
+        widget.onIconTapped(IconType.suffix);
+      },
+      child: _effectiveController.suffixIcon,
+    );
+
+    Widget mainRowChild = Expanded(
+        child: Container(
+          child: ConstrainedBox(
+            constraints: new BoxConstraints(
+              maxHeight: maxHeightExpand + (_paddingSize * 2),
+            ),
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              reverse: true,
+              child: new Theme(
+                data: new ThemeData(
+                  hintColor: Colors.transparent,
+                  primaryColor: Colors.transparent,
+                ),
+                child: ModTextField(
+                  focusNode: widget.focusNode,
+                  controller: _textEditingCtrl,
+                  onChanged: (newText) {
+                    _effectiveController.removeListener(_update);
+                    if (widget.keyboardType == TextInputType.number && newText == "") newText = "0";
+
+                    var newValue = /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number
+                    ? newText.indexOf(".") > 0
+                        ? (double.tryParse(newText) ?? "").toString()
+                        : (int.tryParse(newText) ?? "").toString()
+                    : */newText;
+
+                    String oldValue = _effectiveController.text;
+                    //set ke text yg diketik supaya pas di bawah di-set dengan newvalue akan ketrigger updatenya
+                    _effectiveController.text = newText;
+
+                    if (_textEditingCtrl.selection.baseOffset <= newText.length &&
+                        _textEditingCtrl.selection.extentOffset <= newText.length)
+                      _effectiveController.selection = _textEditingCtrl.selection;
+
+                    _effectiveController.error = "";
+
+                    _effectiveController.addListener(_update);
+
+                    _effectiveController.text = newValue;
+
+                    if (widget.textChangeListener != null) widget.textChangeListener(oldValue, newValue);
+                  },
+                  obscureText: _effectiveController.obscureText,
+                  enabled: _effectiveController.enable,
+                  maxLines: _effectiveController.maxLines,
+                  maxLength: _effectiveController.maxLength,
+                  keyboardType: widget.keyboardType,
+                  inputFormatters: formaters,
+                  maxLengthEnforced: _effectiveController.maxLengthEnforced,
+                  textAlign: _effectiveController.alignment,
+                  style: widget.measureTextSpan.style.copyWith(color: _textColor),
+                  decoration: ModInputDecoration(
+                      contentPadding: new EdgeInsets.all(_paddingSize),
+                      hintText: _effectiveController.hint,
+                      hintStyle: TextStyle(color: _hintColor),
+                      maxLines: _effectiveController.maxLines),
+                ),
+              ),
+            ),
+          ),
+        ));
+
+    if (_effectiveController.prefixIcon != null) rowChildren.add(prefixRowChild);
+    rowChildren.add(mainRowChild);
+    if (_effectiveController.suffixIcon != null) rowChildren.add(suffixRowChild);
+
+    Widget mainChild = Container(
+        width: width,
+        constraints: BoxConstraints(
+          minHeight: tp.size.height + _defaultHeightAddition + maxLengthHeight - 8.0 - ((8.0 - _paddingSize) * 2),
+        ),
+        decoration: BoxDecoration(
+          color: _backgroundColor,
+          border: Border.all(width: 1.0, color: widget.borderColor),
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(4.0),
+          ),
+        ),
+        padding: widget.padding,
+        child: Row(children: rowChildren));
 
     children.add(mainChild);
 
-    if (widget.controller.error != null && widget.controller.error != "") {
-      TextStyle style = ts.fs11
-          .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
+    if (_effectiveController.error != null && _effectiveController.error != "") {
+      TextStyle style = ts.fs11.copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 
       children.add(Container(
-          width: maxWidth,
+          width: width,
           child: AdvText(
-            widget.controller.error,
+            _effectiveController.error,
             textAlign: TextAlign.end,
             style: style,
             maxLines: 1,

@@ -10,7 +10,6 @@ class DateTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-
     return _getDateTime(oldValue, newValue, format);
   }
 
@@ -25,15 +24,15 @@ class DateTextFormatter extends TextInputFormatter {
     }
 
     String text =
-    newValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
+        newValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
     String newValueText = newValue.text;
     String cleanNewValueText =
-    newValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
+        newValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
     String cleanOldValueText =
-    oldValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
+        oldValue.text.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
     TextEditingValue result = newValue.copyWith(text: text);
     String cleanFormat =
-    format.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
+        format.replaceAll(RegExp(r'[' + fixedInvalidChars + ']'), "");
     int newSelectionStart = newValue.selection.start;
     int oldSelectionStart = oldValue.selection.start;
     int oldSelectionEnd = oldValue.selection.end;
@@ -41,8 +40,8 @@ class DateTextFormatter extends TextInputFormatter {
     int newCleanSelectionStart = newSelectionStart;
 
     if (oldSelectionStart < newSelectionStart) {
-      int invalidCharIndex =
-      format.indexOf(RegExp(r'[' + fixedInvalidChars + ']'), oldSelectionStart);
+      int invalidCharIndex = format.indexOf(
+          RegExp(r'[' + fixedInvalidChars + ']'), oldSelectionStart);
 
       while (invalidCharIndex == oldSelectionStart) {
         selectionOffset++;
@@ -70,7 +69,7 @@ class DateTextFormatter extends TextInputFormatter {
 
         result = result.copyWith(
             text:
-            "${cleanNewValueText.substring(0, newCleanSelectionStart)}${Utils.stringRepeat("0", missingCharacters)}${cleanNewValueText.substring(newCleanSelectionStart, cleanNewValueText.length)}");
+                "${cleanNewValueText.substring(0, newCleanSelectionStart)}${Utils.stringRepeat("0", missingCharacters)}${cleanNewValueText.substring(newCleanSelectionStart, cleanNewValueText.length)}");
       }
     } else {
       int newSelectionOffset = RegExp(r'[' + fixedInvalidChars + ']')
@@ -83,11 +82,11 @@ class DateTextFormatter extends TextInputFormatter {
       if (cleanNewValueText.length > cleanOldValueText.length) {
         result = result.copyWith(
             text:
-            "${text.substring(0, newCleanSelectionStart)}${text.substring(text.length > newCleanSelectionStart + 1 ? newCleanSelectionStart + 1 : text.length, text.length)}");
+                "${text.substring(0, newCleanSelectionStart)}${text.substring(text.length > newCleanSelectionStart + 1 ? newCleanSelectionStart + 1 : text.length, text.length)}");
       } else if (cleanNewValueText.length < cleanOldValueText.length) {
         result = result.copyWith(
             text:
-            "${text.substring(0, newCleanSelectionStart)}0${text.substring(newCleanSelectionStart, text.length)}");
+                "${text.substring(0, newCleanSelectionStart)}0${text.substring(newCleanSelectionStart, text.length)}");
       }
     }
 
@@ -195,7 +194,7 @@ class DateTextFormatter extends TextInputFormatter {
     String partValueString = partValue.toString();
     if (partValueString.length < datePartLength)
       partValueString =
-      "${Utils.stringRepeat("0", datePartLength - partValueString.length)}$partValueString";
+          "${Utils.stringRepeat("0", datePartLength - partValueString.length)}$partValueString";
 
     return result.replaceAll(currentPart, partValueString);
   }
@@ -215,7 +214,7 @@ class DateTextFormatter extends TextInputFormatter {
 
     if (datePartIndex != -1) {
       datePart = int.tryParse(cleanValue.substring(
-          datePartIndex, datePartIndex + datePartLength)) ??
+              datePartIndex, datePartIndex + datePartLength)) ??
           0;
     }
 

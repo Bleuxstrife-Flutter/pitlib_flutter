@@ -122,6 +122,7 @@ class AdvExpansionPanelList extends StatefulWidget {
     this.children = const <AdvExpansionPanel>[],
     this.expansionCallback,
     this.animationDuration = kThemeAnimationDuration,
+    this.padding,
   })  : assert(children != null),
         assert(animationDuration != null),
         _allowOnlyOnePanelOpen = false,
@@ -141,6 +142,7 @@ class AdvExpansionPanelList extends StatefulWidget {
     this.expansionCallback,
     this.animationDuration = kThemeAnimationDuration,
     this.initialOpenPanelValue,
+    this.padding,
   })  : children = children,
         // ignore: prefer_initializing_formals
         assert(children != null),
@@ -171,6 +173,8 @@ class AdvExpansionPanelList extends StatefulWidget {
   /// only used when initializing with the [AdvExpansionPanelList.radio]
   /// constructor.)
   final Object initialOpenPanelValue;
+
+  final EdgeInsetsGeometry padding;
 
   @override
   State<StatefulWidget> createState() => _AdvExpansionPanelListState();
@@ -262,42 +266,46 @@ class _AdvExpansionPanelListState extends State<AdvExpansionPanelList> {
       }
       final Widget header = InkWell(
           child: Container(
+              margin: widget.padding,
               child: Row(
-            children: <Widget>[
-              Expanded(
-                child: AnimatedContainer(
-                  duration: widget.animationDuration,
-                  curve: Curves.fastOutSlowIn,
-                  margin: _isChildExpanded(index)
-                      ? kExpandedEdgeInsets
-                      : EdgeInsets.zero,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                        minHeight: _kPanelHeaderCollapsedHeight),
-                    child: child.headerBuilder(
-                      context,
-                      _isChildExpanded(index),
+                children: <Widget>[
+                  Expanded(
+                    child: AnimatedContainer(
+                      duration: widget.animationDuration,
+                      curve: Curves.fastOutSlowIn,
+                      margin: _isChildExpanded(index)
+                          ? kExpandedEdgeInsets
+                          : EdgeInsets.zero,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            minHeight: _kPanelHeaderCollapsedHeight),
+                        child: child.headerBuilder(
+                          context,
+                          _isChildExpanded(index),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsetsDirectional.only(end: 8.0),
-                child: new Radio(
-                  value: childRadio.value,
-                  groupValue: _radioValue,
-                  activeColor: PitComponents.expansionPanelRadioColor,
-                  onChanged: (checked) {
-                    _handlePressed(_isChildExpanded(index), index);
-                    _radioValue = _radioValue == childRadio.value ? null : childRadio.value;
-                  },
-                ),
-              ),
-            ],
-          )),
+                  Container(
+                    child: new Radio(
+                      value: childRadio.value,
+                      groupValue: _radioValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      activeColor: PitComponents.expansionPanelRadioColor,
+                      onChanged: (checked) {
+                        _handlePressed(_isChildExpanded(index), index);
+                        _radioValue = _radioValue == childRadio.value
+                            ? null
+                            : childRadio.value;
+                      },
+                    ),
+                  ),
+                ],
+              )),
           onTap: () {
             _handlePressed(_isChildExpanded(index), index);
-            _radioValue = _radioValue == childRadio.value ? null : childRadio.value;
+            _radioValue =
+                _radioValue == childRadio.value ? null : childRadio.value;
           });
 
       items.add(

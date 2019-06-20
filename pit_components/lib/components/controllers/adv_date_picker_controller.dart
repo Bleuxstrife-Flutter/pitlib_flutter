@@ -9,6 +9,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: newInitialValue,
         dates: this.dates,
         markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
         hint: this.hint,
         label: this.label,
         error: this.error,
@@ -22,6 +24,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: this.initialValue,
         dates: newDates,
         markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
         hint: this.hint,
         label: this.label,
         error: this.error,
@@ -35,6 +39,38 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: this.initialValue,
         dates: this.dates,
         markedDates: newMarkedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
+        hint: this.hint,
+        label: this.label,
+        error: this.error,
+        enable: this.enable);
+  }
+
+  DateTime get minDate => value.minDate;
+
+  set minDate(DateTime newMinDate) {
+    value = value.copyWith(
+        initialValue: this.initialValue,
+        dates: this.dates,
+        markedDates: this.markedDates,
+        minDate: newMinDate,
+        maxDate: this.maxDate,
+        hint: this.hint,
+        label: this.label,
+        error: this.error,
+        enable: this.enable);
+  }
+
+  DateTime get maxDate => value.maxDate;
+
+  set maxDate(DateTime newMaxDate) {
+    value = value.copyWith(
+        initialValue: this.initialValue,
+        dates: this.dates,
+        markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: newMaxDate,
         hint: this.hint,
         label: this.label,
         error: this.error,
@@ -48,6 +84,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: this.initialValue,
         dates: this.dates,
         markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
         hint: newHint,
         label: this.label,
         error: this.error,
@@ -61,6 +99,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: this.initialValue,
         dates: this.dates,
         markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
         hint: this.hint,
         label: newLabel,
         error: this.error,
@@ -74,6 +114,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         initialValue: this.initialValue,
         dates: this.dates,
         markedDates: this.markedDates,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
         hint: this.hint,
         label: this.label,
         error: newError,
@@ -90,13 +132,17 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
         hint: this.hint,
         label: this.label,
         error: this.error,
-        enable: newEnable);
+        enable: newEnable,
+        minDate: this.minDate,
+        maxDate: this.maxDate);
   }
 
   AdvDatePickerController(
       {DateTime initialValue,
       List<DateTime> dates,
       List<MarkedDate> markedDates,
+        DateTime minDate,
+        DateTime maxDate,
       String hint,
       String label,
       String error,
@@ -104,6 +150,8 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
       : super(initialValue == null &&
                 dates == null &&
                 markedDates == null &&
+                minDate == null &&
+                maxDate == null &&
                 hint == null &&
                 label == null &&
                 error == null &&
@@ -113,13 +161,14 @@ class AdvDatePickerController extends ValueNotifier<AdvDatePickerEditingValue> {
                 initialValue: initialValue,
                 dates: dates,
                 markedDates: markedDates,
+                minDate: minDate,
+                maxDate: maxDate,
                 hint: hint,
                 label: label,
                 error: error,
                 enable: enable));
 
-  AdvDatePickerController.fromValue(AdvDatePickerEditingValue value)
-      : super(value ?? AdvDatePickerEditingValue.empty);
+  AdvDatePickerController.fromValue(AdvDatePickerEditingValue value) : super(value ?? AdvDatePickerEditingValue.empty);
 
   void clear() {
     value = AdvDatePickerEditingValue.empty;
@@ -132,12 +181,16 @@ class AdvDatePickerEditingValue {
       {this.initialValue,
       List<DateTime> dates = const [],
       List<MarkedDate> markedDates = const [],
+      DateTime minDate,
+      DateTime maxDate,
       String hint = '',
       String label = '',
       String error = '',
       bool enable = true})
       : this.dates = dates ?? const [],
         this.markedDates = markedDates ?? const [],
+        this.minDate = minDate,
+        this.maxDate = maxDate,
         this.hint = hint ?? '',
         this.label = label ?? '',
         this.error = error ?? '',
@@ -146,36 +199,43 @@ class AdvDatePickerEditingValue {
   final DateTime initialValue;
   final List<DateTime> dates;
   final List<MarkedDate> markedDates;
+  final DateTime minDate;
+  final DateTime maxDate;
   final String hint;
   final String label;
   final String error;
   final bool enable;
 
-  static const AdvDatePickerEditingValue empty =
-      const AdvDatePickerEditingValue();
+  static const AdvDatePickerEditingValue empty = const AdvDatePickerEditingValue();
 
   AdvDatePickerEditingValue copyWith(
       {DateTime initialValue,
       List<DateTime> dates,
       List<MarkedDate> markedDates,
+      DateTime minDate,
+      DateTime maxDate,
       String hint,
       String label,
       String error,
       bool enable}) {
     return new AdvDatePickerEditingValue(
-        initialValue: initialValue ?? this.initialValue,
-        dates: dates ?? this.dates,
-        markedDates: markedDates ?? this.markedDates,
-        hint: hint ?? this.hint,
-        label: label ?? this.label,
-        error: error ?? this.error,
-        enable: enable ?? this.enable);
+        initialValue: initialValue,
+        dates: dates,
+        markedDates: markedDates,
+        minDate: minDate,
+        maxDate: maxDate,
+        hint: hint,
+        label: label,
+        error: error,
+        enable: enable);
   }
 
   AdvDatePickerEditingValue.fromValue(AdvDatePickerEditingValue copy)
       : this.initialValue = copy.initialValue,
         this.dates = copy.dates,
         this.markedDates = copy.markedDates,
+        this.minDate = copy.minDate,
+        this.maxDate = copy.maxDate,
         this.hint = copy.hint,
         this.label = copy.label,
         this.error = copy.error,
@@ -185,6 +245,8 @@ class AdvDatePickerEditingValue {
   String toString() => '$runtimeType(initialValue: \u2524$initialValue\u251C, '
       'dates: \u2524$dates\u251C, '
       'markedDates: \u2524$markedDates\u251C, '
+      'minDate: \u2524$minDate\u251C, '
+      'maxDate: \u2524$maxDate\u251C, '
       'hint: \u2524$hint\u251C, '
       'label: \u2524$label\u251C, '
       'error: \u2524$error\u251C, '
@@ -198,6 +260,8 @@ class AdvDatePickerEditingValue {
     return typedOther.initialValue == initialValue &&
         typedOther.dates == dates &&
         typedOther.markedDates == markedDates &&
+        typedOther.minDate == minDate &&
+        typedOther.maxDate == maxDate &&
         typedOther.hint == hint &&
         typedOther.label == label &&
         typedOther.error == error &&
@@ -205,12 +269,6 @@ class AdvDatePickerEditingValue {
   }
 
   @override
-  int get hashCode => hashValues(
-      initialValue.hashCode,
-      dates.hashCode,
-      markedDates.hashCode,
-      hint.hashCode,
-      label.hashCode,
-      error.hashCode,
-      enable.hashCode);
+  int get hashCode => hashValues(initialValue.hashCode, dates.hashCode, markedDates.hashCode, minDate.hashCode, maxDate.hashCode,
+      hint.hashCode, label.hashCode, error.hashCode, enable.hashCode);
 }

@@ -4,6 +4,7 @@ import 'package:pit_components/components/adv_list_tile.dart';
 import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/mods/mod_checkbox.dart';
 import 'package:pit_components/pit_components.dart';
+import 'package:pit_components/consts/textstyles.dart' as ts;
 
 typedef RadioGroupCallback = void Function(String data);
 typedef ContentGetterCallback = Widget Function(String data);
@@ -19,24 +20,28 @@ class RadioGroupItem {
 class AdvRadioGroup extends StatefulWidget {
   final AdvRadioGroupController controller;
   final String title;
+  final TextStyle titleStyle;
   final RadioGroupCallback callback;
   final Axis direction;
   final double divider;
 
-  AdvRadioGroup(
-      {this.title,
-      String checkedValue,
-      List<RadioGroupItem> itemList,
-      AdvRadioGroupController controller,
-      this.callback,
-      Axis direction,
-      this.divider = 0.0})
+  AdvRadioGroup({this.title,
+    TextStyle titleStyle,
+    String checkedValue,
+    List<RadioGroupItem> itemList,
+    AdvRadioGroupController controller,
+    this.callback,
+    Axis direction,
+    this.divider = 0.0})
       : assert(
-            controller == null || (checkedValue == null && itemList == null)),
+  controller == null || (checkedValue == null && itemList == null)),
         this.direction = direction ?? Axis.horizontal,
         this.controller = controller ??
             new AdvRadioGroupController(
-                checkedValue: checkedValue ?? "", itemList: itemList ?? []);
+                checkedValue: checkedValue ?? "", itemList: itemList ?? []),
+        this.titleStyle = titleStyle ?? ts.fs16
+            .merge(ts.fw600)
+            .copyWith(color: PitComponents.radioButtonTitleColor);
 
   @override
   State<StatefulWidget> createState() => _AdvRadioGroupState();
@@ -47,25 +52,31 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
   void initState() {
     super.initState();
     widget.controller.addListener(() {
-      if (this.mounted) {
-        if (widget.callback != null)
-          widget.callback(widget.controller.checkedValue);
+      if (this.mounted)
         setState(() {});
-      }
+      if (widget.callback != null)
+        widget.callback(widget.controller.checkedValue);
     });
   }
 
   handleClick(data) {
     widget.controller.checkedValue = data;
-    if (widget.callback != null) widget.callback(data);
-    setState(() {
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     List<RadioGroupItem> stringChildren = widget.controller.itemList;
+    List<Widget> innerChildren = [];
     List<Widget> children = [];
+
+    if (widget.title != null) {
+      children.add(Container(
+        child: Text(
+          widget.title,
+          style: widget.titleStyle,
+        ),
+      ));
+    }
 
     stringChildren.forEach((radioGroupItem) {
       AdvListTile item = AdvListTile(
@@ -73,31 +84,38 @@ class _AdvRadioGroupState extends State<AdvRadioGroup> {
             handleClick(radioGroupItem.data);
           },
           padding: EdgeInsets.all(0.0),
-          start: RoundCheckbox(
-              activeColor: PitComponents.radioButtonColor,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onChanged: (b) {
-                handleClick(radioGroupItem.data);
-              },
-              value: radioGroupItem.data == widget.controller.checkedValue),
+          start: AbsorbPointer(
+            child: RoundCheckbox(
+                activeColor: PitComponents.radioButtonColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                onChanged: (b) {
+                  handleClick(radioGroupItem.data);
+                },
+                value: radioGroupItem.data == widget.controller.checkedValue),
+          ),
           end: radioGroupItem.data == widget.controller.checkedValue
               ? radioGroupItem.activeItem
               : radioGroupItem.inactiveItem);
 
-      children.add(item);
+      innerChildren.add(item);
     });
 
-    return widget.direction == Axis.horizontal
+    children.add(widget.direction == Axis.horizontal
         ? AdvRow(
-            divider: RowDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: children)
+        divider: RowDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: innerChildren)
         : AdvColumn(
-            divider: ColumnDivider(widget.divider),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: children);
+        divider: ColumnDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: innerChildren));
+
+    return AdvColumn(
+        divider: ColumnDivider(widget.divider),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children);
   }
 }
 
@@ -118,9 +136,9 @@ class AdvRadioGroupController extends ValueNotifier<AdvRadioGroupEditingValue> {
 
   AdvRadioGroupController({String checkedValue, List<RadioGroupItem> itemList})
       : super(checkedValue == null && itemList == null
-            ? AdvRadioGroupEditingValue.empty
-            : new AdvRadioGroupEditingValue(
-                checkedValue: checkedValue, itemList: itemList));
+      ? AdvRadioGroupEditingValue.empty
+      : new AdvRadioGroupEditingValue(
+      checkedValue: checkedValue, itemList: itemList));
 
   AdvRadioGroupController.fromValue(AdvRadioGroupEditingValue value)
       : super(value ?? AdvRadioGroupEditingValue.empty);
@@ -138,13 +156,12 @@ class AdvRadioGroupEditingValue {
   final List<RadioGroupItem> itemList;
 
   static const AdvRadioGroupEditingValue empty =
-      const AdvRadioGroupEditingValue();
+  const AdvRadioGroupEditingValue();
 
-  AdvRadioGroupEditingValue copyWith(
-      {String checkedValue, List<RadioGroupItem> itemList}) {
+  AdvRadioGroupEditingValue copyWith({String checkedValue, List<RadioGroupItem> itemList}) {
     return new AdvRadioGroupEditingValue(
-        checkedValue: checkedValue ?? this.checkedValue,
-        itemList: itemList ?? this.itemList);
+        checkedValue: checkedValue,
+        itemList: itemList);
   }
 
   AdvRadioGroupEditingValue.fromValue(AdvRadioGroupEditingValue copy)
