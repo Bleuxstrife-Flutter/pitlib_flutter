@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+* minor fix
+
 ## 0.4.1
 
 * Loading With Barrier now added processing content, it will be displayed if it's on processing, if it's not specified, will use content instead

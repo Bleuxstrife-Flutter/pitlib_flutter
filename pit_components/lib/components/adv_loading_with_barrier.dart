@@ -15,7 +15,7 @@ class AdvLoadingWithBarrier extends StatelessWidget {
       Color barrierColor,
       double width,
       double height,
-      double processingContent})
+        Widget processingContent})
       : this.barrierColor = barrierColor ?? PitComponents.loadingBarrierColor,
         this.width = width ?? PitComponents.loadingWidth,
         this.height = height ?? PitComponents.loadingHeight,
