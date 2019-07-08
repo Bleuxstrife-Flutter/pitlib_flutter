@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               AdvTextField(
                 label: "test nih",
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.emailAddress,
 //                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
 //                  NumberThousandFormatter()]
 //                controller: controller,

@@ -4,20 +4,30 @@ import 'package:pit_components/pit_components.dart';
 class AdvLoadingWithBarrier extends StatelessWidget {
   final Widget content;
   final bool isProcessing;
+  final Widget processingContent;
   final Color barrierColor;
   final double width;
   final double height;
 
   AdvLoadingWithBarrier(
-      {this.content, this.isProcessing, Color barrierColor, double width, double height})
+      {this.content,
+      this.isProcessing,
+      Color barrierColor,
+      double width,
+      double height,
+      double processingContent})
       : this.barrierColor = barrierColor ?? PitComponents.loadingBarrierColor,
         this.width = width ?? PitComponents.loadingWidth,
-        this.height = height ?? PitComponents.loadingHeight;
+        this.height = height ?? PitComponents.loadingHeight,
+        this.processingContent = processingContent ?? content;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[content, _AdvLoadingWrapper(isProcessing, barrierColor, width, height)],
+      children: <Widget>[
+        isProcessing ? processingContent : content,
+        _AdvLoadingWrapper(isProcessing, barrierColor, width, height)
+      ],
     );
   }
 }

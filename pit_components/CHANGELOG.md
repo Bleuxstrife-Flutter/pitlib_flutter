@@ -1,3 +1,9 @@
+## 0.4.1
+
+* Loading With Barrier now added processing content, it will be displayed if it's on processing, if it's not specified, will use content instead
+* Add Adv Text Field Clear widget to be suffix icon to clear text instantly
+* Add textCapitalization to Adv Text Field, with default TextCapitalization.sentences for all except TextInputType.emailAddress
+
 ## 0.4.0+1
 
 * Applying all 1.0.0 changes to 1.5.4
