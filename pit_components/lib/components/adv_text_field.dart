@@ -11,6 +11,8 @@ import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
+import 'adv_text_field_clear.dart';
+
 typedef void OnTextChanged(String oldValue, String newValue);
 typedef void OnIconTapped(IconType iconType);
 
@@ -49,6 +51,7 @@ class AdvTextField extends StatefulWidget {
   final TextAlign alignment;
   final bool obscureText;
   final bool numberAcknowledgeZero;
+  final bool enableAllClear;
 
   AdvTextField(
       {this.text,
@@ -83,7 +86,8 @@ class AdvTextField extends StatefulWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.onIconTapped,
-      bool numberAcknowledgeZero})
+      bool numberAcknowledgeZero,
+      this.enableAllClear})
       : assert(controller == null ||
             (text == null &&
                 hint == null &&
@@ -96,7 +100,7 @@ class AdvTextField extends StatefulWidget {
                 alignment == null &&
                 obscureText == null &&
                 prefixIcon == null &&
-                suffixIcon == null)),
+                (suffixIcon == null || enableAllClear == null))),
         this.maxLines = maxLines ?? 1,
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
@@ -123,6 +127,8 @@ class _AdvTextFieldState extends State<AdvTextField> {
 
   AdvTextFieldController _ctrl;
 
+  bool isTextEmpty = true;
+
   @override
   void initState() {
     super.initState();
@@ -140,7 +146,8 @@ class _AdvTextFieldState extends State<AdvTextField> {
             alignment: widget.alignment ?? TextAlign.left,
             obscureText: widget.obscureText ?? false,
             prefixIcon: widget.prefixIcon,
-            suffixIcon: widget.suffixIcon)
+            suffixIcon: widget.suffixIcon,
+            enableAllClear: widget.enableAllClear ?? false)
         : null;
 
     _effectiveController.addListener(_update);
@@ -275,13 +282,18 @@ class _AdvTextFieldState extends State<AdvTextField> {
       },
       child: _effectiveController.prefixIcon,
     );
-
-    Widget suffixRowChild = InkWell(
-      onTap: () {
-        widget.onIconTapped(IconType.suffix);
-      },
-      child: _effectiveController.suffixIcon,
-    );
+    Widget suffixRowChild = _effectiveController.enableAllClear
+        ? AdvTextFieldClear(() {
+            _effectiveController.removeListener(_update);
+            _effectiveController.addListener(_update);
+            _effectiveController.text = "";
+            isTextEmpty = true;
+          })
+        : InkWell(
+            onTap: () {
+              widget.onIconTapped(IconType.suffix);
+            },
+            child: _effectiveController.suffixIcon);
     TextCapitalization _textCapitalization = widget.textCapitalization == null
         ? widget.keyboardType == TextInputType.emailAddress
             ? TextCapitalization.none
@@ -309,6 +321,12 @@ class _AdvTextFieldState extends State<AdvTextField> {
               onChanged: (newText) {
                 _effectiveController.removeListener(_update);
 //                    if (widget.keyboardType == TextInputType.number && newText == "") newText = "0";
+
+                if (newText.length > 0) {
+                  isTextEmpty = false;
+                } else {
+                  isTextEmpty = true;
+                }
 
                 var newValue =
                     /*!widget.numberAcknowledgeZero && widget.keyboardType == TextInputType.number
@@ -360,7 +378,12 @@ class _AdvTextFieldState extends State<AdvTextField> {
     ));
 
     if (_effectiveController.prefixIcon != null) rowChildren.add(prefixRowChild);
+
     rowChildren.add(mainRowChild);
+
+
+    if (_effectiveController.enableAllClear && !isTextEmpty) rowChildren.add(suffixRowChild);
+
     if (_effectiveController.suffixIcon != null) rowChildren.add(suffixRowChild);
 
     Widget mainChild = Container(

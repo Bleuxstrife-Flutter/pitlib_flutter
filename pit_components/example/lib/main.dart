@@ -135,6 +135,11 @@ class _MyHomePageState extends State<MyHomePage> {
         maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
         );
+    AdvTextFieldController controller3 = AdvTextFieldController(
+      label: "Test nih",
+      enableAllClear: true,
+//      suffixIcon: Icon(Icons.add),
+    );
 //    AdvTextFieldController plainController = AdvTextFieldController(
 //        enable: false,
 //        hint: "Plain TextField Example",
@@ -190,8 +195,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
               AdvTextField(
-                label: "test nih",
                 keyboardType: TextInputType.emailAddress,
+                controller: controller3,
 //                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
 //                  NumberThousandFormatter()]
 //                controller: controller,
@@ -228,15 +233,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         controller: cc,
                       ),
                     ),
-                    Expanded(
-                      child: AdvIncrement(
-                        textStyle: ts.fs16,
-                        controller: incController,
-                        valueChangeListener: (before, after) {
-                          setState(() {});
-                        },
-                      ),
-                    ),
+//                    Expanded(
+//                      child: AdvIncrement(
+//                        textStyle: ts.fs16,
+//                        controller: incController,
+//                        valueChangeListener: (before, after) {
+//                          setState(() {});
+//                        },
+//                      ),
+//                    ),
                     Expanded(
                       child: AdvTextFieldWithButton(
                         textStyle: ts.fs16,

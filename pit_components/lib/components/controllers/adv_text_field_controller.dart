@@ -17,7 +17,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   String get hint => value.hint;
@@ -36,7 +37,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   String get label => value.label;
@@ -55,7 +57,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   String get error => value.error;
@@ -74,7 +77,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   int get maxLength => value.maxLength;
@@ -93,7 +97,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   bool get maxLengthEnforced => value.maxLengthEnforced;
@@ -112,7 +117,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   int get maxLines => value.maxLines;
@@ -131,7 +137,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   bool get enable => value.enable;
@@ -150,7 +157,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   TextAlign get alignment => value.alignment;
@@ -169,7 +177,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   bool get obscureText => value.obscureText;
@@ -188,7 +197,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: newObscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   Widget get prefixIcon => value.prefixIcon;
@@ -207,7 +217,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: this.obscureText,
         prefixIcon: newPrefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear);
   }
 
   Widget get suffixIcon => value.suffixIcon;
@@ -226,7 +237,9 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: newSuffixIcon,
-        selection: this.selection);
+        selection: this.selection,
+        enableAllClear: this.enableAllClear
+    );
   }
 
   TextSelection get selection => value.selection;
@@ -248,7 +261,28 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
         obscureText: obscureText,
         prefixIcon: this.prefixIcon,
         suffixIcon: this.suffixIcon,
-        selection: newSelection);
+        selection: newSelection,
+        enableAllClear: this.enableAllClear);
+  }
+
+  bool get enableAllClear => value.enableAllClear;
+
+  set enableAllClear (bool newEnableAllClear){
+    value = value.copyWith(
+        text: this.text,
+        hint: this.hint,
+        label: this.label,
+        error: this.error,
+        maxLength: this.maxLength,
+        maxLengthEnforced: this.maxLengthEnforced,
+        maxLines: this.maxLines,
+        enable: this.enable,
+        alignment: this.alignment,
+        obscureText: obscureText,
+        prefixIcon: this.prefixIcon,
+        suffixIcon: this.suffixIcon,
+        selection: this.selection,
+        enableAllClear: newEnableAllClear);
   }
 
   AdvTextFieldController(
@@ -264,8 +298,10 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
       bool obscureText,
       Widget prefixIcon,
       Widget suffixIcon,
-      TextSelection selection})
-      : super(text == null &&
+      TextSelection selection,
+      bool enableAllClear})
+      : assert(suffixIcon==null|| enableAllClear==null),
+        super(text == null &&
                 hint == null &&
                 label == null &&
                 error == null &&
@@ -277,7 +313,8 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 obscureText == null &&
                 prefixIcon == null &&
                 suffixIcon == null &&
-                selection == null
+                selection == null &&
+                enableAllClear == null
             ? AdvTextFieldEditingValue.empty
             : new AdvTextFieldEditingValue(
                 text: text,
@@ -294,6 +331,7 @@ class AdvTextFieldController extends ValueNotifier<AdvTextFieldEditingValue> {
                 suffixIcon: suffixIcon,
                 selection: selection =
                     const TextSelection.collapsed(offset: -1),
+                enableAllClear: enableAllClear ?? false
               ));
 
   AdvTextFieldController.fromValue(AdvTextFieldEditingValue value)
@@ -319,7 +357,8 @@ class AdvTextFieldEditingValue {
       this.obscureText = false,
       this.prefixIcon,
       this.suffixIcon,
-      this.selection = const TextSelection.collapsed(offset: -1)});
+      this.selection = const TextSelection.collapsed(offset: -1),
+      this.enableAllClear = false});
 
   final String text;
   final String hint;
@@ -334,6 +373,7 @@ class AdvTextFieldEditingValue {
   final Widget prefixIcon;
   final Widget suffixIcon;
   final TextSelection selection;
+  final bool enableAllClear;
 
   static const AdvTextFieldEditingValue empty =
       const AdvTextFieldEditingValue();
@@ -351,7 +391,8 @@ class AdvTextFieldEditingValue {
       bool obscureText,
       Widget prefixIcon,
       Widget suffixIcon,
-      TextSelection selection}) {
+      TextSelection selection,
+      bool enableAllClear}) {
     return new AdvTextFieldEditingValue(
         text: text,
         hint: hint,
@@ -365,7 +406,8 @@ class AdvTextFieldEditingValue {
         obscureText: obscureText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        selection: selection);
+        selection: selection,
+        enableAllClear: enableAllClear);
   }
 
   AdvTextFieldEditingValue.fromValue(AdvTextFieldEditingValue copy)
@@ -381,11 +423,12 @@ class AdvTextFieldEditingValue {
         this.obscureText = copy.obscureText,
         this.prefixIcon = copy.prefixIcon,
         this.suffixIcon = copy.suffixIcon,
-        this.selection = copy.selection;
+        this.selection = copy.selection,
+        this.enableAllClear = copy.enableAllClear;
 
   @override
   String toString() =>
-      '$runtimeType(text: \u2524$text\u251C, \u2524$hint\u251C, \u2524$label\u251C, \u2524$error\u251C, maxLength: $maxLength, maxLengthEnforced: $maxLengthEnforced, maxLines: $maxLines, enable: $enable, alignment: $alignment, obscureText: $obscureText, prefixIcon: $prefixIcon, suffixIcon: $suffixIcon, selection: $selection)';
+      '$runtimeType(text: \u2524$text\u251C, \u2524$hint\u251C, \u2524$label\u251C, \u2524$error\u251C, maxLength: $maxLength, maxLengthEnforced: $maxLengthEnforced, maxLines: $maxLines, enable: $enable, alignment: $alignment, obscureText: $obscureText, prefixIcon: $prefixIcon, suffixIcon: $suffixIcon, selection: $selection, enableAllClear: $enableAllClear)';
 
   @override
   bool operator ==(dynamic other) {
@@ -404,7 +447,8 @@ class AdvTextFieldEditingValue {
         typedOther.obscureText == obscureText &&
         typedOther.prefixIcon == prefixIcon &&
         typedOther.suffixIcon == suffixIcon &&
-        typedOther.selection == selection;
+        typedOther.selection == selection &&
+        typedOther.enableAllClear == enableAllClear;
   }
 
   @override
@@ -421,5 +465,6 @@ class AdvTextFieldEditingValue {
       obscureText.hashCode,
       prefixIcon.hashCode,
       suffixIcon.hashCode,
-      selection.hashCode);
+      selection.hashCode,
+      enableAllClear.hashCode);
 }
