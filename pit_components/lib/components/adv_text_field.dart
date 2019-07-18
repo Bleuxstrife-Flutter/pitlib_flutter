@@ -381,10 +381,7 @@ class _AdvTextFieldState extends State<AdvTextField> {
 
     rowChildren.add(mainRowChild);
 
-
-    if (_effectiveController.enableAllClear && !isTextEmpty) rowChildren.add(suffixRowChild);
-
-    if (_effectiveController.suffixIcon != null) rowChildren.add(suffixRowChild);
+    if (_effectiveController.suffixIcon != null||_effectiveController.enableAllClear && !isTextEmpty) rowChildren.add(suffixRowChild);
 
     Widget mainChild = Container(
         width: width,
