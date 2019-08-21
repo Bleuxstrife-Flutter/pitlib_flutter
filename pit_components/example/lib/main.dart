@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               AdvTextField(
                 label: "test nih",
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.emailAddress,
 //                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
 //                  NumberThousandFormatter()]
 //                controller: controller,
@@ -272,8 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
 
-                  Utils.pickFromIncrement(context,
-                      controller: incController,
+                  Utils.pickFromIncrement(context, controller: incController,
                       infoMessageGenerator: (counter) {
                         return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
                       },

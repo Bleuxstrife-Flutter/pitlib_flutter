@@ -9,11 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pit_components/mods/mod_editable_text.dart';
 import 'package:pit_components/mods/mod_input_decorator.dart';
 
-export 'package:flutter/services.dart'
-    show TextInputType, TextInputAction, TextCapitalization;
+export 'package:flutter/services.dart' show TextInputType, TextInputAction, TextCapitalization;
 
 /// A material design text field.
 ///
@@ -126,8 +124,8 @@ class ModTextField extends StatefulWidget {
         assert(scrollPadding != null),
         assert(maxLines == null || maxLines > 0),
         assert(maxLength == null || maxLength > 0),
-        keyboardType = keyboardType ??
-            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+        keyboardType =
+            keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         super(key: key);
 
   /// Controls the text being edited.
@@ -351,48 +349,36 @@ class ModTextField extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>(
-        'controller', controller,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
-    properties
-        .add(DiagnosticsProperty<ModInputDecoration>('decoration', decoration));
-    properties.add(DiagnosticsProperty<TextInputType>(
-        'keyboardType', keyboardType,
+    properties.add(
+        DiagnosticsProperty<TextEditingController>('controller', controller, defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
+    properties.add(DiagnosticsProperty<ModInputDecoration>('decoration', decoration));
+    properties.add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType,
         defaultValue: TextInputType.text));
-    properties.add(
-        DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText,
-        defaultValue: false));
-    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect,
-        defaultValue: false));
+    properties.add(DiagnosticsProperty<TextStyle>('style', style, defaultValue: null));
+    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText, defaultValue: false));
+    properties.add(DiagnosticsProperty<bool>('autocorrect', autocorrect, defaultValue: false));
     properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));
     properties.add(IntProperty('maxLength', maxLength, defaultValue: null));
-    properties.add(FlagProperty('maxLengthEnforced',
-        value: maxLengthEnforced, ifTrue: 'max length enforced'));
+    properties.add(
+        FlagProperty('maxLengthEnforced', value: maxLengthEnforced, ifTrue: 'max length enforced'));
   }
 }
 
-class _ModTextFieldState extends State<ModTextField>
-    with AutomaticKeepAliveClientMixin {
-  final GlobalKey<ModEditableTextState> _editableTextKey =
-      GlobalKey<ModEditableTextState>();
+class _ModTextFieldState extends State<ModTextField> with AutomaticKeepAliveClientMixin {
+  final GlobalKey<EditableTextState> _editableTextKey = GlobalKey<EditableTextState>();
 
   Set<InteractiveInkFeature> _splashes;
   InteractiveInkFeature _currentSplash;
 
   TextEditingController _controller;
 
-  TextEditingController get _effectiveController =>
-      widget.controller ?? _controller;
+  TextEditingController get _effectiveController => widget.controller ?? _controller;
 
   FocusNode _focusNode;
 
-  FocusNode get _effectiveFocusNode =>
-      widget.focusNode ?? (_focusNode ??= FocusNode());
+  FocusNode get _effectiveFocusNode => widget.focusNode ?? (_focusNode ??= FocusNode());
 
   bool get needsCounter =>
       widget.maxLength != null &&
@@ -401,23 +387,19 @@ class _ModTextFieldState extends State<ModTextField>
       widget.needsCounter;
 
   ModInputDecoration _getEffectiveDecoration() {
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
-    final ModInputDecoration effectiveDecoration =
-        (widget.decoration ?? const ModInputDecoration())
-            .applyDefaults(Theme.of(context).inputDecorationTheme)
-            .copyWith(
-              enabled: widget.enabled,
-            );
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final ModInputDecoration effectiveDecoration = (widget.decoration ?? const ModInputDecoration())
+        .applyDefaults(Theme.of(context).inputDecorationTheme)
+        .copyWith(
+          enabled: widget.enabled,
+        );
 
     if (!needsCounter) return effectiveDecoration;
 
     final int currentLength = _effectiveController.value.text.runes.length;
     final String counterText = '$currentLength/${widget.maxLength}';
-    final int remaining =
-        (widget.maxLength - currentLength).clamp(0, widget.maxLength);
-    final String semanticCounterText =
-        localizations.remainingTextFieldCharacterCount(remaining);
+    final int remaining = (widget.maxLength - currentLength).clamp(0, widget.maxLength);
+    final String semanticCounterText = localizations.remainingTextFieldCharacterCount(remaining);
     if (_effectiveController.value.text.runes.length > widget.maxLength) {
       final ThemeData themeData = Theme.of(context);
       return effectiveDecoration.copyWith(
@@ -446,11 +428,9 @@ class _ModTextFieldState extends State<ModTextField>
     super.didUpdateWidget(oldWidget);
     if (widget.controller == null && oldWidget.controller != null)
       _controller = TextEditingController.fromValue(oldWidget.controller.value);
-    else if (widget.controller != null && oldWidget.controller == null)
-      _controller = null;
+    else if (widget.controller != null && oldWidget.controller == null) _controller = null;
     final bool isEnabled = widget.enabled ?? widget.decoration?.enabled ?? true;
-    final bool wasEnabled =
-        oldWidget.enabled ?? oldWidget.decoration?.enabled ?? true;
+    final bool wasEnabled = oldWidget.enabled ?? oldWidget.decoration?.enabled ?? true;
     if (wasEnabled && !isEnabled) {
       _effectiveFocusNode.unfocus();
     }
@@ -466,18 +446,15 @@ class _ModTextFieldState extends State<ModTextField>
     _editableTextKey.currentState?.requestKeyboard();
   }
 
-  void _handleSelectionChanged(
-      TextSelection selection, SelectionChangedCause cause) {
-    if (cause == SelectionChangedCause.longPress)
-      Feedback.forLongPress(context);
+  void _handleSelectionChanged(TextSelection selection, SelectionChangedCause cause) {
+    if (cause == SelectionChangedCause.longPress) Feedback.forLongPress(context);
   }
 
   InteractiveInkFeature _createInkFeature(TapDownDetails details) {
     final MaterialInkController inkController = Material.of(context);
     final BuildContext editableContext = _editableTextKey.currentContext;
     final RenderBox referenceBox =
-        ModInputDecorator.containerOf(editableContext) ??
-            editableContext.findRenderObject();
+        ModInputDecorator.containerOf(editableContext) ?? editableContext.findRenderObject();
     final Offset position = referenceBox.globalToLocal(details.globalPosition);
     final Color color = Theme.of(context).splashColor;
 
@@ -506,8 +483,7 @@ class _ModTextFieldState extends State<ModTextField>
     return splash;
   }
 
-  RenderEditable get _renderEditable =>
-      _editableTextKey.currentState.renderEditable;
+  RenderEditable get _renderEditable => _editableTextKey.currentState.renderEditable;
 
   void _handleTapDown(TapDownDetails details) {
     _renderEditable.handleTapDown(details);
@@ -575,17 +551,15 @@ class _ModTextFieldState extends State<ModTextField>
         widget.keyboardAppearance ?? themeData.primaryColorBrightness;
     final TextEditingController controller = _effectiveController;
     final FocusNode focusNode = _effectiveFocusNode;
-    final List<TextInputFormatter> formatters =
-        widget.inputFormatters ?? <TextInputFormatter>[];
+    final List<TextInputFormatter> formatters = widget.inputFormatters ?? <TextInputFormatter>[];
     if (widget.maxLength != null && widget.maxLengthEnforced)
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));
 
     Widget child = RepaintBoundary(
         child: Container(
-      constraints: widget.maxHeight == null
-          ? BoxConstraints()
-          : BoxConstraints(maxHeight: widget.maxHeight),
-      child: ModEditableText(
+      constraints:
+          widget.maxHeight == null ? BoxConstraints() : BoxConstraints(maxHeight: widget.maxHeight),
+      child: EditableText(
         key: _editableTextKey,
         controller: controller,
         focusNode: focusNode,
@@ -613,6 +587,7 @@ class _ModTextFieldState extends State<ModTextField>
         cursorColor: widget.cursorColor ?? Theme.of(context).cursorColor,
         scrollPadding: widget.scrollPadding,
         keyboardAppearance: keyboardAppearance,
+        backgroundCursorColor: CupertinoColors.inactiveGray,
       ),
     ));
 
