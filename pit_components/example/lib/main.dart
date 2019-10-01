@@ -30,8 +30,6 @@ import 'package:pit_components/components/controllers/adv_increment_controller.d
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/mods/mod_checkbox.dart';
-import 'package:pit_components/components/extras/date_formatter.dart';
-import 'package:pit_components/components/extras/number_thousand_formatter.dart';
 import 'package:pit_components/utils/utils.dart';
 
 const String loremIpsum =
@@ -180,9 +178,58 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Color(0xffffedd8),
           child: AdvColumn(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            onlyInner: false,
             divider: ColumnDivider(16.0),
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  color: Colors.amber,
+                  width: 117.0,
+                  height: 50.0,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  color: Colors.amber,
+                  width: 59.0,
+                  child: Text(
+                    "1234",
+                    style: ts.fs16,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: AdvTextField(
+                  measureText: "@@@@@",
+                ),
+              ),
+              AdvIncrement(
+                textStyle: ts.fs16,
+                controller: incController,
+                valueChangeListener: (before, after) {
+                  setState(() {});
+                },
+              ),
+              AdvButton(
+                "try dialog",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          child: AdvColumn(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Test 1"),
+                              Text("Test 2"),
+                            ],
+                          ),
+                        );
+                      });
+                },
+              ),
               AnimatedCrossFade(
                 duration: const Duration(seconds: 1),
                 firstChild: const FlutterLogo(style: FlutterLogoStyle.horizontal, size: 100.0),
@@ -195,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
 //                  NumberThousandFormatter()]
 //                controller: controller,
-                  ),
+              ),
 //              PositionedTransition(rect: null, child: null,),
               AdvTextFieldPlain(
                 controller: controller,
@@ -274,9 +321,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   Utils.pickFromIncrement(context, controller: incController,
                       infoMessageGenerator: (counter) {
-                        return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
-                      },
-                  callback: (newV, n) {
+                    return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
+                  }, callback: (newV, n) {
                     incController.error = "error aja";
                     return false;
                   });
