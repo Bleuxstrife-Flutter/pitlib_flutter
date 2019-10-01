@@ -30,43 +30,43 @@ class AdvIncrement extends StatefulWidget {
   final Color borderColor;
   final Color errorColor;
 
-  AdvIncrement({int counter,
-    String format,
-    String hint,
-    String label,
-    String error,
-    int minCounter,
-    int maxCounter,
-    int maxLines,
-    bool enable,
-    TextAlign alignment,
-    String measureText,
-    TextStyle textStyle,
-    EdgeInsets padding,
-    EdgeInsets margin,
-    this.valueChangeListener,
-    AdvIncrementController controller,
-    int maxLineExpand,
-    Color hintColor,
-    Color labelColor,
-    Color backgroundColor,
-    Color borderColor,
-    Color errorColor})
+  AdvIncrement(
+      {int counter,
+      String format,
+      String hint,
+      String label,
+      String error,
+      int minCounter,
+      int maxCounter,
+      int maxLines,
+      bool enable,
+      TextAlign alignment,
+      String measureText,
+      TextStyle textStyle,
+      EdgeInsets padding,
+      EdgeInsets margin,
+      this.valueChangeListener,
+      AdvIncrementController controller,
+      int maxLineExpand,
+      Color hintColor,
+      Color labelColor,
+      Color backgroundColor,
+      Color borderColor,
+      Color errorColor})
       : assert(controller == null ||
-      (counter == null &&
-          format == null &&
-          hint == null &&
-          label == null &&
-          error == null &&
-          minCounter == null &&
-          maxCounter == null &&
-          maxLines == null &&
-          enable == null &&
-          alignment == null)),
+            (counter == null &&
+                format == null &&
+                hint == null &&
+                label == null &&
+                error == null &&
+                minCounter == null &&
+                maxCounter == null &&
+                maxLines == null &&
+                enable == null &&
+                alignment == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
-        this.backgroundColor =
-            backgroundColor ?? PitComponents.textFieldBackgroundColor,
+        this.backgroundColor = backgroundColor ?? PitComponents.textFieldBackgroundColor,
         this.borderColor = borderColor ?? PitComponents.textFieldBorderColor,
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
         this.controller = controller ??
@@ -81,8 +81,8 @@ class AdvIncrement extends StatefulWidget {
                 maxLines: maxLines ?? 1,
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.center),
-        this.measureTextSpan = TextSpan(
-            text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
+        this.measureTextSpan =
+            TextSpan(text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.padding = padding ?? new EdgeInsets.all(0.0),
         this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 4;
@@ -91,8 +91,7 @@ class AdvIncrement extends StatefulWidget {
   State createState() => new _AdvIncrementState();
 }
 
-class _AdvIncrementState extends State<AdvIncrement>
-    with SingleTickerProviderStateMixin {
+class _AdvIncrementState extends State<AdvIncrement> with SingleTickerProviderStateMixin {
   TextEditingController _textEdittingCtrl = new TextEditingController();
   int initialMaxLines;
 
@@ -120,8 +119,8 @@ class _AdvIncrementState extends State<AdvIncrement>
     _textEdittingCtrl.text = nf.format(widget.controller.counter ?? 0);
 
     if (cursorPos.start > _textEdittingCtrl.text.length) {
-      cursorPos = new TextSelection.fromPosition(
-          new TextPosition(offset: _textEdittingCtrl.text.length));
+      cursorPos =
+          new TextSelection.fromPosition(new TextPosition(offset: _textEdittingCtrl.text.length));
     }
     _textEdittingCtrl.selection = cursorPos;
   }
@@ -159,8 +158,8 @@ class _AdvIncrementState extends State<AdvIncrement>
         : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
-        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-        PitComponents.lerpColor, 0.6);
+        : Color.lerp(
+            widget.measureTextSpan.style.color ?? Colors.black, PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
@@ -168,23 +167,23 @@ class _AdvIncrementState extends State<AdvIncrement>
     double _iconSize = 24.0 / 16.0 * widget.measureTextSpan.style.fontSize;
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
 
-    var tp = new TextPainter(
-        text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
     tp.layout();
 
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
-        _defaultWidthAddition +
-        (_defaultInnerPadding * 2) +
-        (widget.padding.horizontal);
+            ((_iconSize + _paddingSize + 2) * 2) +
+            _defaultWidthAddition +
+            (_defaultInnerPadding * 2) +
+            (widget.padding.horizontal);
 
-    TextSpan currentTextSpan = TextSpan(
-        text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
+    TextSpan currentTextSpan =
+        TextSpan(text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
 
-    var tp2 = new TextPainter(
-        text: currentTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp2 = new TextPainter(text: currentTextSpan, textDirection: ui.TextDirection.ltr);
+
     tp2.layout(maxWidth: width - _iconSize - (_paddingSize * 2));
 
     if (widget.controller.label != null && widget.controller.label != "") {
@@ -213,8 +212,7 @@ class _AdvIncrementState extends State<AdvIncrement>
           child: InkWell(
               onTap: () {
                 widget.controller.error = "";
-                if (widget.controller.minCounter == widget.controller.counter)
-                  return;
+                if (widget.controller.minCounter == widget.controller.counter) return;
                 widget.controller.counter--;
                 if (widget.valueChangeListener != null)
                   widget.valueChangeListener(
@@ -239,9 +237,7 @@ class _AdvIncrementState extends State<AdvIncrement>
         ),
         child: Theme(
           data: new ThemeData(
-              cursorColor: Theme
-                  .of(context)
-                  .cursorColor,
+              cursorColor: Theme.of(context).cursorColor,
               accentColor: _backgroundColor,
               hintColor: widget.borderColor,
               primaryColor: widget.borderColor),
@@ -258,7 +254,8 @@ class _AdvIncrementState extends State<AdvIncrement>
               int newCounter = newValue.isEmpty ? 0 : int.tryParse(newValue) ?? oldCounter;
 
               if (widget.controller.maxCounter != null && widget.controller.maxCounter != null) {
-                newCounter = newCounter.clamp(widget.controller.minCounter, widget.controller.maxCounter);
+                newCounter =
+                    newCounter.clamp(widget.controller.minCounter, widget.controller.maxCounter);
               }
 
               widget.controller.counter = newCounter;
@@ -275,16 +272,15 @@ class _AdvIncrementState extends State<AdvIncrement>
 //                border: InputBorder.none,
                 border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
-                      const Radius.circular(4.0),
-                    )),
+                  const Radius.circular(4.0),
+                )),
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: widget.borderColor),
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(4.0),
                     )),
                 contentPadding: new EdgeInsets.symmetric(
-                    vertical: _paddingSize + 1.0,
-                    horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
+                    vertical: _paddingSize + 1.0, horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
 //                contentPadding: new EdgeInsets.only(
 //                    left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
                 hintText: widget.controller.hint,
@@ -311,8 +307,7 @@ class _AdvIncrementState extends State<AdvIncrement>
           child: InkWell(
               onTap: () {
                 widget.controller.error = "";
-                if (widget.controller.maxCounter == widget.controller.counter)
-                  return;
+                if (widget.controller.maxCounter == widget.controller.counter) return;
                 widget.controller.counter++;
                 if (widget.valueChangeListener != null)
                   widget.valueChangeListener(
@@ -331,8 +326,7 @@ class _AdvIncrementState extends State<AdvIncrement>
     ]));
 
     if (widget.controller.error != null && widget.controller.error != "") {
-      TextStyle style = ts.fs11
-          .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
+      TextStyle style = ts.fs11.copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 
       children.add(Container(
           width: maxWidth,

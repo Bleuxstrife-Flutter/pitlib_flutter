@@ -4,7 +4,6 @@ class AdvRow extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
   final Widget divider;
-  final bool onlyInner;
   final Key key;
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
@@ -17,8 +16,7 @@ class AdvRow extends StatelessWidget {
   AdvRow({
     this.padding,
     this.margin,
-    Widget divider,
-    bool onlyInner,
+    this.divider,
     Key key,
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
     MainAxisSize mainAxisSize = MainAxisSize.max,
@@ -27,9 +25,7 @@ class AdvRow extends StatelessWidget {
     VerticalDirection verticalDirection = VerticalDirection.down,
     TextBaseline textBaseline,
     List<Widget> children = const <Widget>[],
-  })  : this.divider = divider ?? Container(),
-        this.onlyInner = onlyInner ?? true,
-        this.key = key,
+  })  : this.key = key,
         this.mainAxisAlignment = mainAxisAlignment,
         this.mainAxisSize = mainAxisSize,
         this.crossAxisAlignment = crossAxisAlignment,
@@ -62,17 +58,14 @@ class AdvRow extends StatelessWidget {
     if (children.length == 0) return [];
     List<Widget> newChildren = [];
 
-    if (!onlyInner) newChildren.add(divider);
-
     for (Widget child in children) {
       if (child != null) {
         newChildren.add(child);
-        newChildren.add(divider);
+        if (divider != null) newChildren.add(divider);
       }
     }
 
-    if (onlyInner && newChildren.length > 0)
-      newChildren.removeAt(newChildren.length - 1);
+    if (newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }
