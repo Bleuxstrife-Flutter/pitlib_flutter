@@ -157,13 +157,13 @@ class _MyHomePageState extends State<MyHomePage> {
               inactiveItem: _buildRadioButton(Icon(inactiveIconData), value));
         }).toList());
 
-    AdvRangeSliderController sliderController = AdvRangeSliderController(
-        lowerValue: _lowerValue,
-        upperValue: _upperValue,
-        min: 0.0,
-        max: 100.0,
-        divisions: 10,
-        hint: "Advanced Slider");
+//    AdvRangeSliderController sliderController = AdvRangeSliderController(
+//        lowerValue: _lowerValue,
+//        upperValue: _upperValue,
+//        min: 0.0,
+//        max: 100.0,
+//        divisions: 10,
+//        hint: "Advanced Slider");
 
     AdvGroupCheckController groupCheckController = AdvGroupCheckController(
         checkedValue: "",
@@ -476,15 +476,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 divider: 8.0,
                 callback: _handleRadioValueChange,
               ),
-              AdvRangeSlider(
-                controller: sliderController,
-                onChanged: (low, high) {
-                  setState(() {
-                    _lowerValue = low;
-                    _upperValue = high;
-                  });
-                },
-              ),
+//              AdvRangeSlider(
+//                controller: sliderController,
+//                onChanged: (low, high) {
+//                  setState(() {
+//                    _lowerValue = low;
+//                    _upperValue = high;
+//                  });
+//                },
+//              ),
               Container(
                   child: AdvImagePreview(
                     imageProviders: [
