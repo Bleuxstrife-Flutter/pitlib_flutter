@@ -65,7 +65,7 @@ class AdvRow extends StatelessWidget {
       }
     }
 
-    if (newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
+    if (newChildren.length > 0 && divider != null) newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }
