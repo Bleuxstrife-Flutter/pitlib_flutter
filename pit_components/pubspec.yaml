@@ -1,6 +1,6 @@
 name: pit_components
 description: Our customized material components. (Padimas Inovasi Teknologi)
-version: 0.4.2
+version: 0.5.0
 author: Richardo <richardothayeb@gmail.com>
 homepage: https://nemob.id
 
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
 
   intl: ^0.15.7
-  flutter_range_slider: "^1.0.1"
-  photo_view: ^0.3.0
+#  flutter_range_slider: "^1.0.1"
+  photo_view: ^0.5.0
 
 dev_dependencies:
   flutter_test:
