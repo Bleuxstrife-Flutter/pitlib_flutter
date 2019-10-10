@@ -1,3 +1,7 @@
+## 0.5.0+1
+
+* Fix error on column and row
+
 ## 0.5.0
 
 * [Breaking change] try to upgrade to 1.9.1
