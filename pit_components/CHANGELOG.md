@@ -1,3 +1,20 @@
+## 0.5.0+1
+
+* Fix error on column and row
+
+## 0.5.0
+
+* [Breaking change] try to upgrade to 1.9.1
+
+## 0.4.3
+
+* Fix Adv Row / Column / List for its divider that causes expanded width
+* Fix AdvIncrement's measureText not working
+
+## 0.4.2
+
+* AdvLoadingWithBarrier now need builder arguments instead of widget for its contents
+
 ## 0.4.1+1
 
 * minor fix

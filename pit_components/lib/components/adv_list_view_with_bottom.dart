@@ -5,21 +5,17 @@ import 'package:pit_components/components/adv_visibility.dart';
 class AdvListViewWithBottom extends StatefulWidget {
   final List<Widget> children;
   final Widget divider;
-  final bool onlyInner;
   final Widget footerItem;
 
-  AdvListViewWithBottom(
-      {List<Widget> children,
-      Widget divider,
-      this.onlyInner = true,
-      Widget footerItem})
-      : this.divider = divider ?? Container(),
-        this.children = children ?? [],
-        this.footerItem = footerItem ?? Container();
+  AdvListViewWithBottom({
+    List<Widget> children,
+    this.divider,
+    Widget footerItem,
+  })  : this.children = children ?? [],
+        this.footerItem = footerItem ?? Container(width: 0.0, height: 0.0);
 
   @override
-  _AdvListViewWithBottomState createState() =>
-      new _AdvListViewWithBottomState();
+  _AdvListViewWithBottomState createState() => new _AdvListViewWithBottomState();
 }
 
 class _AdvListViewWithBottomState extends State<AdvListViewWithBottom>
@@ -34,42 +30,34 @@ class _AdvListViewWithBottomState extends State<AdvListViewWithBottom>
   initState() {
     super.initState();
     _controller = AnimationController(
-        duration: Duration(milliseconds: 300),
-        value: (true) ? 1.0 : 0.0,
-        vsync: this);
+        duration: Duration(milliseconds: 300), value: (true) ? 1.0 : 0.0, vsync: this);
 
     _hideButtonController = new ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _hideButtonController
-        .position.isScrollingNotifier
-        .addListener(_onScrollListener));
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _hideButtonController.position.isScrollingNotifier.addListener(_onScrollListener));
     _hideButtonController.addListener(() {
       double currentScroll = _hideButtonController.position.pixels;
 
       double factor = (currentScroll - _lastScrollPosition) / _childHeight;
-      _controller.value =
-          _controller.value - factor < 0.0 ? 0.0 : _controller.value - factor;
+      _controller.value = _controller.value - factor < 0.0 ? 0.0 : _controller.value - factor;
 
       _lastScrollPosition = currentScroll;
     });
   }
 
   _onScrollListener() {
-    if (_controller.isAnimating ||
-        _controller.status == AnimationStatus.completed) return;
+    if (_controller.isAnimating || _controller.status == AnimationStatus.completed) return;
 
-    if (_hideButtonController.position.userScrollDirection ==
-        ScrollDirection.reverse) {
+    if (_hideButtonController.position.userScrollDirection == ScrollDirection.reverse) {
       _controller.fling(velocity: -1.0);
-    } else if (_hideButtonController.position.userScrollDirection ==
-        ScrollDirection.forward) {
+    } else if (_hideButtonController.position.userScrollDirection == ScrollDirection.forward) {
       _controller.fling(velocity: 1.0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
       final panelDetailsPosition = Tween<Offset>(
         begin: Offset(0.0, 1.0),
         end: Offset(0.0, 0.0),
@@ -108,18 +96,14 @@ class _AdvListViewWithBottomState extends State<AdvListViewWithBottom>
     if (widget.children.length == 0) return [];
     List<Widget> newChildren = [];
 
-    if (!widget.onlyInner) newChildren.add(widget.divider);
-
     for (Widget child in widget.children) {
       newChildren.add(child);
-      newChildren.add(widget.divider);
+      if (widget.divider != null) newChildren.add(widget.divider);
     }
 
-    if (widget.onlyInner && newChildren.length > 0)
-      newChildren.removeAt(newChildren.length - 1);
+    if (newChildren.length > 0) newChildren.removeAt(newChildren.length - 1);
 
-    newChildren.add(AdvVisibility(
-        visibility: VisibilityFlag.invisible, child: widget.footerItem));
+    newChildren.add(AdvVisibility(visibility: VisibilityFlag.invisible, child: widget.footerItem));
 
     return newChildren;
   }
@@ -135,8 +119,7 @@ class HeightReporter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => this.callback(context.size.height));
+    WidgetsBinding.instance.addPostFrameCallback((_) => this.callback(context.size.height));
 
     return new Container(child: child);
   }

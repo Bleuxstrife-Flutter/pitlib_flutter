@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pit_components/pit_components.dart';
 
 class AdvLoadingWithBarrier extends StatelessWidget {
-  final Widget content;
+  final WidgetBuilder content;
   final bool isProcessing;
-  final Widget processingContent;
+  final WidgetBuilder processingContent;
   final Color barrierColor;
   final double width;
   final double height;
@@ -15,7 +15,7 @@ class AdvLoadingWithBarrier extends StatelessWidget {
       Color barrierColor,
       double width,
       double height,
-        Widget processingContent})
+      WidgetBuilder processingContent})
       : this.barrierColor = barrierColor ?? PitComponents.loadingBarrierColor,
         this.width = width ?? PitComponents.loadingWidth,
         this.height = height ?? PitComponents.loadingHeight,
@@ -25,7 +25,7 @@ class AdvLoadingWithBarrier extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        isProcessing ? processingContent : content,
+        isProcessing ? processingContent(context) : content(context),
         _AdvLoadingWrapper(isProcessing, barrierColor, width, height)
       ],
     );
