@@ -1,3 +1,7 @@
+## 0.5.0+2
+
+* AdvIncrement : When textEdit is disable textColor and background will not change
+
 ## 0.5.0+1
 
 * Fix error on column and row
