@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_expansion_panel.dart';
+import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/components/adv_text_field.dart';
 import 'package:pit_components/components/adv_text_with_number.dart';
 import 'package:pit_components/components/adv_visibility.dart';
@@ -13,18 +14,20 @@ import 'package:pit_components/components/controllers/adv_text_field_controller.
 import 'package:pit_components/components/extras/date_formatter.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
 import 'package:pit_components/pit_components.dart';
+import 'package:pit_components/utils/utils.dart';
+import 'package:pit_payment/localization.dart';
 
 //class PitPayment {
 //
 
 //}
 
-typedef PaymentBodyBuilder = Widget Function(PaymentMethodItem item);
+typedef PaymentBodyBuilder = Widget Function(BuildContext context);
 typedef ResetCaller = void Function();
-typedef PaymentCallback = void Function(PaymentType paymentType,
-    {dynamic result});
+typedef PaymentCallback = void Function(PaymentType paymentType, {dynamic result});
 
 enum PaymentType {
+  bankTransfer,
   creditCard,
   permataVirtualAccount,
   mandiriClickPay,
@@ -33,6 +36,7 @@ enum PaymentType {
 
 const Map<PaymentType, String> displayValues = {
   PaymentType.creditCard: "Credit Card",
+  PaymentType.bankTransfer: "Bank Transfer",
   PaymentType.permataVirtualAccount: "Permata Virtual Account",
   PaymentType.mandiriClickPay: "Mandiri Click Pay",
   PaymentType.mandiriBillPay: "Mandiri Bill Payment",
@@ -57,7 +61,7 @@ class PaymentMethodItem {
     };
   }
 
-  Widget build() => builder != null ? builder(this) : () {};
+  Widget build(BuildContext context) => builder != null ? builder(context) : () {};
 
   void reset() => resetCaller != null ? resetCaller() : () {};
 }
@@ -68,12 +72,19 @@ class PitPayment extends StatefulWidget {
   final num price;
   final PaymentCallback paymentCallback;
   final EdgeInsetsGeometry padding;
+  final Locale locale;
 
   static Color expansionPanelRadioColor = Colors.blue;
   static Color expansionPanelBackgroundColor = Color(0xffF4FAFE);
   static Color expansionPanelButtonColor = Colors.blue;
+  static String bcaAccountNumber = "123 456 7890";
+  static String bcaAccountName = "Mr. BCA";
+  static String bcaAccountBranch = "Central BCA";
+  static String mandiriAccountNumber = "123-45-6789012-3";
+  static String mandiriAccountName = "Mr. Mandiri";
+  static String mandiriAccountBranch = "Central Mandiri";
 
-  PitPayment(this.price, this.paymentCallback, {this.padding});
+  PitPayment(this.price, this.paymentCallback, {this.padding, Locale locale}) : this.locale = locale ?? Locale("en");
 
   @override
   _PitPaymentState createState() => _PitPaymentState();
@@ -86,8 +97,7 @@ class CreditCardDetail {
   final int cvv;
   final double amount;
 
-  CreditCardDetail(this.creditCardNumber, this.expiryMonth, this.expiryYear,
-      this.cvv, this.amount);
+  CreditCardDetail(this.creditCardNumber, this.expiryMonth, this.expiryYear, this.cvv, this.amount);
 
   String toMap() {
     return "{"
@@ -101,21 +111,16 @@ class CreditCardDetail {
 }
 
 class _PitPaymentState extends State<PitPayment> {
+  Dict dict;
   List<PaymentMethodItem> _paymentMethodItem;
-  AdvTextFieldController creditCardController = AdvTextFieldController(
-      hint: "Credit Card Number", maxLength: 16, maxLengthEnforced: true);
-  AdvTextFieldController cvvController = AdvTextFieldController(
-      hint: "CVV Number", maxLength: 3, maxLengthEnforced: true);
-  AdvTextFieldController expiryDateController =
-  AdvTextFieldController(hint: "Expiry Date", text: "00/0000");
+  AdvTextFieldController creditCardController =
+  AdvTextFieldController(maxLength: 16, maxLengthEnforced: true);
+  AdvTextFieldController cvvController = AdvTextFieldController(maxLength: 3, maxLengthEnforced: true);
+  AdvTextFieldController expiryDateController = AdvTextFieldController(text: "00/0000");
 
   AdvTextFieldController mandiriDebitController = AdvTextFieldController(
-      hint: "Mandiri Debit Card Number",
-      label: "Mandiri Debit Card Number",
-      maxLength: 16,
-      maxLengthEnforced: true);
-  AdvTextFieldController mandiriTokenController = AdvTextFieldController(
-      hint: "Your security code", label: "Challenge Token");
+      maxLength: 16, maxLengthEnforced: true);
+  AdvTextFieldController mandiriTokenController = AdvTextFieldController(label: "Challenge Token");
   String randomNumber = "";
   String _creditCardResult = "";
 
@@ -133,9 +138,15 @@ class _PitPaymentState extends State<PitPayment> {
   void initState() {
     super.initState();
 
-    PitComponents.expansionPanelRadioColor =
-        PitPayment.expansionPanelRadioColor;
+    dict = Dict(widget.locale);
+    PitComponents.expansionPanelRadioColor = PitPayment.expansionPanelRadioColor;
     PitComponents.buttonBackgroundColor = PitPayment.expansionPanelButtonColor;
+
+    creditCardController.hint = dict.getString("credit_card_number");
+    cvvController.hint = dict.getString("cvv_number");
+    mandiriDebitController.hint = dict.getString("mandiri_debit_card_number");
+    mandiriDebitController.label = dict.getString("mandiri_debit_card_number");
+    mandiriTokenController.hint = dict.getString("your_security_code");
 
     randomNumber = _randomNumber().toString();
     _paymentMethodItem = <PaymentMethodItem>[
@@ -146,23 +157,16 @@ class _PitPaymentState extends State<PitPayment> {
           cvvController.text = "";
           expiryDateController.text = "00/0000";
         },
-        builder: (PaymentMethodItem item) {
+        builder: (BuildContext context) {
           return Container(
               color: PitPayment.expansionPanelBackgroundColor,
               padding: EdgeInsets.all(32.0),
               child: AdvColumn(divider: ColumnDivider(8.0), children: [
-                AdvTextField(
-                  controller: creditCardController,
-                ),
-                AdvTextField(
-                  controller: cvvController,
-                ),
-                AdvTextField(
-                  controller: expiryDateController,
-                  inputFormatters: [DateTextFormatter("MM/yyyy")],
-                ),
+                AdvTextField(controller: creditCardController),
+                AdvTextField(controller: cvvController),
+                AdvTextField(controller: expiryDateController, inputFormatters: [DateTextFormatter("MM/yyyy")]),
                 AdvButton(
-                  "Submit",
+                  dict.getString("submit"),
                   width: double.infinity,
                   onPressed: () {
                     String creditCard = creditCardController.text;
@@ -172,13 +176,7 @@ class _PitPaymentState extends State<PitPayment> {
                     DateTime expiryDate = df.parse(expiryDateString);
 
                     _channel.invokeMethod('generateCreditCardToken', {
-                      "creditCard": CreditCardDetail(
-                          creditCard,
-                          expiryDate.month,
-                          expiryDate.year,
-                          cvv,
-                          widget.price)
-                          .toMap()
+                      "creditCard": CreditCardDetail(creditCard, expiryDate.month, expiryDate.year, cvv, widget.price).toMap()
                     }).then((result) {
                       print("result = $result!");
                       setState(() {
@@ -187,8 +185,7 @@ class _PitPaymentState extends State<PitPayment> {
                         } else {
                           _creditCardResult = "";
                           print("sukses $result!");
-                          widget.paymentCallback(PaymentType.creditCard,
-                              result: result.replaceAll("ccToken: ", ""));
+                          widget.paymentCallback(PaymentType.creditCard, result: result.replaceAll("ccToken: ", ""));
                         }
                       });
                     });
@@ -199,52 +196,87 @@ class _PitPaymentState extends State<PitPayment> {
                     _creditCardResult,
                     style: ts.fw700.copyWith(color: Colors.redAccent),
                   ),
-                  visibility: _creditCardResult == ""
-                      ? VisibilityFlag.gone
-                      : VisibilityFlag.visible,
+                  visibility: _creditCardResult == "" ? VisibilityFlag.gone : VisibilityFlag.visible,
                 ),
               ]));
         },
       ),
       PaymentMethodItem(
-          paymentType: PaymentType.permataVirtualAccount,
-          builder: (PaymentMethodItem item) {
+          paymentType: PaymentType.bankTransfer,
+          builder: (BuildContext context) {
             return Container(
                 color: PitPayment.expansionPanelBackgroundColor,
                 padding: EdgeInsets.all(32.0),
-                child: AdvColumn(
-                    divider: ColumnDivider(16.0),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "ATM Transfer Step-by-step",
-                        style: ts.fs16.merge(ts.fw700),
+                child: AdvColumn(divider: ColumnDivider(16.0), crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  AdvRow(divider: RowDivider(16.0), children: [
+                    Container(
+                      child: Image.asset(
+                        "images/ic_logo_bca.png",
+                        width: 90.0,
+                        alignment: Alignment.centerLeft,
+                        package: "pit_payment",
                       ),
-                      AdvTextWithNumber(
-                          Text("1. "),
-                          Text.rich(TextSpan(children: [
-                            TextSpan(text: "Click the "),
-                            TextSpan(text: "Submit", style: ts.fw700),
-                            TextSpan(text: " button")
-                          ]))),
-                      AdvTextWithNumber(
-                          Text("2. "),
-                          Text(
-                              "You will receive a unique account number and instructions on how to pay (you can receive instructions via your email)")),
-                      AdvTextWithNumber(
-                          Text("3. "),
-                          Text(
-                              "Please complete payment through the Prima (BCA), ATM Bersama (Mandiri), or Alto (Permata) ATM Network")),
-                      AdvTextWithNumber(
-                          Text("4. "),
-                          Text(
-                              "Once payment is complete, you will receive a confirmation email")),
-                      AdvButton("Submit", width: double.infinity,
-                          onPressed: () {
-                            widget
-                                .paymentCallback(PaymentType.permataVirtualAccount);
-                          })
-                    ]));
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    Expanded(
+                        child: AdvColumn(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(PitPayment.bcaAccountNumber, style: ts.fw600),
+                          Text(PitPayment.bcaAccountName, style: ts.fw600),
+                          Text(PitPayment.bcaAccountBranch, style: ts.fw600)
+                        ]))
+                  ]),
+                  AdvRow(divider: RowDivider(16.0), children: [
+                    Container(
+                      child: Image.asset(
+                        "images/ic_logo_mandiri.png",
+                        width: 90.0,
+                        alignment: Alignment.centerLeft,
+                        package: "pit_payment",
+                      ),
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    Expanded(
+                        child: AdvColumn(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(PitPayment.mandiriAccountNumber, style: ts.fw600),
+                          Text(PitPayment.mandiriAccountName, style: ts.fw600),
+                          Text(PitPayment.mandiriAccountBranch, style: ts.fw600)
+                        ]))
+                  ]),
+                  AdvButton(dict.getString("submit"), width: double.infinity, onPressed: () {
+                    widget.paymentCallback(PaymentType.bankTransfer);
+                  })
+                ]));
+          }),
+      PaymentMethodItem(
+          paymentType: PaymentType.permataVirtualAccount,
+          builder: (BuildContext context) {
+            List<TextSpan> textSpans =
+            Utils.parseStringToTextSpan(dict.getString("permata_va_content_1"), [dict.getString("submit")]);
+
+            return Container(
+                color: PitPayment.expansionPanelBackgroundColor,
+                padding: EdgeInsets.all(32.0),
+                child: AdvColumn(divider: ColumnDivider(16.0), crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    dict.getString("permata_va_title"),
+                    style: ts.fs16.merge(ts.fw700),
+                  ),
+                  AdvTextWithNumber(
+                      Text("1. "),
+                      Text.rich(TextSpan(
+                          children: textSpans.map((TextSpan textSpan) {
+                            return TextSpan(
+                                text: textSpan.text,
+                                style: TextStyle(
+                                    fontWeight: textSpan.text == dict.getString("submit") ? FontWeight.w700 : FontWeight.w400));
+                          }).toList()))),
+                  AdvTextWithNumber(Text("2. "), Text(dict.getString("permata_va_content_2"))),
+                  AdvTextWithNumber(Text("3. "), Text(dict.getString("permata_va_content_3"))),
+                  AdvTextWithNumber(Text("4. "), Text(dict.getString("permata_va_content_4"))),
+                  AdvButton(dict.getString("submit"), width: double.infinity, onPressed: () {
+                    widget.paymentCallback(PaymentType.permataVirtualAccount);
+                  })
+                ]));
           }),
       PaymentMethodItem(
           paymentType: PaymentType.mandiriClickPay,
@@ -252,78 +284,59 @@ class _PitPaymentState extends State<PitPayment> {
             mandiriDebitController.text = "";
             mandiriTokenController.text = "";
           },
-          builder: (PaymentMethodItem item) {
+          builder: (BuildContext context) {
             String mandiriDebitNumber = (mandiriDebitController.text ?? "");
-            String input1 = mandiriDebitNumber.length >= 6
-                ? mandiriDebitNumber.substring(6, mandiriDebitNumber.length)
-                : "";
+            String input1 = mandiriDebitNumber.length >= 6 ? mandiriDebitNumber.substring(6, mandiriDebitNumber.length) : "";
 
             return Container(
                 color: PitPayment.expansionPanelBackgroundColor,
                 padding: EdgeInsets.all(32.0),
-                child: AdvColumn(
-                    divider: ColumnDivider(16.0),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AdvTextField(
-                        controller: mandiriDebitController,
-                        textChangeListener: (String oldValue, String newValue) {
-                          setState(() {});
-                        },
-                      ),
-                      Text(
-                        "Input Token",
-                        style: ts.fs16.merge(ts.fw700),
-                      ),
-                      AdvTextWithNumber(Text("APPLI : "), Text("3")),
-                      AdvTextWithNumber(Text("Input 1 : "), Text(input1)),
-                      AdvTextWithNumber(Text("Input 2 : "), Text(widget.price.toInt().toString())),
-                      AdvTextWithNumber(
-                          Text("Input 3 : "), Text("$randomNumber")),
-                      AdvTextField(
-                        controller: mandiriTokenController,
-                      ),
-                      AdvButton("Submit", width: double.infinity,
-                          onPressed: () {
-                            String mandiriToken =
-                            (mandiriTokenController.text ?? "");
-                            widget.paymentCallback(PaymentType.mandiriClickPay,
-                                result: {
-                                  "mandiriDebitNumber": mandiriDebitNumber,
-                                  "input1": input1,
-                                  "input2": widget.price.toInt().toString(),
-                                  "input3": randomNumber,
-                                  "mandiriToken": mandiriToken
-                                });
-                          })
-                    ]));
+                child: AdvColumn(divider: ColumnDivider(16.0), crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  AdvTextField(
+                    controller: mandiriDebitController,
+                    textChangeListener: (String oldValue, String newValue) {
+                      setState(() {});
+                    },
+                  ),
+                  Text(
+                    "Input Token",
+                    style: ts.fs16.merge(ts.fw700),
+                  ),
+                  AdvTextWithNumber(Text("APPLI : "), Text("3")),
+                  AdvTextWithNumber(Text("Input 1 : "), Text(input1)),
+                  AdvTextWithNumber(Text("Input 2 : "), Text(widget.price.toInt().toString())),
+                  AdvTextWithNumber(Text("Input 3 : "), Text("$randomNumber")),
+                  AdvTextField(
+                    controller: mandiriTokenController,
+                  ),
+                  AdvButton(dict.getString("submit"), width: double.infinity, onPressed: () {
+                    String mandiriToken = (mandiriTokenController.text ?? "");
+                    widget.paymentCallback(PaymentType.mandiriClickPay, result: {
+                      "mandiriDebitNumber": mandiriDebitNumber,
+                      "input1": input1,
+                      "input2": widget.price.toInt().toString(),
+                      "input3": randomNumber,
+                      "mandiriToken": mandiriToken
+                    });
+                  })
+                ]));
           }),
       PaymentMethodItem(
           paymentType: PaymentType.mandiriBillPay,
-          builder: (PaymentMethodItem item) {
+          builder: (BuildContext context) {
             return Container(
                 color: PitPayment.expansionPanelBackgroundColor,
                 padding: EdgeInsets.all(32.0),
-                child: AdvColumn(
-                    divider: ColumnDivider(16.0),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Mandiri Bill Payment Information :",
-                        style: ts.fs16.merge(ts.fw700),
-                      ),
-                      Text(
-                          "Payment can be made through Mandiri ATM or Mandiri Internet Banking"),
-                      Text(
-                          "Please make a payment as soon as possible - the payment code will expire within 24 hours"),
-                      Text(
-                          "Minimum transaction using Mandiri ATM is Rp. 50.000 and Mandiri Internet Banking is Rp. 10.000"),
-                      Text("Order details will be sent via email"),
-                      AdvButton("Submit", width: double.infinity,
-                          onPressed: () {
-                            widget.paymentCallback(PaymentType.mandiriBillPay);
-                          })
-                    ]));
+                child: AdvColumn(divider: ColumnDivider(16.0), crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(dict.getString("mandiri_bill_title"), style: ts.fs16.merge(ts.fw700)),
+                  Text(dict.getString("mandiri_bill_content_1")),
+                  Text(dict.getString("mandiri_bill_content_2")),
+                  Text(dict.getString("mandiri_bill_content_3")),
+                  Text(dict.getString("mandiri_bill_content_4")),
+                  AdvButton(dict.getString("submit"), width: double.infinity, onPressed: () {
+                    widget.paymentCallback(PaymentType.mandiriBillPay);
+                  })
+                ]));
           }),
     ];
   }
@@ -331,21 +344,46 @@ class _PitPaymentState extends State<PitPayment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: AdvExpansionPanelList.radio(
-          expansionCallback: (int index, bool isExpanded) {
-            setState(() {
-              _paymentMethodItem[index].reset();
-              _paymentMethodItem[index].isExpanded = !isExpanded;
-            });
-          },
-          children: _paymentMethodItem
-              .map<AdvExpansionPanelRadio>((PaymentMethodItem item) {
-            return AdvExpansionPanelRadio(
-                value: item.paymentType,
-                headerBuilder: item.headerBuilder,
-                body: item.build());
-          }).toList(),
-      padding: widget.padding),
-    );
+        child: AdvColumn(children: [
+          AdvExpansionPanelList.radio(
+              expansionCallback: (int index, bool isExpanded) {
+                setState(() {
+                  _paymentMethodItem[index].reset();
+                  _paymentMethodItem[index].isExpanded = !isExpanded;
+                });
+              },
+              children: _paymentMethodItem.map<AdvExpansionPanelRadio>((PaymentMethodItem item) {
+                return AdvExpansionPanelRadio(
+                    value: item.paymentType, headerBuilder: item.headerBuilder, body: item.build(context));
+              }).toList()),
+          Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(top: 32.0),
+              child: AdvRow(children: [
+                Expanded(
+                  child: AdvRow(
+                    divider: RowDivider(8.0),
+                    children: [
+                      Icon(
+                        Icons.lock,
+                        color: Colors.lightBlueAccent,
+                      ),
+                      Text("100% Secured Transaction"),
+                    ],
+                  ),
+                ),
+                Image.asset(
+                  "images/geotrust.png",
+                  width: 90.0,
+                  alignment: Alignment.centerLeft,
+                  package: "pit_payment",
+                )
+              ]))
+        ]),
+        padding: widget.padding);
+  }
+
+  void onLocaleChange(Locale locale) {
+    setState(() {});
   }
 }

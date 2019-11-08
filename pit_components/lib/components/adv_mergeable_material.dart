@@ -37,7 +37,7 @@ class AdvMaterialSlice extends AdvMergeableMaterialItem {
   const AdvMaterialSlice({
     @required LocalKey key,
     @required this.child,
-  }) : assert(key != null),
+  })  : assert(key != null),
         super(key);
 
   /// The contents of this slice.
@@ -56,10 +56,8 @@ class AdvMaterialSlice extends AdvMergeableMaterialItem {
 /// All [AdvMaterialGap] objects need a [LocalKey].
 class AdvMaterialGap extends AdvMergeableMaterialItem {
   /// Creates a Material gap with a given size.
-  const AdvMaterialGap({
-    @required LocalKey key,
-    this.size = 16.0
-  }) : assert(key != null),
+  const AdvMaterialGap({@required LocalKey key, this.size = 16.0})
+      : assert(key != null),
         super(key);
 
   /// The main axis extent of this gap. For example, if the [AdvMergeableMaterial]
@@ -95,13 +93,13 @@ class AdvMaterialGap extends AdvMergeableMaterialItem {
 ///    but otherwise looks the same.
 class AdvMergeableMaterial extends StatefulWidget {
   /// Creates a mergeable Material list of items.
-  const AdvMergeableMaterial({
-    Key key,
-    this.mainAxis = Axis.vertical,
-    this.elevation = 2,
-    this.hasDividers = false,
-    this.children = const <AdvMergeableMaterialItem>[]
-  }) : super(key: key);
+  const AdvMergeableMaterial(
+      {Key key,
+      this.mainAxis = Axis.vertical,
+      this.elevation = 2,
+      this.hasDividers = false,
+      this.children = const <AdvMergeableMaterialItem>[]})
+      : super(key: key);
 
   /// The children of the [AdvMergeableMaterial].
   final List<AdvMergeableMaterialItem> children;
@@ -131,13 +129,12 @@ class AdvMergeableMaterial extends StatefulWidget {
 }
 
 class _AnimationTuple {
-  _AnimationTuple({
-    this.controller,
-    this.startAnimation,
-    this.endAnimation,
-    this.gapAnimation,
-    this.gapStart = 0.0
-  });
+  _AnimationTuple(
+      {this.controller,
+      this.startAnimation,
+      this.endAnimation,
+      this.gapAnimation,
+      this.gapStart = 0.0});
 
   final AnimationController controller;
   final CurvedAnimation startAnimation;
@@ -146,10 +143,11 @@ class _AnimationTuple {
   double gapStart;
 }
 
-class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with TickerProviderStateMixin {
+class _AdvMergeableMaterialState extends State<AdvMergeableMaterial>
+    with TickerProviderStateMixin {
   List<AdvMergeableMaterialItem> _children;
   final Map<LocalKey, _AnimationTuple> _animationTuples =
-  <LocalKey, _AnimationTuple>{};
+      <LocalKey, _AnimationTuple>{};
 
   @override
   void initState() {
@@ -157,10 +155,11 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
     _children = List<AdvMergeableMaterialItem>.from(widget.children);
 
     for (int i = 0; i < _children.length; i += 1) {
-    if (_children[i] is AdvMaterialGap) {
-    _initGap(_children[i]);
-    _animationTuples[_children[i].key].controller.value = 1.0; // Gaps are initially full-sized.
-    }
+      if (_children[i] is AdvMaterialGap) {
+        _initGap(_children[i]);
+        _animationTuples[_children[i].key].controller.value =
+            1.0; // Gaps are initially full-sized.
+      }
     }
     assert(_debugGapsAreValid(_children));
   }
@@ -171,18 +170,12 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
       vsync: this,
     );
 
-    final CurvedAnimation startAnimation = CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastOutSlowIn
-    );
-    final CurvedAnimation endAnimation = CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastOutSlowIn
-    );
-    final CurvedAnimation gapAnimation = CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastOutSlowIn
-    );
+    final CurvedAnimation startAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    final CurvedAnimation endAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    final CurvedAnimation gapAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(_handleTick);
 
@@ -190,8 +183,7 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
         controller: controller,
         startAnimation: startAnimation,
         endAnimation: endAnimation,
-        gapAnimation: gapAnimation
-    );
+        gapAnimation: gapAnimation);
   }
 
   @override
@@ -212,16 +204,14 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
   bool _debugHasConsecutiveGaps(List<AdvMergeableMaterialItem> children) {
     for (int i = 0; i < widget.children.length - 1; i += 1) {
       if (widget.children[i] is AdvMaterialGap &&
-          widget.children[i + 1] is AdvMaterialGap)
-        return true;
+          widget.children[i + 1] is AdvMaterialGap) return true;
     }
     return false;
   }
 
   bool _debugGapsAreValid(List<AdvMergeableMaterialItem> children) {
     // Check for consecutive gaps.
-    if (_debugHasConsecutiveGaps(children))
-      return false;
+    if (_debugHasConsecutiveGaps(children)) return false;
 
     // First and last children must not be gaps.
     if (children.isNotEmpty) {
@@ -235,15 +225,13 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
   void _insertChild(int index, AdvMergeableMaterialItem child) {
     _children.insert(index, child);
 
-    if (child is AdvMaterialGap)
-      _initGap(child);
+    if (child is AdvMaterialGap) _initGap(child);
   }
 
   void _removeChild(int index) {
     final AdvMergeableMaterialItem child = _children.removeAt(index);
 
-    if (child is AdvMaterialGap)
-      _animationTuples[child.key] = null;
+    if (child is AdvMaterialGap) _animationTuples[child.key] = null;
   }
 
   bool _isClosingGap(int index) {
@@ -259,10 +247,9 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
     int j = 0;
 
     while (j < _children.length) {
-      if (
-      _children[j] is AdvMaterialGap &&
-          _animationTuples[_children[j].key].controller.status == AnimationStatus.dismissed
-      ) {
+      if (_children[j] is AdvMaterialGap &&
+          _animationTuples[_children[j].key].controller.status ==
+              AnimationStatus.dismissed) {
         _removeChild(j);
       } else {
         j += 1;
@@ -274,12 +261,12 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
   void didUpdateWidget(AdvMergeableMaterial oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final Set<LocalKey> oldKeys = oldWidget.children.map<LocalKey>(
-            (AdvMergeableMaterialItem child) => child.key
-    ).toSet();
-    final Set<LocalKey> newKeys = widget.children.map<LocalKey>(
-            (AdvMergeableMaterialItem child) => child.key
-    ).toSet();
+    final Set<LocalKey> oldKeys = oldWidget.children
+        .map<LocalKey>((AdvMergeableMaterialItem child) => child.key)
+        .toSet();
+    final Set<LocalKey> newKeys = widget.children
+        .map<LocalKey>((AdvMergeableMaterialItem child) => child.key)
+        .toSet();
     final Set<LocalKey> newOnly = newKeys.difference(oldKeys);
     final Set<LocalKey> oldOnly = oldKeys.difference(newKeys);
 
@@ -298,12 +285,10 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
         final int startOld = j;
 
         // Skip new keys.
-        while (newOnly.contains(newChildren[i].key))
-          i += 1;
+        while (newOnly.contains(newChildren[i].key)) i += 1;
 
         // Skip old keys.
-        while (oldOnly.contains(_children[j].key) || _isClosingGap(j))
-          j += 1;
+        while (oldOnly.contains(_children[j].key) || _isClosingGap(j)) j += 1;
 
         final int newLength = i - startNew;
         final int oldLength = j - startOld;
@@ -333,15 +318,15 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
               j += 1;
             } else {
               // No animation if replaced items are more than one.
-              for (int k = 0; k < oldLength; k += 1)
-                _removeChild(startOld);
+              for (int k = 0; k < oldLength; k += 1) _removeChild(startOld);
               for (int k = 0; k < newLength; k += 1)
                 _insertChild(startOld + k, newChildren[startNew + k]);
 
               j += newLength - oldLength;
             }
           } else if (oldLength == 1) {
-            if (newLength == 1 && newChildren[startNew] is AdvMaterialGap &&
+            if (newLength == 1 &&
+                newChildren[startNew] is AdvMaterialGap &&
                 _children[startOld].key == newChildren[startNew].key) {
               /// Special case: gap added back.
               _animationTuples[newChildren[startNew].key].controller.forward();
@@ -369,8 +354,8 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
                 if (newChildren[k] is AdvMaterialGap) {
                   final AdvMaterialGap gap = newChildren[k];
 
-                  _animationTuples[gap.key].gapStart = gapSize * gap.size /
-                      gapSizeSum;
+                  _animationTuples[gap.key].gapStart =
+                      gapSize * gap.size / gapSizeSum;
                   _animationTuples[gap.key].controller
                     ..value = 0.0
                     ..forward();
@@ -407,10 +392,8 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
             }
 
             if (gapSizeSum != 0.0) {
-              final AdvMaterialGap gap = AdvMaterialGap(
-                  key: UniqueKey(),
-                  size: gapSizeSum
-              );
+              final AdvMaterialGap gap =
+                  AdvMaterialGap(key: UniqueKey(), size: gapSizeSum);
               _insertChild(startOld, gap);
               _animationTuples[gap.key].gapStart = 0.0;
               _animationTuples[gap.key].controller
@@ -429,7 +412,8 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
       } else {
         // Check whether the items are the same type. If they are, it means that
         // their places have been swaped.
-        if ((_children[j] is AdvMaterialGap) == (newChildren[i] is AdvMaterialGap)) {
+        if ((_children[j] is AdvMaterialGap) ==
+            (newChildren[i] is AdvMaterialGap)) {
           _children[j] = newChildren[i];
 
           i += 1;
@@ -443,8 +427,7 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
     }
 
     // Handle remaining items.
-    while (j < _children.length)
-      _removeChild(j);
+    while (j < _children.length) _removeChild(j);
     while (i < newChildren.length) {
       _insertChild(j, newChildren[i]);
 
@@ -454,57 +437,48 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
   }
 
   BorderRadius _borderRadius(int index, bool start, bool end) {
-    assert(kMaterialEdges[MaterialType.card].topLeft == kMaterialEdges[MaterialType.card].topRight);
-    assert(kMaterialEdges[MaterialType.card].topLeft == kMaterialEdges[MaterialType.card].bottomLeft);
-    assert(kMaterialEdges[MaterialType.card].topLeft == kMaterialEdges[MaterialType.card].bottomRight);
+    assert(kMaterialEdges[MaterialType.card].topLeft ==
+        kMaterialEdges[MaterialType.card].topRight);
+    assert(kMaterialEdges[MaterialType.card].topLeft ==
+        kMaterialEdges[MaterialType.card].bottomLeft);
+    assert(kMaterialEdges[MaterialType.card].topLeft ==
+        kMaterialEdges[MaterialType.card].bottomRight);
     final Radius cardRadius = kMaterialEdges[MaterialType.card].topLeft;
 
     Radius startRadius = Radius.zero;
     Radius endRadius = Radius.zero;
 
     if (index > 0 && _children[index - 1] is AdvMaterialGap) {
-      startRadius = Radius.lerp(
-          Radius.zero,
-          cardRadius,
-          _animationTuples[_children[index - 1].key].startAnimation.value
-      );
+      startRadius = Radius.lerp(Radius.zero, cardRadius,
+          _animationTuples[_children[index - 1].key].startAnimation.value);
     }
-    if (index < _children.length - 2 && _children[index + 1] is AdvMaterialGap) {
-      endRadius = Radius.lerp(
-          Radius.zero,
-          cardRadius,
-          _animationTuples[_children[index + 1].key].endAnimation.value
-      );
+    if (index < _children.length - 2 &&
+        _children[index + 1] is AdvMaterialGap) {
+      endRadius = Radius.lerp(Radius.zero, cardRadius,
+          _animationTuples[_children[index + 1].key].endAnimation.value);
     }
 
     if (widget.mainAxis == Axis.vertical) {
       return BorderRadius.vertical(
           top: start ? cardRadius : startRadius,
-          bottom: end ? cardRadius : endRadius
-      );
+          bottom: end ? cardRadius : endRadius);
     } else {
       return BorderRadius.horizontal(
           left: start ? cardRadius : startRadius,
-          right: end ? cardRadius : endRadius
-      );
+          right: end ? cardRadius : endRadius);
     }
   }
 
   double _getGapSize(int index) {
     final AdvMaterialGap gap = _children[index];
 
-    return lerpDouble(
-        _animationTuples[gap.key].gapStart,
-        gap.size,
-        _animationTuples[gap.key].gapAnimation.value
-    );
+    return lerpDouble(_animationTuples[gap.key].gapStart, gap.size,
+        _animationTuples[gap.key].gapAnimation.value);
   }
 
   bool _willNeedDivider(int index) {
-    if (index < 0)
-      return false;
-    if (index >= _children.length)
-      return false;
+    if (index < 0) return false;
+    if (index >= _children.length) return false;
     return _children[index] is AdvMaterialSlice || _isClosingGap(index);
   }
 
@@ -519,27 +493,17 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
     for (i = 0; i < _children.length; i += 1) {
       if (_children[i] is AdvMaterialGap) {
         assert(slices.isNotEmpty);
-        widgets.add(
-            Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: _borderRadius(i - 1, widgets.isEmpty, false),
-                    shape: BoxShape.rectangle
-                ),
-                child: ListBody(
-                    mainAxis: widget.mainAxis,
-                    children: slices
-                )
-            )
-        );
+        widgets.add(Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: _borderRadius(i - 1, widgets.isEmpty, false),
+                shape: BoxShape.rectangle),
+            child: ListBody(mainAxis: widget.mainAxis, children: slices)));
         slices = <Widget>[];
 
-        widgets.add(
-            SizedBox(
-                width: widget.mainAxis == Axis.horizontal ? _getGapSize(i) : null,
-                height: widget.mainAxis == Axis.vertical ? _getGapSize(i) : null
-            )
-        );
+        widgets.add(SizedBox(
+            width: widget.mainAxis == Axis.horizontal ? _getGapSize(i) : null,
+            height: widget.mainAxis == Axis.vertical ? _getGapSize(i) : null));
       } else {
         final AdvMaterialSlice slice = _children[i];
         Widget child = slice.child;
@@ -551,22 +515,19 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
           Border border;
           final BorderSide divider = Divider.createBorderSide(
             context,
-            width: 0.5, // TODO(ianh): This probably looks terrible when the dpr isn't a power of two.
+            width:
+                0.5, // TODO(ianh): This probably looks terrible when the dpr isn't a power of two.
           );
 
           if (i == 0) {
-            border = Border(
-                bottom: hasBottomDivider ? divider : BorderSide.none
-            );
+            border =
+                Border(bottom: hasBottomDivider ? divider : BorderSide.none);
           } else if (i == _children.length - 1) {
-            border = Border(
-                top: hasTopDivider ? divider : BorderSide.none
-            );
+            border = Border(top: hasTopDivider ? divider : BorderSide.none);
           } else {
             border = Border(
                 top: hasTopDivider ? divider : BorderSide.none,
-                bottom: hasBottomDivider ? divider : BorderSide.none
-            );
+                bottom: hasBottomDivider ? divider : BorderSide.none);
           }
 
           assert(border != null);
@@ -576,33 +537,20 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
               decoration: BoxDecoration(border: border),
               duration: kThemeAnimationDuration,
               curve: Curves.fastOutSlowIn,
-              child: child
-          );
+              child: child);
         }
 
-        slices.add(
-            Material(
-                type: MaterialType.transparency,
-                child: child
-            )
-        );
+        slices.add(Material(type: MaterialType.transparency, child: child));
       }
     }
 
     if (slices.isNotEmpty) {
-      widgets.add(
-          Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: _borderRadius(i - 1, widgets.isEmpty, true),
-                  shape: BoxShape.rectangle
-              ),
-              child: ListBody(
-                  mainAxis: widget.mainAxis,
-                  children: slices
-              )
-          )
-      );
+      widgets.add(Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: _borderRadius(i - 1, widgets.isEmpty, true),
+              shape: BoxShape.rectangle),
+          child: ListBody(mainAxis: widget.mainAxis, children: slices)));
       slices = <Widget>[];
     }
 
@@ -610,8 +558,7 @@ class _AdvMergeableMaterialState extends State<AdvMergeableMaterial> with Ticker
         mainAxis: widget.mainAxis,
         boxShadows: kElevationToShadow[widget.elevation],
         items: _children,
-        children: widgets
-    );
+        children: widgets);
   }
 }
 
@@ -624,8 +571,7 @@ class _MergeableMaterialSliceKey extends GlobalKey {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! _MergeableMaterialSliceKey)
-      return false;
+    if (other is! _MergeableMaterialSliceKey) return false;
     final _MergeableMaterialSliceKey typedOther = other;
     return value == typedOther.value;
   }
@@ -640,18 +586,19 @@ class _MergeableMaterialSliceKey extends GlobalKey {
 }
 
 class _MergeableMaterialListBody extends ListBody {
-  _MergeableMaterialListBody({
-    List<Widget> children,
-    Axis mainAxis = Axis.vertical,
-    this.items,
-    this.boxShadows
-  }) : super(children: children, mainAxis: mainAxis);
+  _MergeableMaterialListBody(
+      {List<Widget> children,
+      Axis mainAxis = Axis.vertical,
+      this.items,
+      this.boxShadows})
+      : super(children: children, mainAxis: mainAxis);
 
   final List<AdvMergeableMaterialItem> items;
   final List<BoxShadow> boxShadows;
 
   AxisDirection _getDirection(BuildContext context) {
-    return getAxisDirectionFromAxisReverseAndDirectionality(context, mainAxis, false);
+    return getAxisDirectionFromAxisReverseAndDirectionality(
+        context, mainAxis, false);
   }
 
   @override
@@ -664,7 +611,8 @@ class _MergeableMaterialListBody extends ListBody {
 
   @override
   void updateRenderObject(BuildContext context, RenderListBody renderObject) {
-    final _RenderMergeableMaterialListBody materialRenderListBody = renderObject;
+    final _RenderMergeableMaterialListBody materialRenderListBody =
+        renderObject;
     materialRenderListBody
       ..axisDirection = _getDirection(context)
       ..boxShadows = boxShadows;
@@ -672,11 +620,11 @@ class _MergeableMaterialListBody extends ListBody {
 }
 
 class _RenderMergeableMaterialListBody extends RenderListBody {
-  _RenderMergeableMaterialListBody({
-    List<RenderBox> children,
-    AxisDirection axisDirection = AxisDirection.down,
-    this.boxShadows
-  }) : super(children: children, axisDirection: axisDirection);
+  _RenderMergeableMaterialListBody(
+      {List<RenderBox> children,
+      AxisDirection axisDirection = AxisDirection.down,
+      this.boxShadows})
+      : super(children: children, axisDirection: axisDirection);
 
   List<BoxShadow> boxShadows;
 
@@ -702,8 +650,7 @@ class _RenderMergeableMaterialListBody extends RenderListBody {
     while (child != null) {
       final ListBodyParentData childParentData = child.parentData;
       final Rect rect = (childParentData.offset + offset) & child.size;
-      if (i % 2 == 0)
-        _paintShadows(context.canvas, rect);
+      if (i % 2 == 0) _paintShadows(context.canvas, rect);
       child = childParentData.nextSibling;
 
       i += 1;

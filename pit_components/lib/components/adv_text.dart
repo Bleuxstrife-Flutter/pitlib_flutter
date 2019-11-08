@@ -17,18 +17,18 @@ class AdvText extends StatelessWidget {
   final String semanticsLabel;
 
   AdvText(
-    this.data, {
-    this.key,
-    this.style,
-    this.textAlign,
-    this.textDirection,
-    this.locale,
-    this.softWrap,
-    this.overflow,
-    this.textScaleFactor,
-    this.maxLines,
-    this.semanticsLabel,
-  });
+      this.data, {
+        this.key,
+        this.style,
+        this.textAlign,
+        this.textDirection,
+        this.locale,
+        this.softWrap,
+        this.overflow,
+        this.textScaleFactor,
+        this.maxLines,
+        this.semanticsLabel,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class AdvText extends StatelessWidget {
         String _data = "";
         int _maxLines = maxLines;
         if (_maxLines == null) {
-          if (maxHeight == null) {
+          if (maxHeight == double.infinity) {
             _data = this.data;
           } else {
             var tpMeasureHeight = new TextPainter(
@@ -94,15 +94,35 @@ class AdvText extends StatelessWidget {
     while (maxLines > 0) {
       if (maxLines == 1) {
         String croppedText =
-            Utils.getEllipsizedText(text, this.style, maxWidth);
+        Utils.getEllipsizedText(text, this.style, maxWidth);
+
+        int indexOf = croppedText.indexOf("\n");
+
+        if (indexOf > 0)
+          croppedText = "${croppedText.substring(0, indexOf)}\u2026";
+
         _data += "$croppedText";
 
         text = text.substring(croppedText.length);
       } else {
         String croppedText =
-            Utils.getEllipsizedText(text, this.style, maxWidth, withDot: false);
-        _data += "$croppedText\n";
+        Utils.getEllipsizedText(text, this.style, maxWidth, withDot: false);
+
+        int enterOccurance = 0;
+
+        int indexOf = croppedText.indexOf("\n");
+
+        while (indexOf > 0) {
+          enterOccurance ++;
+          indexOf = croppedText.indexOf("\n", indexOf + 1);
+        }
+        maxLines-= enterOccurance;
+
+        _data += "$croppedText";
         text = text.substring(croppedText.length);
+        if (text.length > 0) {
+          _data += "\n";
+        }
       }
       maxLines--;
     }

@@ -1,13 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pit_components/components/adv_badge.dart';
 import 'package:pit_components/components/adv_button.dart';
 import 'package:pit_components/components/adv_chooser.dart';
+import 'package:pit_components/components/adv_chooser_plain.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_date_picker.dart';
 import 'package:pit_components/components/adv_drop_down.dart';
 import 'package:pit_components/components/adv_group_check.dart';
+import 'package:pit_components/components/adv_image_preview.dart';
 import 'package:pit_components/components/adv_increment.dart';
 import 'package:pit_components/components/adv_infinity_list_view.dart';
 import 'package:pit_components/components/adv_list_view_with_bottom.dart';
@@ -16,13 +20,16 @@ import 'package:pit_components/components/adv_range_slider.dart';
 import 'package:pit_components/components/adv_row.dart';
 import 'package:pit_components/components/adv_scrollable_bottom_sheet.dart';
 import 'package:pit_components/components/adv_single_digit_inputter.dart';
+import 'package:pit_components/components/adv_state.dart';
 import 'package:pit_components/components/adv_text.dart';
 import 'package:pit_components/components/adv_text_field.dart';
+import 'package:pit_components/components/adv_text_field_plain.dart';
 import 'package:pit_components/components/adv_text_field_with_button.dart';
 import 'package:pit_components/components/controllers/adv_date_picker_controller.dart';
 import 'package:pit_components/components/controllers/adv_increment_controller.dart';
 import 'package:pit_components/components/controllers/adv_text_field_controller.dart';
 import 'package:pit_components/consts/textstyles.dart' as ts;
+import 'package:pit_components/mods/mod_checkbox.dart';
 import 'package:pit_components/utils/utils.dart';
 
 const String loremIpsum =
@@ -65,48 +72,63 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     possibleValue.add("Possible Value 1");
     possibleValue.add("Possible Value 2");
+    incController = AdvIncrementController(
+      label: "Increment",
+      hint: "Increment",
+//      format: "#,### Hari",
+      alignment: TextAlign.center,
+      minCounter: 1,
+      counter: 1,
+      /* maxLines: 1 ,
+        text: "00\\00\\0000 ~ 00(00)00®000"*/
+    );
+    cc = AdvDatePickerController(
+//                    enable: false,
+        label: "Just TextField MaxLines 1",
+        hint: "test",
+        initialValue: _date,
+        markedDates: [MarkedDate(DateTime.now(), "lalala")],
+        dates: [_date ?? DateTime.now(), _date ?? DateTime.now()]);
   }
 
   Widget _buildRadioButton(Widget icon, String value) {
     return AdvRow(divider: RowDivider(12.0), children: [
       icon,
       Text(value,
-          style: ts.fw700.merge(ts.fs12).copyWith(
-              color:
-                  _radioButtonValue == value ? Colors.black87 : Colors.black38))
+          style: ts.fw700
+              .merge(ts.fs12)
+              .copyWith(color: _radioButtonValue == value ? Colors.black87 : Colors.black38))
     ]);
   }
 
+  AdvIncrementController incController;
+  bool _lalala = false;
+
+  bool _first = true;
+
+  AdvDatePickerController cc;
+
   @override
   Widget build(BuildContext context) {
-    AdvIncrementController incController = AdvIncrementController(
-      label: "Increment",
-      hint: "Increment",
-      format: "#,### Hari",
-      minCounter: 0,
-      maxCounter: 9,
-      /* maxLines: 1 ,
+    AdvTextFieldController specialController =
+        AdvTextFieldController(label: "With Button", hint: "Dengan Tombol", error: "asdasdasd"
+            /* maxLines: 1 ,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
-    );
-    AdvTextFieldController specialController = AdvTextFieldController(
-      label: "With Button",
-      hint: "Dengan Tombol",
-      /* maxLines: 1 ,
-        text: "00\\00\\0000 ~ 00(00)00®000"*/
-    );
+            );
     AdvTextFieldController controller = AdvTextFieldController(
         label: "Just",
+        alignment: TextAlign.center,
         hint: "TextField MaxLines 1 Example",
 //        enable: false,
         prefixIcon: Icon(Icons.arrow_back),
         suffixIcon: Icon(Icons.arrow_forward),
-      maxLines: 1/*,
+        maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
         );
     AdvTextFieldController controller2 = AdvTextFieldController(
         label: "Just TextField MaxLines 1",
         hint: "TextField MaxLines 1 Example",
-        prefixIcon: Icon(Icons.arrow_back),
+        prefixIcon: Container(height: 35.0, width: 35.0, color: Colors.blue),
         suffixIcon: Icon(Icons.arrow_forward),
         maxLines: 1 /*,
         text: "00\\00\\0000 ~ 00(00)00®000"*/
@@ -135,33 +157,102 @@ class _MyHomePageState extends State<MyHomePage> {
               inactiveItem: _buildRadioButton(Icon(inactiveIconData), value));
         }).toList());
 
-    AdvRangeSliderController sliderController = AdvRangeSliderController(
-        lowerValue: _lowerValue,
-        upperValue: _upperValue,
-        min: 0.0,
-        max: 100.0,
-        divisions: 10,
-        hint: "Advanced Slider");
+//    AdvRangeSliderController sliderController = AdvRangeSliderController(
+//        lowerValue: _lowerValue,
+//        upperValue: _upperValue,
+//        min: 0.0,
+//        max: 100.0,
+//        divisions: 10,
+//        hint: "Advanced Slider");
 
     AdvGroupCheckController groupCheckController = AdvGroupCheckController(
         checkedValue: "",
-        itemList: [
-          GroupCheckItem('Image', 'Image'),
-          GroupCheckItem('Document', 'Document')
-        ]);
-
+        itemList: [GroupCheckItem('Image', 'Image'), GroupCheckItem('Document', 'Document')]);
+    controller.error = "asdasd";
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Color(0xffFCF6E8),
+          color: Color(0xffffedd8),
           child: AdvColumn(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            onlyInner: false,
             divider: ColumnDivider(16.0),
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  color: Colors.amber,
+                  width: 117.0,
+                  height: 50.0,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  color: Colors.amber,
+                  width: 59.0,
+                  child: Text(
+                    "1234",
+                    style: ts.fs16,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: AdvTextField(
+                  measureText: "@@@@@",
+                ),
+              ),
+              AdvIncrement(
+                textStyle: ts.fs16,
+                controller: incController,
+                valueChangeListener: (before, after) {
+                  setState(() {});
+                },
+              ),
+              AdvButton(
+                "try dialog",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          child: AdvColumn(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Test 1"),
+                              Text("Test 2"),
+                            ],
+                          ),
+                        );
+                      });
+                },
+              ),
+              AnimatedCrossFade(
+                duration: const Duration(seconds: 1),
+                firstChild: const FlutterLogo(style: FlutterLogoStyle.horizontal, size: 100.0),
+                secondChild: const FlutterLogo(style: FlutterLogoStyle.stacked, size: 100.0),
+                crossFadeState: _first ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              ),
+              AdvTextField(
+                label: "test nih",
+                keyboardType: TextInputType.emailAddress,
+//                  inputFormatters: [/*WhitelistingTextInputFormatter.digitsOnly,*/
+//                  NumberThousandFormatter()]
+//                controller: controller,
+              ),
+//              PositionedTransition(rect: null, child: null,),
+              AdvTextFieldPlain(
+                controller: controller,
+//                numberAcknowledgeZero: true,
+                keyboardType: TextInputType.number,
+//                prefixIcon:
+//                Container(child: Icon(Icons.place), color: Colors.green),
+//                suffixIcon:
+//                Container(child: Icon(Icons.fast_forward), color: Colors.green),
+              ),
               AdvRow(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   divider: RowDivider(8.0),
@@ -181,18 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //                  MarkedDate(DateTime(2018, 11, 20),
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
-                        controller: AdvDatePickerController(
-//                    enable: false,
-                            label: "Just TextField MaxLines 1",
-                            hint: "test",
-                            initialValue: _date ?? DateTime.now(),
-                            markedDates: [
-                              MarkedDate(DateTime.now(), "lalala")
-                            ],
-                            dates: [
-                              _date ?? DateTime.now(),
-                              _date ?? DateTime.now()
-                            ]),
+                        controller: cc,
                       ),
                     ),
                     Expanded(
@@ -200,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         textStyle: ts.fs16,
                         controller: incController,
                         valueChangeListener: (before, after) {
-                          print("before => $before, after => $after");
+                          setState(() {});
                         },
                       ),
                     ),
@@ -209,6 +289,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         textStyle: ts.fs16,
                         controller: specialController,
                         buttonName: "Btn",
+                        onButtonTapped: () {
+                          setState(() {
+                            _first = !_first;
+                          });
+                        },
+                        keyboardType: TextInputType.multiline,
                       ),
                     ),
 //                Expanded(
@@ -217,21 +303,29 @@ class _MyHomePageState extends State<MyHomePage> {
 //                )),
                   ]),
               Container(
-                padding: EdgeInsets.all(8.0),
                 child: AdvTextFieldWithButton(
 //                  textStyle: ts.fs12,
                   controller: specialController,
                   buttonName: "Button",
+                  onButtonTapped: () {
+//                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryView()));
+                  },
                 ),
               ),
               AdvButton(
                 "Pick From Increment",
                 buttonSize: ButtonSize.small,
+                bold: false,
                 onPressed: () {
-                  Utils.pickFromIncrement(context,
-                      title: "Pick from Increment",
-                      controller: incController,
-                      infoMessage: "Sewa berakhir pada 12/12/2018 12:40:40");
+                  DateFormat df = DateFormat("dd/MM/yyyy HH:mm:ss");
+
+                  Utils.pickFromIncrement(context, controller: incController,
+                      infoMessageGenerator: (counter) {
+                    return "Sewa berakhir pada ${df.format(DateTime.now().add(Duration(days: counter)))}";
+                  }, callback: (newV, n) {
+                    incController.error = "error aja";
+                    return false;
+                  });
                 },
               ),
               AdvRow(divider: RowDivider(8.0), children: [
@@ -243,33 +337,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   onIconTapped: (iconType) {
                     print("iconType => $iconType");
                   },
-//                  inputFormatters: [
-//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
-//                  ],
                 )),
                 Expanded(
                     child: AdvTextField(
-//                      measureTextSpan: TextSpan(style: ts.fs10),
                   controller: controller2,
-//                  inputFormatters: [
-//                    DateTextFormatter("dd\\MM\\yyyy ~ HH(mm)ss®SSS")
-//                  ],
+                  keyboardType: TextInputType.number,
+                  textChangeListener: (oldText, newText) {
+                    if (double.tryParse(newText) > 75000.0) {
+                      controller2.text = oldText;
+                    }
+                  },
                 )),
-//                Expanded(
-//                    child: AdvTextFieldPlain(
-//                  controller: plainController,
-//                )),
               ]),
               AdvRow(divider: RowDivider(8.0), children: [
                 Expanded(child: AdvButton("Normal", enable: false)),
-                Expanded(
-                    child:
-                        AdvButton("Outlined", onlyBorder: true, enable: false)),
-                Expanded(
-                    child: AdvButton("Reverse", reverse: true, enable: false))
+                Expanded(child: AdvButton("Outlined", onlyBorder: true, enable: false)),
+                Expanded(child: AdvButton("Reverse", reverse: true, enable: false))
               ]),
               AdvButton(
                 "Go to List View with Bottom Button",
+                padding: EdgeInsets.all(16.0),
                 width: double.infinity,
                 buttonSize: ButtonSize.small,
                 onPressed: () {
@@ -277,8 +364,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => AnotherPage(),
-                        settings:
-                            RouteSettings(name: widget.runtimeType.toString())),
+                        settings: RouteSettings(name: widget.runtimeType.toString())),
                   );
                 },
               ),
@@ -293,30 +379,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => InfinityListDemo(),
-                            settings: RouteSettings(
-                                name: widget.runtimeType.toString())),
+                            settings: RouteSettings(name: widget.runtimeType.toString())),
                       );
                     },
                   ),
                 ),
                 Expanded(
                     child: AdvButtonWithIcon(
-                        "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
-                        onPressed: () {
+                        "", Icon(Icons.airline_seat_flat_angled), Axis.vertical, onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PersistentBottomSheetDemo(),
-                        settings:
-                            RouteSettings(name: widget.runtimeType.toString())),
+                        settings: RouteSettings(name: widget.runtimeType.toString())),
                   );
                 }, onlyBorder: true)),
                 Expanded(
-                    child: AdvButtonWithIcon(
-                        "", Icon(Icons.headset), Axis.vertical, onPressed: () {
+                    child: AdvButtonWithIcon("", Icon(Icons.headset), Axis.vertical, onPressed: () {
                   Utils.pickDate(
                     context,
                     selectionType: SelectionType.range,
+                    maxDate: DateTime(2000, 1, 1),
                   ).then((dates) {
                     print("dates => $dates");
                   });
@@ -336,19 +419,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         "", Icon(Icons.airline_seat_flat_angled), Axis.vertical,
                         enable: false, onlyBorder: true)),
                 Expanded(
-                    child: AdvButtonWithIcon(
-                        "", Icon(Icons.headset), Axis.vertical,
+                    child: AdvButtonWithIcon("", Icon(Icons.headset), Axis.vertical,
                         enable: false, reverse: true)),
               ]),
-              Container(child: AdvText(
-                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
-//                maxLines: 5,
-              ), height: 1250.0, color: Colors.green),
-              Visibility(
-                  visible: _date != null,
-                  child: AdvText("You picked date => $_date")),
+//              Container(child: AdvText(
+//                "1. $loremIpsum, 2. $loremIpsum, 3. $loremIpsum, 4. $loremIpsum, 5. $loremIpsum, 6. $loremIpsum, 7. $loremIpsum, 8. $loremIpsum, 9. $loremIpsum, 10. $loremIpsum 11. $loremIpsum, 12. $loremIpsum, 13. $loremIpsum, 14. $loremIpsum, 15. $loremIpsum, 16. $loremIpsum, 17. $loremIpsum, 18. $loremIpsum, 19. $loremIpsum, 20. $loremIpsum",
+////                maxLines: 5,
+//              ), height: 1250.0, color: Colors.green),
+              Visibility(visible: _date != null, child: AdvText("You picked date => $_date")),
               AdvDatePicker(
-                selectionType: SelectionType.range,
+                selectionType: SelectionType.single,
                 onChanged: (List value) {
                   if (value == null || value.length == 0) return;
 
@@ -361,6 +441,8 @@ class _MyHomePageState extends State<MyHomePage> {
 //                      "20th November - Maulid Nabi Muhammad")
 //                ],
                 controller: AdvDatePickerController(
+                    minDate: DateTime(2000, 1, 1),
+                    maxDate: DateTime(2001, 1, 1),
 //                    enable: false,
                     label: "Just TextField MaxLines 1",
                     hint: "test",
@@ -370,15 +452,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               AdvDropDown(
                 onChanged: (String value) {},
-                items: {
-                  "data 1": "display 1",
-                  "data 2": "display 2",
-                  "data 3": "display 3"
-                },
+                items: {"data 1": "display 1", "data 2": "display 2", "data 3": "display 3"},
               ),
               AdvSingleDigitInputter(
                 text: "12345",
                 digitCount: 5,
+                label: "Syalalalala",
+                error: "Error nih gk ",
+                keyboardType: TextInputType.number,
+              ),
+              RoundCheckbox(
+                onChanged: (bool value) {
+                  setState(() {
+                    _lalala = !_lalala;
+                  });
+                },
+                value: _lalala,
               ),
               AdvRadioGroup(
                 title: "this is radio Group",
@@ -387,15 +476,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 divider: 8.0,
                 callback: _handleRadioValueChange,
               ),
-              AdvRangeSlider(
-                controller: sliderController,
-                onChanged: (low, high) {
-                  setState(() {
-                    _lowerValue = low;
-                    _upperValue = high;
-                  });
-                },
-              ),
+//              AdvRangeSlider(
+//                controller: sliderController,
+//                onChanged: (low, high) {
+//                  setState(() {
+//                    _lowerValue = low;
+//                    _upperValue = high;
+//                  });
+//                },
+//              ),
+              Container(
+                  child: AdvImagePreview(
+                    imageProviders: [
+                      NetworkImage(
+                          "https://i.pinimg.com/originals/0c/48/76/0c4876e490e1e4dc925cc09be057a5a5.jpg"),
+                    ],
+                  ),
+                  height: 250.0),
               AdvBadge(
                 size: 50.0,
                 text: "5,000.00",
@@ -409,33 +506,67 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: AdvChooser(
                   label: "Chooser Example",
                   hint: "This is chooser example",
-                  items: {
-                    "data 1": "display 1",
-                    "data 2": "display 2",
-                    "data 3": "display 3",
-                    "data 4": "display 4",
-                    "data 5": "display 5",
-                    "data 6": "display 6",
-                    "data 7": "display 7",
-                    "data 8": "display 8",
-                    "data 9": "display 9",
-                    "data 10": "display 10",
-                    "data 11": "display 11",
-                    "data 12": "display 12",
-                    "data 13": "display 13",
-                    "data 14": "display 14",
-                    "data 15": "display 15",
-                    "data 16": "display 16",
-                    "data 17": "display 17",
-                    "data 18": "display 18",
-                    "data 19": "display 19",
-                    "data 20": "display 20",
-                    "data 21": "display 21",
-                    "data 22": "display 22",
-                    "data 23": "display 24 ",
-                    "data 24": "display 24",
-                    "data 25": "display 25"
-                  },
+                  items: [
+                    GroupCheckItem("data 1", "display 1"),
+                    GroupCheckItem("data 2", "display 2"),
+                    GroupCheckItem("data 3", "display 3"),
+                    GroupCheckItem("data 4", "display 4"),
+                    GroupCheckItem("data 5", "display 5"),
+                    GroupCheckItem("data 6", "display 6"),
+                    GroupCheckItem("data 7", "display 7"),
+                    GroupCheckItem("data 8", "display 8"),
+                    GroupCheckItem("data 9", "display 9"),
+                    GroupCheckItem("data 10", "display 10"),
+                    GroupCheckItem("data 11", "display 11"),
+                    GroupCheckItem("data 12", "display 12"),
+                    GroupCheckItem("data 13", "display 13"),
+                    GroupCheckItem("data 14", "display 14"),
+                    GroupCheckItem("data 15", "display 15"),
+                    GroupCheckItem("data 16", "display 16"),
+                    GroupCheckItem("data 17", "display 17"),
+                    GroupCheckItem("data 18", "display 18"),
+                    GroupCheckItem("data 19", "display 19"),
+                    GroupCheckItem("data 20", "display 20"),
+                    GroupCheckItem("data 21", "display 21"),
+                    GroupCheckItem("data 22", "display 22"),
+                    GroupCheckItem("data 23", "display 23"),
+                    GroupCheckItem("data 24", "display 24"),
+                    GroupCheckItem("data 25", "display 25"),
+                  ],
+                ))
+              ]),
+              Row(children: [
+                Expanded(
+                    child: AdvChooserPlain(
+                  label: "Chooser Example",
+                  hint: "This is chooser example",
+                  items: [
+                    GroupCheckItem("data 1", "display 1"),
+                    GroupCheckItem("data 2", "display 2"),
+                    GroupCheckItem("data 3", "display 3"),
+                    GroupCheckItem("data 4", "display 4"),
+                    GroupCheckItem("data 5", "display 5"),
+                    GroupCheckItem("data 6", "display 6"),
+                    GroupCheckItem("data 7", "display 7"),
+                    GroupCheckItem("data 8", "display 8"),
+                    GroupCheckItem("data 9", "display 9"),
+                    GroupCheckItem("data 10", "display 10"),
+                    GroupCheckItem("data 11", "display 11"),
+                    GroupCheckItem("data 12", "display 12"),
+                    GroupCheckItem("data 13", "display 13"),
+                    GroupCheckItem("data 14", "display 14"),
+                    GroupCheckItem("data 15", "display 15"),
+                    GroupCheckItem("data 16", "display 16"),
+                    GroupCheckItem("data 17", "display 17"),
+                    GroupCheckItem("data 18", "display 18"),
+                    GroupCheckItem("data 19", "display 19"),
+                    GroupCheckItem("data 20", "display 20"),
+                    GroupCheckItem("data 21", "display 21"),
+                    GroupCheckItem("data 22", "display 22"),
+                    GroupCheckItem("data 23", "display 23"),
+                    GroupCheckItem("data 24", "display 24"),
+                    GroupCheckItem("data 25", "display 25"),
+                  ],
                 ))
               ])
             ],
@@ -452,7 +583,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class AnotherPage extends StatelessWidget {
+class AnotherPage extends StatefulWidget {
+  @override
+  _AnotherPageState createState() => _AnotherPageState();
+}
+
+class _AnotherPageState extends AdvState<AnotherPage> {
+  @override
+  Widget advBuild(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Another Page"),
+      ),
+      body: Column(children: [
+        FlatButton(
+          child: Text("coba"),
+          color: Colors.green,
+          onPressed: () {
+            process(() async {
+              await Future.delayed(Duration(seconds: 3));
+            });
+          },
+        )
+      ]),
+    );
+  }
+}
+
+class An2otherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -476,17 +634,12 @@ class AnotherPage extends StatelessWidget {
               child: InkWell(
                 onTap: () {},
                 child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: AdvRow(
-                        divider: RowDivider(4.0),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.filter_list,
-                              size: 16.0, color: Colors.purple),
-                          Text("Filter",
-                              style: ts.fs12.copyWith(color: Colors.purple))
-                        ])),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child:
+                        AdvRow(divider: RowDivider(4.0), mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.filter_list, size: 16.0, color: Colors.purple),
+                      Text("Filter", style: ts.fs12.copyWith(color: Colors.purple))
+                    ])),
               ),
               elevation: 4.0),
           margin: EdgeInsets.only(bottom: 20.0),
@@ -500,8 +653,7 @@ class PersistentBottomSheetDemo extends StatefulWidget {
   static const String routeName = '/material/persistent-bottom-sheet';
 
   @override
-  _PersistentBottomSheetDemoState createState() =>
-      _PersistentBottomSheetDemoState();
+  _PersistentBottomSheetDemoState createState() => _PersistentBottomSheetDemoState();
 }
 
 class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
@@ -575,12 +727,10 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
                                                   'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color:
-                                                          themeData.accentColor,
+                                                      color: themeData.accentColor,
                                                       fontSize: 24.0)),
                                               Column(
-                                                  children: List.generate(100,
-                                                      (index) {
+                                                  children: List.generate(100, (index) {
                                                 return Text("Text $index");
                                               }))
                                             ]))),
@@ -655,7 +805,6 @@ class _InfinityListDemoState extends State<InfinityListDemo> {
 
       items.addAll(List.generate(50, (i) => i));
 
-      print("isThereAnyMoreData = $isThereAnyMoreData");
       return isThereAnyMoreData;
     });
   }

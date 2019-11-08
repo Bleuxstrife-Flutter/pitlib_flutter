@@ -33,3 +33,23 @@
 ## 0.0.9
 
 * Android bugs fixed
+
+## 0.1.0
+
+* Bank Transfer now added
+
+## 0.1.1
+
+* Dependencies to Stable channel Flutter
+
+## 0.2.0
+
+* Migrate to AndroidX
+
+## 0.2.0+1
+
+* Migrate to AndroidX
+
+## 0.3.0
+
+* I have shut down this plugin for now, please move to this plugin to connect to Midtrans Payment [MidFlutter](https://pub.dartlang.org/packages/mid_flutter/versions/0.0.1)

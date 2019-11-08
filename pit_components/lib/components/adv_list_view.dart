@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class AdvListView extends StatelessWidget {
   final Widget divider;
-  final bool onlyInner;
   final Key key;
   final Axis scrollDirection;
   final bool reverse;
@@ -18,9 +17,8 @@ class AdvListView extends StatelessWidget {
   final List<Widget> children;
 
   AdvListView({
-    Widget divider,
+    this.divider,
     Key key,
-    this.onlyInner = true,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
     ScrollController controller,
@@ -33,8 +31,7 @@ class AdvListView extends StatelessWidget {
     bool addRepaintBoundaries = true,
     double cacheExtent,
     List<Widget> children = const <Widget>[],
-  })  : this.divider = divider ?? Container(),
-        this.key = key,
+  })  : this.key = key,
         this.scrollDirection = scrollDirection,
         this.reverse = reverse,
         this.controller = controller,
@@ -73,14 +70,15 @@ class AdvListView extends StatelessWidget {
     if (children.length == 0) return [];
     List<Widget> newChildren = [];
 
-    if (!this.onlyInner) newChildren.add(divider);
-
     for (Widget child in children) {
-      newChildren.add(child);
-      newChildren.add(divider);
+      if (child != null) {
+        newChildren.add(child);
+        if (divider != null) newChildren.add(divider);
+      }
     }
 
-    if (this.onlyInner) newChildren.removeAt(newChildren.length - 1);
+    if (newChildren.length > 0 && divider != null)
+      newChildren.removeAt(newChildren.length - 1);
 
     return newChildren;
   }

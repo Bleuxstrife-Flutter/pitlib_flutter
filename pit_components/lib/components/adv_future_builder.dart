@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 typedef void ResetFunction();
 typedef Widget WidgetBuilder(BuildContext context);
-typedef Future<bool> FutureExecutor(BuildContext context, int attempt);
+typedef Future<bool> FutureExecutor(BuildContext context);
 
 class ResetRemote {
   ResetFunction reset;
@@ -22,26 +24,31 @@ class AdvFutureBuilder extends StatefulWidget {
 }
 
 class _AdvFutureBuilderState extends State<AdvFutureBuilder> {
-  int executionAttempt = 1;
+  bool _futureExecuted = false;
 
   @override
   void initState() {
     super.initState();
 
     widget.remote?.reset = () {
-      executionAttempt = 1;
+      setState(() {
+        _futureExecuted = false;
+      });
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.futureExecutor(context, executionAttempt).then((available) {
-      if (available) {
-        setState(() {
-          executionAttempt++;
+    if (!_futureExecuted) {
+      _futureExecuted = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.futureExecutor(context).then((needRedraw) {
+          if (needRedraw && this.mounted) {
+            setState(() {});
+          }
         });
-      }
-    });
+      });
+    }
 
     return widget.widgetBuilder(context);
   }

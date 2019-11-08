@@ -1,85 +1,63 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class NumberThousandFormatter extends TextInputFormatter {
-  final String thousandSeparator;
-  final String decimalSeparator;
+class NumberThousandFormatter extends WhitelistingTextInputFormatter {
+  final int digitLimit;
 
-  NumberThousandFormatter(this.thousandSeparator, this.decimalSeparator);
+  NumberThousandFormatter({int digitLimit})
+      : this.digitLimit = digitLimit ?? 16,
+        super(RegExp(r'(\d+)'));
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    return _format(oldValue, newValue);
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (oldValue.text == newValue.text) {
+      return newValue;
+    }
+
+    var x = super.formatEditUpdate(oldValue, newValue);
+
+    if (x.text.length > this.digitLimit) {
+      x = super.formatEditUpdate(oldValue, oldValue);
+
+      if (x.text.isEmpty) {
+        x = super.formatEditUpdate(oldValue, newValue);
+
+        x = x.copyWith(text: x.text.substring(0, this.digitLimit));
+      }
+    }
+
+    return _format(oldValue, x);
   }
 
-  TextEditingValue _format(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String newValueText = newValue.text.replaceAll(",", "");
-    String oldValueText = oldValue.text;
-    String nonDecimalOldText = "";
+  TextEditingValue _format(TextEditingValue oldValue, TextEditingValue newValue) {
+    NumberFormat nf = NumberFormat("#,##0");
 
-    if (oldValueText.indexOf(".") != -1) {
-      nonDecimalOldText = oldValueText.substring(0, oldValueText.indexOf("."));
-    } else {
-      nonDecimalOldText = (int.tryParse(oldValueText.substring(0, oldValueText.length)) ?? 0 ~/ 100).toString();
-    }
+    String rawText = newValue.text;
+    String cleanText = rawText.replaceAll(",", "");
+    String formattedText = cleanText.isEmpty ? "" : nf.format(int.tryParse(cleanText));
 
-    String nonDecimalNewText = "";
-    String decimalNewText = "00";
+    int base = newValue.selection.baseOffset;
+    int extent = newValue.selection.extentOffset;
+    int length = cleanText.length;
+    int totalSeparator = ((length - 1) / 3).floor();
+    int x = ((length - base) / 3).floor();
 
-    if (newValueText.indexOf(".") != -1) {
-      nonDecimalNewText = newValueText.substring(0, newValueText.indexOf("."));
-      decimalNewText = newValueText.substring(newValueText.indexOf("."), newValueText.length).replaceAll(".", "");
-    } else {
-      nonDecimalNewText = newValueText.substring(0, newValueText.length);
-    }
+    base += totalSeparator - x;
+    extent += totalSeparator - x;
 
-    newValueText = "$nonDecimalNewText.$decimalNewText";
-
-    if (nonDecimalNewText.length > 16) return oldValue;
-
-    num value = double.tryParse(newValueText) ?? 0;
-
-    NumberFormat nf = NumberFormat("#,###.00");
-
-    newValueText = nf.format(value);
-
-
-    if (newValueText.indexOf(".") != -1) {
-      nonDecimalNewText = newValueText.substring(0, newValueText.indexOf("."));
-    } else {
-      nonDecimalNewText = newValueText.substring(0, newValueText.length);
-    }
-
-    int commaMatchesOnNew =
-        RegExp(r'[' + "\," + ']').allMatches(nonDecimalNewText).toList().length;
-
-    int commaMatchesOnOld =
-        RegExp(r'[' + "\," + ']').allMatches(nonDecimalOldText).toList().length;
-
-    int selectionOffset = commaMatchesOnNew - commaMatchesOnOld;
-    print("new: ${newValue.text}, old: ${oldValue.text}");
-    print("new: ${newValueText}");
-    print("start: ${newValue.selection.start}, end: ${newValue.selection.end}");
-    print("start: ${oldValue.selection.start}, end: ${oldValue.selection.end}");
-//    print("selectionOffset: $selectionOffset, baseOffset: ${newValue.selection.start}, extentOffset: ${newValue.selection.end}");
-    TextSelection newSelection = newValue.selection;
-
-    if (newSelection.start == newSelection.end && selectionOffset != 0) {
-      newSelection = TextSelection(
-          baseOffset: newValue.selection.start + selectionOffset,
-          extentOffset: newValue.selection.end + selectionOffset);
-    }
-
-
-    return newValue.copyWith(
-        text: newValueText,
-        selection: newSelection);
+    return TextEditingValue(
+      text: formattedText,
+      selection: newValue.selection.copyWith(baseOffset: base, extentOffset: extent),
+      composing: Platform.isIOS
+          ? (formattedText ?? "").isEmpty ? TextRange.empty : TextRange(start: 0, end: 0)
+          : TextRange.empty,
+    );
   }
 
-  TextSelection updateCursorPosition(String text) {
-    return TextSelection.fromPosition(TextPosition(offset: text.length));
-  }
+//  TextSelection updateCursorPosition(String text) {
+//    return TextSelection.fromPosition(TextPosition(offset: text.length));
+//  }
 }

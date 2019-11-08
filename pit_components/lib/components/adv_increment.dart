@@ -12,7 +12,7 @@ import 'package:pit_components/mods/mod_input_decorator.dart';
 import 'package:pit_components/mods/mod_text_field.dart';
 import 'package:pit_components/pit_components.dart';
 
-typedef void OnValueChanged(int oldValue, int newValue);
+typedef bool OnValueChanged(int oldValue, int newValue);
 typedef void OnIconTapped(IconType iconType);
 
 enum IconType { prefix, suffix }
@@ -20,7 +20,8 @@ enum IconType { prefix, suffix }
 class AdvIncrement extends StatefulWidget {
   final AdvIncrementController controller;
   final TextSpan measureTextSpan;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsets padding;
+  final EdgeInsets margin;
   final OnValueChanged valueChangeListener;
   final int maxLineExpand;
   final Color hintColor;
@@ -42,7 +43,8 @@ class AdvIncrement extends StatefulWidget {
       TextAlign alignment,
       String measureText,
       TextStyle textStyle,
-      EdgeInsetsGeometry padding,
+      EdgeInsets padding,
+      EdgeInsets margin,
       this.valueChangeListener,
       AdvIncrementController controller,
       int maxLineExpand,
@@ -64,13 +66,12 @@ class AdvIncrement extends StatefulWidget {
                 alignment == null)),
         this.hintColor = hintColor ?? PitComponents.textFieldHintColor,
         this.labelColor = labelColor ?? PitComponents.textFieldLabelColor,
-        this.backgroundColor =
-            backgroundColor ?? PitComponents.textFieldBackgroundColor,
+        this.backgroundColor = backgroundColor ?? PitComponents.textFieldBackgroundColor,
         this.borderColor = borderColor ?? PitComponents.textFieldBorderColor,
         this.errorColor = errorColor ?? PitComponents.textFieldErrorColor,
         this.controller = controller ??
             new AdvIncrementController(
-                counter: counter ?? "",
+                counter: counter ?? 0,
                 format: format ?? "",
                 hint: hint ?? "",
                 label: label ?? "",
@@ -80,17 +81,17 @@ class AdvIncrement extends StatefulWidget {
                 maxLines: maxLines ?? 1,
                 enable: enable ?? true,
                 alignment: alignment ?? TextAlign.center),
-        this.measureTextSpan = TextSpan(
-            text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
+        this.measureTextSpan =
+            TextSpan(text: measureText, style: textStyle ?? ts.fs16.merge(ts.tcBlack)),
         this.padding = padding ?? new EdgeInsets.all(0.0),
+        this.margin = margin ?? PitComponents.editableMargin,
         this.maxLineExpand = maxLineExpand ?? 4;
 
   @override
   State createState() => new _AdvIncrementState();
 }
 
-class _AdvIncrementState extends State<AdvIncrement>
-    with SingleTickerProviderStateMixin {
+class _AdvIncrementState extends State<AdvIncrement> with SingleTickerProviderStateMixin {
   TextEditingController _textEdittingCtrl = new TextEditingController();
   int initialMaxLines;
 
@@ -106,16 +107,28 @@ class _AdvIncrementState extends State<AdvIncrement>
   }
 
   _update() {
-    setState(() {
-      var cursorPos = _textEdittingCtrl.selection;
-      _textEdittingCtrl.text = nf.format(widget.controller.counter ?? 0);
+    if (this.mounted) {
+      setState(() {
+        _updateTextController();
+      });
+    }
+  }
 
-      if (cursorPos.start > _textEdittingCtrl.text.length) {
-        cursorPos = new TextSelection.fromPosition(
-            new TextPosition(offset: _textEdittingCtrl.text.length));
-      }
-      _textEdittingCtrl.selection = cursorPos;
-    });
+  _updateTextController() {
+    var cursorPos = _textEdittingCtrl.selection;
+    _textEdittingCtrl.text = nf.format(widget.controller.counter ?? 0);
+
+    if (cursorPos.start > _textEdittingCtrl.text.length) {
+      cursorPos =
+          new TextSelection.fromPosition(new TextPosition(offset: _textEdittingCtrl.text.length));
+    }
+    _textEdittingCtrl.selection = cursorPos;
+  }
+
+  @override
+  void didUpdateWidget(AdvIncrement oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateTextController();
   }
 
   @override
@@ -125,6 +138,7 @@ class _AdvIncrementState extends State<AdvIncrement>
         final double maxWidth = constraints.maxWidth;
 
         return AdvColumn(
+          margin: widget.margin,
           divider: ColumnDivider(2.0),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _buildChildren(maxWidth),
@@ -144,38 +158,32 @@ class _AdvIncrementState extends State<AdvIncrement>
         : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
     final Color _textColor = widget.controller.enable
         ? widget.measureTextSpan.style.color ?? Colors.black
-        : Color.lerp(widget.measureTextSpan.style.color ?? Colors.black,
-            PitComponents.lerpColor, 0.6);
+        : Color.lerp(
+            widget.measureTextSpan.style.color ?? Colors.black, PitComponents.lerpColor, 0.6);
     final Color _hintColor = widget.controller.enable
         ? widget.hintColor
         : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
-//    return LayoutBuilder(
-//        builder: (context, constraints) {
-//      final double maxWidth = constraints.maxWidth;
-//
-//        },
-//    );
 
     double _iconSize = 24.0 / 16.0 * widget.measureTextSpan.style.fontSize;
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;
 
-    var tp = new TextPainter(
-        text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp = new TextPainter(text: widget.measureTextSpan, textDirection: ui.TextDirection.ltr);
 
     tp.layout();
 
     double width = tp.size.width == 0
         ? maxWidth
         : tp.size.width +
+            ((_iconSize + _paddingSize + 2) * 2) +
             _defaultWidthAddition +
             (_defaultInnerPadding * 2) +
             (widget.padding.horizontal);
 
-    TextSpan currentTextSpan = TextSpan(
-        text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
+    TextSpan currentTextSpan =
+        TextSpan(text: _textEdittingCtrl.text, style: widget.measureTextSpan.style);
 
-    var tp2 = new TextPainter(
-        text: currentTextSpan, textDirection: ui.TextDirection.ltr);
+    var tp2 = new TextPainter(text: currentTextSpan, textDirection: ui.TextDirection.ltr);
+
     tp2.layout(maxWidth: width - _iconSize - (_paddingSize * 2));
 
     if (widget.controller.label != null && widget.controller.label != "") {
@@ -203,8 +211,8 @@ class _AdvIncrementState extends State<AdvIncrement>
           type: MaterialType.transparency,
           child: InkWell(
               onTap: () {
-                if (widget.controller.minCounter == widget.controller.counter)
-                  return;
+                widget.controller.error = "";
+                if (widget.controller.minCounter == widget.controller.counter) return;
                 widget.controller.counter--;
                 if (widget.valueChangeListener != null)
                   widget.valueChangeListener(
@@ -227,38 +235,57 @@ class _AdvIncrementState extends State<AdvIncrement>
               8.0 -
               ((8.0 - _paddingSize) * 2),
         ),
-        child: AbsorbPointer(
-          child: new Theme(
-            data: new ThemeData(
-                cursorColor: Theme.of(context).cursorColor,
-                accentColor: _backgroundColor,
-                hintColor: widget.borderColor,
-                primaryColor: widget.borderColor),
-            child: ModTextField(
-              controller: _textEdittingCtrl,
-              enabled: widget.controller.enable,
-              maxLines: widget.controller.maxLines,
-              keyboardType: TextInputType.number,
-              textAlign: widget.controller.alignment,
-              style: widget.measureTextSpan.style.copyWith(color: _textColor),
-              decoration: ModInputDecoration(
-                  iconSize: _iconSize,
-                  filled: true,
-                  fillColor: _backgroundColor,
+        child: Theme(
+          data: new ThemeData(
+              cursorColor: Theme.of(context).cursorColor,
+              accentColor: _backgroundColor,
+              hintColor: widget.borderColor,
+              primaryColor: widget.borderColor),
+          child: ModTextField(
+            controller: _textEdittingCtrl,
+            enabled: widget.controller.enable,
+            maxLength: 18,
+            maxLines: widget.controller.maxLines,
+            keyboardType: TextInputType.number,
+            textAlign: widget.controller.alignment,
+            style: widget.measureTextSpan.style.copyWith(color: _textColor),
+            onChanged: (String newValue) {
+              int oldCounter = widget.controller.counter;
+              int newCounter = newValue.isEmpty ? 0 : int.tryParse(newValue) ?? oldCounter;
+
+              if (widget.controller.maxCounter != null && widget.controller.maxCounter != null) {
+                newCounter =
+                    newCounter.clamp(widget.controller.minCounter, widget.controller.maxCounter);
+              }
+
+              widget.controller.counter = newCounter;
+              widget.controller.error = "";
+
+              if (oldCounter == newCounter) _update();
+
+              widget.valueChangeListener(oldCounter, newCounter);
+            },
+            decoration: ModInputDecoration(
+                iconSize: _iconSize,
+                filled: true,
+                fillColor: _backgroundColor,
 //                border: InputBorder.none,
-                  border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                    const Radius.circular(4.0),
-                  )),
-                  contentPadding: new EdgeInsets.symmetric(
-                      vertical: _paddingSize,
-                      horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
+                border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                  const Radius.circular(4.0),
+                )),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: widget.borderColor),
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(4.0),
+                    )),
+                contentPadding: new EdgeInsets.symmetric(
+                    vertical: _paddingSize + 1.0, horizontal: _iconSize + 1.0 + (_paddingSize * 2)),
 //                contentPadding: new EdgeInsets.only(
 //                    left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
-                  hintText: widget.controller.hint,
-                  hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
-                  maxLines: widget.controller.maxLines),
-            ),
+                hintText: widget.controller.hint,
+                hintStyle: TextStyle(color: _hintColor.withOpacity(0.6)),
+                maxLines: widget.controller.maxLines),
           ),
         ),
       ),
@@ -279,8 +306,8 @@ class _AdvIncrementState extends State<AdvIncrement>
           type: MaterialType.transparency,
           child: InkWell(
               onTap: () {
-                if (widget.controller.maxCounter == widget.controller.counter)
-                  return;
+                widget.controller.error = "";
+                if (widget.controller.maxCounter == widget.controller.counter) return;
                 widget.controller.counter++;
                 if (widget.valueChangeListener != null)
                   widget.valueChangeListener(
@@ -299,8 +326,7 @@ class _AdvIncrementState extends State<AdvIncrement>
     ]));
 
     if (widget.controller.error != null && widget.controller.error != "") {
-      TextStyle style = ts.fs11
-          .copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
+      TextStyle style = ts.fs11.copyWith(color: widget.errorColor, fontWeight: ts.fw600.fontWeight);
 
       children.add(Container(
           width: maxWidth,

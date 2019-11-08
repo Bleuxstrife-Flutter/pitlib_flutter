@@ -243,16 +243,16 @@ class AdvIncrementEditingValue {
       bool enable,
       TextAlign alignment}) {
     return new AdvIncrementEditingValue(
-        counter: counter ?? this.counter,
-        format: format ?? this.format,
-        hint: hint ?? this.hint,
-        label: label ?? this.label,
-        error: error ?? this.error,
-        minCounter: minCounter ?? this.minCounter,
-        maxCounter: maxCounter ?? this.maxCounter,
-        maxLines: maxLines ?? this.maxLines,
-        enable: enable ?? this.enable,
-        alignment: alignment ?? this.alignment);
+        counter: counter,
+        format: format,
+        hint: hint,
+        label: label,
+        error: error,
+        minCounter: minCounter,
+        maxCounter: maxCounter,
+        maxLines: maxLines,
+        enable: enable,
+        alignment: alignment);
   }
 
   AdvIncrementEditingValue.fromValue(AdvIncrementEditingValue copy)

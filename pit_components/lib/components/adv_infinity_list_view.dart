@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pit_components/components/adv_column.dart';
 import 'package:pit_components/components/adv_loading.dart';
@@ -17,7 +19,6 @@ class AdvInfiniteListView extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
   final Widget divider;
-  final bool onlyInner;
   final Key key;
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
@@ -33,8 +34,7 @@ class AdvInfiniteListView extends StatefulWidget {
     this.fetcher,
     this.padding,
     this.margin,
-    Widget divider,
-    bool onlyInner,
+    this.divider,
     Key key,
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
     MainAxisSize mainAxisSize = MainAxisSize.max,
@@ -45,8 +45,6 @@ class AdvInfiniteListView extends StatefulWidget {
     List<Widget> children = const <Widget>[],
   })  : assert(widgetBuilder != null),
         assert(fetcher != null),
-        this.divider = divider ?? Container(),
-        this.onlyInner = onlyInner ?? true,
         this.key = key,
         this.mainAxisAlignment = mainAxisAlignment,
         this.mainAxisSize = mainAxisSize,
@@ -128,9 +126,10 @@ class _AdvInfiniteListViewState extends State<AdvInfiniteListView> {
         }
       });
 
-      if (widget.remote != null) widget.remote.reset = () {
-        _reset(context);
-      };
+      if (widget.remote != null)
+        widget.remote.reset = () {
+          _reset(context);
+        };
 
       _tryFetchMore(context);
       firstBuild = false;
@@ -145,7 +144,6 @@ class _AdvInfiniteListViewState extends State<AdvInfiniteListView> {
           padding: widget.padding,
           margin: widget.margin,
           divider: widget.divider,
-          onlyInner: widget.onlyInner,
           key: widget.key,
           mainAxisAlignment: widget.mainAxisAlignment,
           mainAxisSize: widget.mainAxisSize,

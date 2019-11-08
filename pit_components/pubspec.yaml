@@ -1,6 +1,6 @@
 name: pit_components
 description: Our customized material components. (Padimas Inovasi Teknologi)
-version: 0.0.26
+version: 0.5.0+1
 author: Richardo <richardothayeb@gmail.com>
 homepage: https://nemob.id
 
@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
 
   intl: ^0.15.7
-  flutter_range_slider: "^1.0.1"
+#  flutter_range_slider: "^1.0.1"
+  photo_view: ^0.5.0
 
 dev_dependencies:
   flutter_test:
@@ -24,13 +25,14 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
-#  # The following line ensures that the Material Icons font is
-#  # included with your application, so that you can use the icons in
-#  # the material Icons class.
-#  uses-material-design: true
-#
-#  assets:
-#    - images/nemob_loading.gif
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - images/nemob_loading.gif
+    - images/placeholder.png
   # To add assets to your package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
