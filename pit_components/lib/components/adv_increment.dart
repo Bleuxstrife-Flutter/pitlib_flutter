@@ -153,20 +153,16 @@ class _AdvIncrementState extends State<AdvIncrement> with SingleTickerProviderSt
     final int _defaultHeightAddition = 24;
     final double _defaultInnerPadding = 8.0;
 
-    final Color _backgroundColor =  widget.backgroundColor;
-    final Color _textColor = widget.measureTextSpan.style.color ?? Colors.black;
-    final Color _hintColor = widget.hintColor;
-
-//    final Color _backgroundColor = widget.controller.enable
-//        ? widget.backgroundColor
-//        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
-//    final Color _textColor = widget.controller.enable
-//        ? widget.measureTextSpan.style.color ?? Colors.black
-//        : Color.lerp(
-//            widget.measureTextSpan.style.color ?? Colors.black, PitComponents.lerpColor, 0.6);
-//    final Color _hintColor = widget.controller.enable
-//        ? widget.hintColor
-//        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
+    final Color _backgroundColor = widget.controller.enable
+        ? widget.backgroundColor
+        : Color.lerp(widget.backgroundColor, PitComponents.lerpColor, 0.6);
+    final Color _textColor = widget.controller.enable
+        ? widget.measureTextSpan.style.color ?? Colors.black
+        : Color.lerp(
+            widget.measureTextSpan.style.color ?? Colors.black, PitComponents.lerpColor, 0.6);
+    final Color _hintColor = widget.controller.enable
+        ? widget.hintColor
+        : Color.lerp(widget.hintColor, PitComponents.lerpColor, 0.6);
 
     double _iconSize = 24.0 / 16.0 * widget.measureTextSpan.style.fontSize;
     double _paddingSize = 8.0 / 16.0 * widget.measureTextSpan.style.fontSize;

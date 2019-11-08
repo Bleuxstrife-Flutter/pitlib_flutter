@@ -1,3 +1,7 @@
+## 0.5.0+1
+
+* Revert to 0.5.0+1
+
 ## 0.5.0+2
 
 * AdvIncrement : When textEdit is disable textColor and background will not change
