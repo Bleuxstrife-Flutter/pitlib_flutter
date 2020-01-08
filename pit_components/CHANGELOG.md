@@ -1,3 +1,7 @@
+## 0.5.0+3
+
+* Upgrade intl version to 0.16.0
+
 ## 0.5.0+2
 
 * AdvIncrement : When textEdit is disable textColor and background will not change
